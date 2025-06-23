@@ -1,9 +1,8 @@
+[There's a Hebrew version at the bottom - יש גרסא בעברית למטה](#hebrew-version)
+
 # Practick - Music Practice Tracker
 
 Practick is a web-based application designed to help musicians and students track their practice sessions, manage room usage, and stay motivated with features like a metronome, practice logs, weekly summaries, and a leaderboard. The app supports both English and Hebrew languages.
-
-(Theres a hebrew version at the buttom - 
-יש גרסא בעברית למטה)
 
 ---
 
@@ -113,6 +112,8 @@ Please use the [bug report form](https://forms.gle/1b3GkAFXpf7WXGt1A) for any is
 
 ---
 
+<a id="hebrew-version"></a>
+
 # פרקטיק - מעקב אימון מוזיקלי
 
 פרקטיק היא אפליקציה מבוססת דפדפן לניהול ומעקב אחרי אימונים מוזיקליים, ניהול חדרי תרגול, יומן אימונים, סיכום שבועי, מטרונום, ולוח תוצאות. האפליקציה תומכת בעברית ובאנגלית.
@@ -221,4 +222,4 @@ Please use the [bug report form](https://forms.gle/1b3GkAFXpf7WXGt1A) for any is
 
 ## דיווח תקלות
 
-יש להשתמש ב[טופס הדיווח](https://forms.gle/1b3GkAFXpf7WXGt1A) לכל תקלה או הצעה
+יש להשתמש ב[טופס הדיווח](https://forms.gle/1b3GkAFXpf7WXGt1A) לכל
