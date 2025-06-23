@@ -2,7 +2,7 @@
 
 Practick is a web-based application designed to help musicians and students track their practice sessions, manage room usage, and stay motivated with features like a metronome, practice logs, weekly summaries, and a leaderboard. The app supports both English and Hebrew languages.
 
-(Theres a hebrew version at the buttom
+(Theres a hebrew version at the buttom - 
 יש גרסא בעברית למטה)
 
 ---
