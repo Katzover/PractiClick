@@ -6,7 +6,7 @@ let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
 const LANGS = {
     en: {
-        practiceTitle: "🎵 Pracitc - Practice tracker 🎵",
+        practiceTitle: "🎵 PractiClick - Practice tracker 🎵",
         cycle: "Cycle",
         stopwatch: "Stopwatch",
         timer: "Timer",
