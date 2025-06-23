@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Practick - Music Practice Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+<div style="text-align:right; margin-bottom:10px;">
+    <select id="langSelect">
+        <option value="he">עברית</option>
+        <option value="en">English</option>
+    </select>
+    </div>
+            <h1>🎵 Pracitck - Practice tracker 🎵</h1>
+    <div class="timer-section">
+    <!-- Mode Switch Tabs -->
+    <div class="timer-modes" id="timerModes">
+        <button id="tabCycle" class="tab-btn active" data-mode="cycle">Cycle</button>
+        <button id="tabStopwatch" class="tab-btn" data-mode="stopwatch">Stopwatch</button>
+        <button id="tabTimer" class="tab-btn" data-mode="timer">Timer</button>
+        <button id="tabRooms" class="tab-btn" data-mode="rooms">Rooms</button>
+    </div>
+
+    <div id="roomsContainer" style="display:none;">
+  <h2 id="rstatus">Rooms Status</h2>
+  <table id="roomsTable" border="1" style="width:100%;text-align:center;">
+    <thead>
+      <tr>
+        <th>Room</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Cycle Mode Inputs -->
+<div id="cycle-inputs" style="margin:12px 0;">
+    <label id="cycleCountLabel" for="cycleCount">Cycles: <input type="number" id="cycleCount" placeholder="5" ...></label>
+    <label id="cycleLengthLabel" for="cycleLength" style="margin-left:13px;">Cycle Length (min): <input type="number" id="cycleLength" placeholder="15" ...></label>
+    <label id="cycleBreakLabel" for="cycleBreak" style="margin-left:12px;">Break (sec): <input type="number" id="cycleBreak" placeholder="90" ...></label>
+</div>
+<div class="timer-display" id="cycleDisplay">00:00:00</div>
+<div class="timer-controls" id="cycle-controls">
+    <button id="cycleStartBtn">Start Cycle</button>
+    <button id="cyclePauseBtn" disabled>Pause</button>
+    <button id="cycleResetBtn" disabled>Reset</button>
+    <button id="cycleLogBtn" disabled>Log</button>
+</div>
+<div id="cycleStatus" style="text-align:center;margin-top:8px;color:#444;"></div>
+
+<!-- Stopwatch/Timer Inputs -->
+<div id="timer-inputs" style="display:none; margin:12px 0;">
+    <input type="number" id="minutes" min="0" max="999" placeholder="Min" value="10"> min
+    <input type="number" id="seconds" min="0" max="59" placeholder="Sec" value="0"> sec
+</div>
+<div class="timer-display" id="display" style="display:none;">00:00:00</div>
+<div class="timer-controls" id="timer-controls" style="display:none;">
+    <button id="startBtn">Start</button>
+    <button id="pauseBtn" disabled>Pause</button>
+    <button id="resetBtn" disabled>Reset</button>
+    <button id="logBtn" disabled>Log</button>
+</div>
+</div>
+<div id="metronome-panel">
+    <h3 style="margin-top:0;" id="metroTitle">Metronome</h3>
+    <div>
+        <label id="metroBpmLabel" style="font-size:0.95em;">BPM:
+            <input type="number" id="metroBpm" min="20" max="700" value="150" style="width:60px;">
+        </label>
+    </div>
+    <div style="margin:8px 0;">
+        <label id="metroSoundLabel" style="font-size:0.95em;">Sound:
+            <select id="metroSound" style="background: var(--card); color: var(--primary);">
+                <option value="high">High</option>
+                <option value="mid">Mid</option>
+                <option value="low">Low</option>
+            </select>
+        </label>
+    </div>
+    <div style="margin-bottom:8px;">
+        <label id="metroAccentLabel" style="font-size:0.95em;">Accent:
+            <input type="number" id="metroAccent" min="0" max="16" value="4" style="width:40px;">
+        </label>
+    </div>
+    <div style="margin-bottom:8px;">
+        <label id="metroVolumeLabel" style="font-size:0.95em;">Volume:
+            <input type="range" id="metroVolume" min="0" max="1" step="0.01" value="0.5">
+        </label>
+    </div>
+    <div style="margin-bottom:8px;">
+        <button id="metroStartBtn" style="margin-bottom: 10px; margin-top: 10px;">Start</button>
+        <button id="metroStopBtn" disabled>Stop</button>
+    </div>
+    <div id="metroIndicator" style="height:18px; text-align:center; font-size:1.2em;"></div>
+</div>
+        <div class="log-section">
+            <h2 id="practiceLogTitle">Practice Log</h2>
+            <div class="log-list" id="logList"></div>
+        </div>
+        <div class="summary-section">
+            <h2 id="weeklySummaryTitle">Weekly Summary</h2>
+            <table class="summary-table" id="summaryTable">
+                <thead>
+                    <tr>
+                        <th id="thDay">Day</th>
+                        <th id="thTotalTime">Total Time</th>
+                        <th id="thSessions">Sessions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Summary rows here -->
+                </tbody>
+            </table>
+        </div>
+         <div class="week-total-section" style="margin-top:24px; text-align:center;">
+            <strong id="weekTotalLabel">Total Time Practiced This Week:</strong>
+            <span id="weekTotal" style="font-size:1.2em; margin-left:8px;">00:00:00</span>
+        </div>
+        <!-- Leaderboard Section -->
+<div class="leaderboard-section" style="margin-top:32px;">
+    <h2 id="lbtitle">Leaderboard (Top 10 this week)</h2>
+    <table class="summary-table" id="leaderboardTable">
+        <thead>
+            <tr>
+                <th id="lbName">Name</th>
+                <th id="lbWeek">Week Start</th>
+                <th id="lbTotal">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Leaderboard rows here -->
+        </tbody>
+    </table>
+</div>
+    </div>
+    <!-- Loading overlay (hidden by default, shown by JS) -->
+    <div id="loadingOverlay" class="loadingOverlay" style="display:none;">
+        <div>
+            <span class="loader"></span>
+        </div>
+    </div>
+    <!-- Footer buttons (populated by JS) -->
+    <div id="footerBtns"></div>
+    <script src="script.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div>
+        <h1>Control Panel</h1>
+        <p>Use this panel to update room statuses.</p>
+        <div>
+            <label for="roomName">Room Name:</label>
+            <input type="text" id="roomName" placeholder="Enter room name">
+        </div>
+        <div>
+            <label for="status">Status:</label>
+            <select id="status">
+                <option value="available">Available</option>
+                <option value="taken">Taken</option>
+                <option value="unavailable">Unavailable</option>
+            </select>
+        </div>
+        <button id="updateStatusBtn">Update Status</button>
+
+        <script  type="module">
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+            const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZGt6cXlvampmc2hzZHlya3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDc0MDIsImV4cCI6MjA2NTM4MzQwMn0.-NcMckWGJ_Dz5YzzAXRl1VAIcUL8E2XBilicEEX3CVQ';
+            const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            async function withLoading(fn) {
+                const loading = document.createElement('div');
+                loading.textContent = 'Loading...';
+                document.body.appendChild(loading);
+                try {
+                    return await fn();
+                } finally {
+                    document.body.removeChild(loading);
+                }
+            }
+            async function updateRoomStatus(roomName, status, updated_at) {
+                if (!roomName || roomName === "Other") return;
+                await withLoading(() =>
+                    supabase
+                        .from('rooms')
+                        .update({ status })
+                        .eq('name', roomName)
+                );
+                await withLoading(() =>
+                    supabase
+                        .from('rooms')
+                        .update({ updated_at })
+                        .eq('name', roomName)
+                );
+            } window.updateRoomStatus = updateRoomStatus;
+
+            document.getElementById('updateStatusBtn').addEventListener('click', async () => {
+                const roomName = document.getElementById('roomName').value;
+                const status = document.getElementById('status').value;
+                const updated_at = new Date().toISOString();
+                await updateRoomStatus(roomName, status, 0);
+                alert(`Room ${roomName} status updated to ${status}`);
+            });
+        </script>
+    </div>
+</body>
+</html>
