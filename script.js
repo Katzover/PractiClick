@@ -355,7 +355,7 @@ async function fetchtoast() {
         console.error("Error fetching rooms:", error);
         return [];
     }
-    if (data) {data = data[0];
+    if (data.msg) {data = data[0];
     if (!showntoasts.includes(data.msg)) {
     await showtoast(data.msg, data.color, data.dur, data.size);
     showntoasts.push(data.msg);}
