@@ -5,7 +5,7 @@ window.resetname =  function resetname() {return localStorage.removeItem('practi
 let showntoasts = []
 let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
-const admins = ['איתמר קצובר', 'Itamar Katzover', 'itamar2', 'itamar3']
+const admins = ['איתמר קצובר', 'itamar katzover', 'itamar2', 'itamar3']
 const LANGS = {
     en: {
         practiceTitle: "🎵 PractiClick - Practice tracker 🎵",
