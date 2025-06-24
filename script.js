@@ -217,10 +217,11 @@ function updateLangUI() {
     }
 }
 
-async function showtoast(msg, color="white", duration = 10000) {
+async function showtoast(msg, color="white", duration = 10000, size = "16px") {
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = msg;
+    toast.style.fontSize = size;
     toast.style.position = 'fixed';
     toast.style.bottom = '20px';
     toast.style.left = '50%';
