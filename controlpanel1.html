@@ -138,6 +138,10 @@
                 }
                 alert(`Toast message "${toastmsg}" deleted`);
             }
+
+            document.getElementById('deletetoast').addEventListener('click', async () => {
+                await deletetoast();
+            });
         </script>
     </div>
 </body>
