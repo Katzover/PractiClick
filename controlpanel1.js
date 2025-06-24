@@ -105,6 +105,7 @@ async function shutdown() {
         supabase
             .from('down')
             .update([{ is_down: true, why: document.getElementById('shutmsg').value }])
+            .eq('id', 1)
     ); if (error) {console.error('Error:', error.message); return;}
 
     alert('server is now blocking and kicking everyone out, only admins can access the app now');
