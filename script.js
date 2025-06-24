@@ -217,7 +217,7 @@ function updateLangUI() {
     }
 }
 
-async function showtoast(msg, duration = 3000) {
+async function showtoast(msg, color="white", duration = 10000) {
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = msg;
@@ -225,7 +225,7 @@ async function showtoast(msg, duration = 3000) {
     toast.style.bottom = '20px';
     toast.style.left = '50%';
     toast.style.transform = 'translateX(-50%)';
-    toast.style.backgroundColor = '#333';
+    toast.style.backgroundColor = color;
     toast.style.color = '#fff';
     toast.style.padding = '10px 20px';
     toast.style.borderRadius = '5px';
