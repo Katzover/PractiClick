@@ -5,6 +5,7 @@ window.resetname =  function resetname() {return localStorage.removeItem('practi
 let showntoasts = []
 let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
+const admins = ['איתמר קצובר', 'Itamar Katzover', 'itamar2', 'itamar3']
 const LANGS = {
     en: {
         practiceTitle: "🎵 PractiClick - Practice tracker 🎵",
@@ -365,7 +366,7 @@ async function fetchtoast() {
 }
 
 setInterval(fetchtoast, 10000);
-fetchtoast();
+window.onload(fetchtoast());
 
 async function lockapp() {
     let { data, error } = await withLoading(() =>
@@ -382,12 +383,13 @@ async function lockapp() {
     if (data.is_down) {
         localStorage.removeItem("reason");
         localStorage.setItem('reason', data.why);
+        if(admins.includes(userName)) {showtoast("The app is currently down for maintenance. You can still access the app as an admin.", "orange", 60000, "16px");return;}
         window.location.href = "https://prac-t.netlify.app/maintenance";
     }
 }
 
 setInterval(lockapp, 10000);
-lockapp();
+window.onload(lockapp());
 
 async function upsertLeaderboard(ms) {
     const weekStart = getWeekStart(new Date());
