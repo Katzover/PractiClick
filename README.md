@@ -4,6 +4,8 @@
 
 PractiClick is a web-based application designed to help musicians and students track their practice sessions, manage room usage, and stay motivated with features like a metronome, practice logs, weekly summaries, and a leaderboard. The app supports both English and Hebrew languages.
 
+**Website:** [https://prac-t.netlify.app](https://prac-t.netlify.app)
+
 ---
 
 ## Features
@@ -29,7 +31,7 @@ PractiClick is a web-based application designed to help musicians and students t
   Rooms marked as "taken" are automatically released after inactivity, ensuring fair usage.
 
 - **Control Panel**:  
-  An admin panel (`controlpanel1.html`) allows authorized users to manually update room statuses.
+  An admin panel (`controlpanel1.html`) allows authorized users to manually update room statuses, send toast notifications, and shut down or reopen the app.
 
 ### 📝 Practice Log
 
@@ -76,6 +78,12 @@ PractiClick is a web-based application designed to help musicians and students t
 - **Loading Indicators**:  
   Smooth loading overlays for all database/network operations.
 
+- **Toast Notifications**:  
+  Admins can send toast messages to all users via the control panel.
+
+- **Maintenance Mode**:  
+  Admins can temporarily shut down the app for all users with a custom reason.
+
 ---
 
 ## File Structure
@@ -83,7 +91,7 @@ PractiClick is a web-based application designed to help musicians and students t
 - `index.html` - Main app interface
 - `script.js` - All app logic (practice tracking, metronome, Supabase integration, etc.)
 - `style.css` - App styling
-- `controlpanel1.html` - Admin panel for room status
+- `controlpanel1.html` - Admin panel for room status, toast notifications, and maintenance
 - `site.webmanifest` - PWA manifest
 - `apks/` - (Optional) APK files for Android
 - `web2apk.py` - Script for generating APKs from the web app
@@ -118,6 +126,8 @@ Please use the [bug report form](https://forms.gle/1b3GkAFXpf7WXGt1A) for any is
 
 פרקטיקליק היא אפליקציה מבוססת דפדפן לניהול ומעקב אחרי אימונים מוזיקליים, ניהול חדרי תרגול, יומן אימונים, סיכום שבועי, מטרונום, ולוח תוצאות. האפליקציה תומכת בעברית ובאנגלית.
 
+**כתובת האתר:** [https://prac-t.netlify.app](https://prac-t.netlify.app)
+
 ---
 
 ## תכונות עיקריות
@@ -143,7 +153,7 @@ Please use the [bug report form](https://forms.gle/1b3GkAFXpf7WXGt1A) for any is
   חדרים תפוסים משתחררים אוטומטית לאחר חוסר פעילות.
 
 - **פאנל ניהול**  
-  פאנל ניהול (`controlpanel1.html`) מאפשר לעדכן סטטוס חדרים ידנית.
+  פאנל ניהול (`controlpanel1.html`) מאפשר לעדכן סטטוס חדרים ידנית, לשלוח התראות טוסט, ולסגור/לפתוח את האפליקציה.
 
 ### 📝 יומן אימון
 
@@ -190,6 +200,12 @@ Please use the [bug report form](https://forms.gle/1b3GkAFXpf7WXGt1A) for any is
 - **אנימציות טעינה**  
   חווית משתמש חלקה בכל פעולה.
 
+- **התראות טוסט**  
+  מנהלים יכולים לשלוח התראות טוסט לכל המשתמשים דרך פאנל הניהול.
+
+- **מצב תחזוקה**  
+  ניתן לסגור זמנית את האפליקציה לכל המשתמשים עם סיבה מותאמת.
+
 ---
 
 ## מבנה קבצים
@@ -197,7 +213,7 @@ Please use the [bug report form](https://forms.gle/1b3GkAFXpf7WXGt1A) for any is
 - `index.html` - ממשק ראשי
 - `script.js` - לוגיקת האפליקציה (מעקב, מטרונום, אינטגרציה עם Supabase ועוד)
 - `style.css` - עיצוב
-- `controlpanel1.html` - פאנל ניהול חדרים
+- `controlpanel1.html` - פאנל ניהול חדרים, טוסטים, ותחזוקה
 - `site.webmanifest` - קובץ PWA
 - `apks/` - (אופציונלי) קבצי APK לאנדרואיד
 - `web2apk.py` - סקריפט ליצירת APK מהאפליקציה
