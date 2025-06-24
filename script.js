@@ -239,6 +239,18 @@ async function showtoast(msg, color="white", duration = 10000, size = "16px") {
 } window.showtoast = showtoast;
 let currentPracticeRoom = null;
 
+async function fetchtoast() {
+    const { data, error } = await supabase
+        .from('toast')
+        .select('*')
+
+    if (error) {
+        console.error("Error fetching rooms:", error);
+        return [];
+    }
+    console.log("Fetched toast:", data);
+}
+
 async function askForPracticeRoom() {
     function showRoomModal(rooms, callback) {
         let modal = document.getElementById('roomModal');
