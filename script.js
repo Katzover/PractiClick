@@ -381,6 +381,7 @@ async function lockapp() {
     data = data[0];
     console.log('App status data:', data);
     if (data.is_down) {
+        localStorage.removeItem("reason");
         localStorage.setItem('reason', data.why);
         window.location.href = "https://prac-t.netlify.app/maintenance";
     }
