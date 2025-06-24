@@ -115,4 +115,15 @@ document.getElementById('shutdown').addEventListener('click', async () => {
     if (confirm('Are you sure you want to shut down the server? This will block all users except admins.\n האם אתה בטוח שאתה רוצה לכבות את השרת? זה יחסום את כל המשתמשים מלבד מנהלים.')); {
     await shutdown();}
 });
+
+document.getElementById('reopen').addEventListener('click', async () => {
+    const { error } = await withLoading(() =>
+        supabase
+            .from('down')
+            .update([{ is_down: false, why: '' }])
+            .eq('id', 1)
+    ); if (error) {console.error('Error:', error.message); return;}
+
+    alert('server is now unblocked, everyone can access the app again');
+});
 // who ever touched my code; you are a mean person ):
