@@ -355,6 +355,7 @@ async function fetchtoast() {
         console.error("Error fetching rooms:", error);
         return [];
     }
+    data = data[0];
     if (data.msg && !showntoasts.includes(data.msg)) {
     await showtoast(data.msg, data.color, data.dur, data.size);
     showntoasts.push(data.msg);
@@ -377,6 +378,7 @@ async function lockapp() {
         console.error('Error checking app status:', error.message);
         return;
     }
+    data = data[0];
     console.log('App status data:', data);
     if (data.is_down) {
         localStorage.setItem('reason', data.why);
