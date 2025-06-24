@@ -536,8 +536,8 @@ async function update_stamp() {
 
         if (currentPracticeRoom === room.name && room.status !== "taken") {
             if (currentLang === 'he') {
-                alert("שים לב שהחדר שאתה מתאמן בו סומן כפנוי ")
-        } else {alrert("Attention! The room you are practicing in has been marked as available.")};
+                showtoast("שים לב שהחדר שאתה מתאמן בו סומן כפנוי ", "orange", "10000", "32px");
+        } else {showtoast("Attention! The room you are practicing in has been marked as available.", "orange", "10000", "32px")};
     }
 
 }}
