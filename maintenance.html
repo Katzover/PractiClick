@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Womp Womp</title>
+</head>
+<body>
+    <h1>תקלה:</h1>
+    <p>האפליקציה סגורה זמנית כי:</p>
+    <P id="reason"></P>
+    <script>
+        document.getElementById("reason").innerText = localStorage.getItem("reason") || "אין סיבה זמינה.";
+        localStorage.removeItem("reason");
+    </script>
+</body>
+</html>

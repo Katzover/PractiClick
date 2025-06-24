@@ -112,8 +112,9 @@ async function shutdown() {
 }
 
 document.getElementById('shutdown').addEventListener('click', async () => {
-    if (confirm('Are you sure you want to shut down the server? This will block all users except admins.\n האם אתה בטוח שאתה רוצה לכבות את השרת? זה יחסום את כל המשתמשים מלבד מנהלים.')); {
+    if (confirm('Are you sure you want to shut down the server? This will block all users except admins.\n האם אתה בטוח שאתה רוצה לכבות את השרת? זה יחסום את כל המשתמשים מלבד מנהלים.')) {
     await shutdown();}
+    else {return;}
 });
 
 document.getElementById('reopen').addEventListener('click', async () => {
@@ -126,4 +127,4 @@ document.getElementById('reopen').addEventListener('click', async () => {
 
     alert('server is now unblocked, everyone can access the app again');
 });
-// who ever touched my code; you are a mean person ):
+// whoever touched my code; you are a mean person ):

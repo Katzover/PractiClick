@@ -364,6 +364,26 @@ async function withLoading(fn) {
     }
 }
 
+async function lockapp() {
+    const { data, error } = await withLoading(() =>
+        supabase
+            .from('down')
+            .select('*')
+    );
+    if (error) {
+        console.error('Error checking app status:', error.message);
+        return;
+    }
+
+    if (data.isdown) {
+        localStorage.setItem('reason', data.why);
+        window.location.href = "https://practiclick.com/maintenance";
+    }
+}
+
+setInterval(lockapp, 1000 * 60 * 5); // Check every 5 minutes
+lockapp();
+
 async function upsertLeaderboard(ms) {
     const weekStart = getWeekStart(new Date());
     const { error } = await withLoading(() =>
