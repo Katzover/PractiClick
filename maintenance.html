@@ -1,16 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Womp Womp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f6f6;
+            color: #222;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 5% auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 2em 1em;
+            max-width: 400px;
+        }
+        h1 {
+            color: #d32f2f;
+        }
+        button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 4px;
+            background: #1976d2;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+    </style>
 </head>
 <body>
-    <h1>תקלה:</h1>
-    <p>האפליקציה סגורה זמנית כי:</p>
-    <P id="reason"></P>
+    <div class="container">
+            <h1>תקלה:</h1>
+            <p>האפליקציה סגורה זמנית כי:</p>
+            <p id="reason"></p>
+
+
+            <h1>Error:</h1>
+            <p>The application is temporarily closed because:</p>
+            <p id="reason"></p>
+    </div>
     <script>
-        document.getElementById("reason").innerText = localStorage.getItem("reason") || "אין סיבה זמינה.";
+        const reason = localStorage.getItem("reason");
+        document.getElementById("reason").innerText = reason || "אין סיבה זמינה. No reason available.";
         localStorage.removeItem("reason");
     </script>
 </body>
