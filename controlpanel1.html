@@ -51,6 +51,7 @@
             <input type="text" id="toastmsg" placeholder="Enter toast msg">
         </div>
         <button id="deletetoast">Delete Toast</button>
+        <button id="deletealltoasts">Delete All Toasts</button>
     </div>
 
 
@@ -140,6 +141,19 @@
 
             document.getElementById('deletetoast').addEventListener('click', async () => {
                 await deletetoast();
+            });
+
+            document.getElementById('deletealltoasts').addEventListener('click', async () => {
+                const { data, error } = await withLoading(() =>
+                    supabase
+                        .from('toast')
+                        .delete()
+                );
+                if (error) {
+                    console.error('Error:', error.message);
+                    return;
+                }
+                alert('All toast messages deleted');
             });
         </script>
     </div>
