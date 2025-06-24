@@ -605,9 +605,8 @@ window.updateRoomStatus = updateRoomStatus;
 // --- Cycle Mode Logic ---
 async function startCycle() {
     currentPracticeRoom = await withLoading(() => askForPracticeRoom());
-    if (!currentPracticeRoom) return; // Cancel if user aborts
-    await withLoading(() => updateRoomStatus(currentPracticeRoom, "taken", room.updated_at)); // Mark as taken
-    // ...rest of startCycle...
+    if (!currentPracticeRoom) return;
+    await withLoading(() => updateRoomStatus(currentPracticeRoom, "taken", 0));
     cycleMode.totalCycles = parseInt(cycleCountInput.value) || 6;
     cycleMode.cycleLength = (parseInt(cycleLengthInput.value) || 15) * 60 * 1000;
     cycleMode.breakLength = (parseInt(cycleBreakInput.value) || 90) * 1000;
