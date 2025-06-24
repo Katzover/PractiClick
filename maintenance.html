@@ -48,11 +48,15 @@
 
             <h1>Error:</h1>
             <p>The application is temporarily closed because:</p>
-            <p id="reason"></p>
+            <p id="reason1"></p>
     </div>
     <script>
         const reason = localStorage.getItem("reason");
-        document.getElementById("reason").innerText = reason || "אין סיבה זמינה. No reason available.";
+        if (!reason) {
+            reason = "אין סיבה זמינה. No reason available.";
+        }
+        document.getElementById("reason").innerText = reason
+        document.getElementById("reason1").innerText = reason
         localStorage.removeItem("reason");
     </script>
 </body>
