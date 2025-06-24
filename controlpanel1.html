@@ -35,12 +35,13 @@
         </div>
         <div>
             <label for="color">color:</label>
-            <input type="text" id="color" placeholder="Enter color">
+            <input type="text" id="color" value="black">
         </div>
         <div>
             <label for="size">size:</label>
-            <input type="text" id="size" placeholder="Enter size">
+            <input type="text" id="size" value="16px">
         </div>
+        <button id="sendtoast">send</button>
 
 
         <script  type="module">
@@ -103,6 +104,9 @@
                 return [];
             }
             }
+            document.getElementById('sendtoast').addEventListener('click', async () => {
+                await sendtoast();
+            });
         </script>
     </div>
 </body>
