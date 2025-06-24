@@ -674,6 +674,11 @@ async function logCycleSession() {
     await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", room.updated_at));
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
+    if (currentLang === 'he') {
+        showtoast("הסשן נשמר ביומן התרגול", "green");
+    } else {
+        showtoast("Session logged in practice log", "green");
+    }
 }
 
 cycleStartBtn.onclick = function() {
@@ -949,6 +954,11 @@ async function logSession() {
     schedulePracticeReminders();
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
+    if (currentLang === 'he') {
+        showtoast("הסשן נשמר ביומן התרגול", "green");
+    } else {
+        showtoast("Session logged in practice log", "green");
+    }
 }
 
 function getCurrentWeekNumber() {
