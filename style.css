@@ -547,3 +547,29 @@ body[dir="rtl"] {
 #roomModal > div {
     animation: fadeInUp 0.4s;
 }
+.timer-input-row {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 8px;
+}
+.timer-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.timer-input-group label {
+    font-size: 1em;
+    color: #cbd5fc;
+    margin-bottom: 4px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+.timer-input-group input[type="number"] {
+    width: 70px;
+    text-align: center;
+    font-size: 1.2em;
+    padding: 7px 0;
+    margin-bottom: 0;
+}

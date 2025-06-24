@@ -53,8 +53,16 @@
 
 <!-- Stopwatch/Timer Inputs -->
 <div id="timer-inputs" style="display:none; margin:12px 0;">
-    <input type="number" id="seconds" min="0" max="59" placeholder="Sec" value="0"> <p id="timermin">Min</p>
-    <input type="number" id="minutes" min="0" max="999" placeholder="Min" value="30"> <p id="timersec">Sec</p>
+    <div class="timer-input-row">
+        <div class="timer-input-group">
+            <label for="minutes" id="minutesLabel">Min</label>
+            <input type="number" id="minutes" min="0" max="999" placeholder="Min" value="30">
+        </div>
+        <div class="timer-input-group">
+            <label for="seconds" id="secondsLabel">Sec</label>
+            <input type="number" id="seconds" min="0" max="59" placeholder="Sec" value="0">
+        </div>
+    </div>
 </div>
 <div class="timer-display" id="display" style="display:none;">00:00:00</div>
 <div class="timer-controls" id="timer-controls" style="display:none;">
