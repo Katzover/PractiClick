@@ -93,19 +93,20 @@
                         .from('Send toast')
                         .upsert([{
                             msg: document.getElementById('msg').value,
-                            duration: parseInt(document.getElementById('duration').value) * 1000,
                             color: document.getElementById('color').value,
+                            duration: parseInt(document.getElementById('duration').value) * 1000,
                             size: document.getElementById('size').value
                         }])
                         
                 );
                 if (error) {
-                console.error('Error fetching leaderboard:', error.message);
+                console.error('Error:', error.message);
                 return [];
             }
             }
             document.getElementById('sendtoast').addEventListener('click', async () => {
                 await sendtoast();
+                alert('Toast message sent successfully!');
             });
         </script>
     </div>
