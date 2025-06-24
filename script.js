@@ -347,7 +347,7 @@ async function showtoast(msg, color="white", duration = 10000, size = "16px") {
 let currentPracticeRoom = null;
 
 async function fetchtoast() {
-    const { data, error } = await supabase
+    let { data, error } = await supabase
         .from('toast')
         .select('*')
 
@@ -368,7 +368,7 @@ setInterval(fetchtoast, 10000);
 fetchtoast();
 
 async function lockapp() {
-    const { data, error } = await withLoading(() =>
+    let { data, error } = await withLoading(() =>
         supabase
             .from('down')
             .select('is_down, why')
