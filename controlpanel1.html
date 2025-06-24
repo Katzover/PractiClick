@@ -43,6 +43,15 @@
             <input type="text" id="size" value="16px">
         </div>
         <button id="sendtoast">send</button>
+    </div>
+    <div>
+        <p>Delete toast</p>
+        <div>
+            <label for="toastmsg">Toast Msg:</label>
+            <input type="text" id="toastmsg" placeholder="Enter toast msg">
+        </div>
+        <button id="deletetoast">Delete Toast</button>
+    </div>
 
 
         <script  type="module">
@@ -112,7 +121,22 @@
             });
 
             async function deletetoast() {
-
+                const toastmsg = document.getElementById('toastmsg').value;
+                if (!toastmsg) {
+                    alert('Please enter a toast message to delete.');
+                    return;
+                }
+                const { data, error } = await withLoading(() =>
+                    supabase
+                        .from('toast')
+                        .delete()
+                        .eq('msg', toastmsg)
+                );
+                if (error) {
+                    console.error('Error:', error.message);
+                    return;
+                }
+                alert(`Toast message "${toastmsg}" deleted`);
             }
         </script>
     </div>
