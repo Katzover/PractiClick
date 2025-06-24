@@ -366,7 +366,7 @@ async function fetchtoast() {
 }
 
 setInterval(fetchtoast, 10000);
-window.onload(fetchtoast());
+fetchtoast();
 
 async function lockapp() {
     let { data, error } = await withLoading(() =>
@@ -389,7 +389,7 @@ async function lockapp() {
 }
 
 setInterval(lockapp, 10000);
-window.onload(lockapp());
+lockapp();
 
 async function upsertLeaderboard(ms) {
     const weekStart = getWeekStart(new Date());
