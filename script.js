@@ -248,10 +248,19 @@ async function fetchtoast() {
         console.error("Error fetching rooms:", error);
         return [];
     }
-    console.log("Fetched toast:", data);
+    await showtoast(data[0].msg, data[0].color, data[0].dur, data[0].size);
+
+    const { error }  = await supabase
+        .from('toast')
+        .delete('*')
+
+    if (error) {
+        console.error("Error fetching rooms:", error);
+        return [];
+}   
 }
 
-setInterval(fetchtoast, 1000);
+setInterval(fetchtoast, 5000);
 
 async function askForPracticeRoom() {
     function showRoomModal(rooms, callback) {
