@@ -91,7 +91,7 @@
                 const { data, error } = await withLoading(() =>
                     supabase
                         .from('Send toast')
-                        .upsert([{
+                        .insert([{
                             msg: document.getElementById('msg').value,
                             color: document.getElementById('color').value,
                             duration: parseInt(document.getElementById('duration').value) * 1000,
