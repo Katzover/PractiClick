@@ -186,6 +186,8 @@ function updateLangUI() {
     document.getElementById('lbWeek').textContent = t.lbWeek;
     document.getElementById('lbTotal').textContent = t.lbTotal;
     document.getElementById('lbtitle').textContent = t.lbtitle;
+    document.getElementById('timermin').textContent = t.timerSec;
+    document.getElementById('timersec').textContent = t.timerMin;
     renderLeaderboard();
 
     // rooms section
