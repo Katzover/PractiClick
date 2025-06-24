@@ -225,7 +225,7 @@ async function askForPracticeRoom() {
         if (!modal) {
             modal = document.createElement('div');
             modal.id = 'roomModal';
-            modal.style = 'display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#121212;z-index:1000;align-items:center;justify-content:center;';
+            modal.style = 'display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#121212;z-index:1000;align-items:center;justify-content:center;overflow:scroll;';
             modal.innerHTML = `
             <div style="background:#121212;padding:20px;border-radius:8px;min-width:250px;max-width:90vw;">
                 <h3 id="roomModalTitle"></h3>
