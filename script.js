@@ -249,9 +249,9 @@ async function fetchtoast() {
         console.error("Error fetching rooms:", error);
         return [];
     }
-    if (!showntoasts.includes(data[0].msg)) {
-    await showtoast(data[0].msg, data[0].color, data[0].dur, data[0].size);
-    showntoasts.push(data[0].msg);
+    if (!showntoasts.includes(data.msg)) {
+    await showtoast(data.msg, data.color, data.dur, data.size);
+    showntoasts.push(data.msg);
     }  else {
         return
     }
@@ -375,7 +375,7 @@ async function lockapp() {
         return;
     }
 
-    if (data.isdown) {
+    if (data.is_down) {
         localStorage.setItem('reason', data.why);
         window.location.href = "https://practiclick.com/maintenance";
     }
