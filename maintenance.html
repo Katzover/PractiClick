@@ -50,6 +50,8 @@
             <h1>Error:</h1>
             <p>The application is temporarily closed because:</p>
             <p id="reason1"></p>
+
+            <button>Reload - רענן</button>
     </div>
     <script>
         const reason = localStorage.getItem("reason");
@@ -60,6 +62,10 @@
         document.getElementById("reason1").innerText = reason
 
         setInterval(window.location.herf = "https://prac-t.netlify.app", 1000 * 60);
+
+        document.querySelector("button").addEventListener("click", () => {
+            window.location.herf = "https://prac-t.netlify.app";
+        });
     </script>
 </body>
 </html>
