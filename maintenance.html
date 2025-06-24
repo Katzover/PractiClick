@@ -51,7 +51,7 @@
             <p>The application is temporarily closed because:</p>
             <p id="reason1"></p>
 
-            <button>Reload - רענן</button>
+            <button id="rel">Reload - רענן</button>
     </div>
     <script>
         const reason = localStorage.getItem("reason");
@@ -63,7 +63,7 @@
 
         setInterval(window.location.herf = "https://prac-t.netlify.app", 1000 * 60);
 
-        document.querySelector("button").addEventListener("click", () => {
+        document.querySelector("rel").addEventListener("click", () => {
             window.location.herf = "https://prac-t.netlify.app";
         });
     </script>
