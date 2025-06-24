@@ -377,7 +377,7 @@ async function lockapp() {
         console.error('Error checking app status:', error.message);
         return;
     }
-
+    console.log('App status data:', data);
     if (data.is_down) {
         localStorage.setItem('reason', data.why);
         window.location.href = "https://practiclick.com/maintenance";
