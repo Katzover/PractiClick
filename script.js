@@ -382,7 +382,7 @@ async function lockapp() {
     console.log('App status data:', data);
     if (data.is_down) {
         localStorage.setItem('reason', data.why);
-        window.location.href = "https://practiclick.com/maintenance";
+        window.location.href = "https://prac-t.netlify.app/maintenance";
     }
 }
 
