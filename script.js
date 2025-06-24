@@ -355,10 +355,10 @@ async function fetchtoast() {
         console.error("Error fetching rooms:", error);
         return [];
     }
-    data = data[0];
-    if (data.msg && !showntoasts.includes(data.msg)) {
+    if (data) {data = data[0];
+    if (!showntoasts.includes(data.msg)) {
     await showtoast(data.msg, data.color, data.dur, data.size);
-    showntoasts.push(data.msg);
+    showntoasts.push(data.msg);}
     }  else {
         return
     }
@@ -379,7 +379,6 @@ async function lockapp() {
         return;
     }
     data = data[0];
-    console.log('App status data:', data);
     if (data.is_down) {
         localStorage.removeItem("reason");
         localStorage.setItem('reason', data.why);
