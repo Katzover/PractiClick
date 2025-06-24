@@ -249,7 +249,7 @@ async function fetchtoast() {
         console.error("Error fetching rooms:", error);
         return [];
     }
-    if (!showntoasts.includes(data.msg)) {
+    if (data && !showntoasts.includes(data.msg)) {
     await showtoast(data.msg, data.color, data.dur, data.size);
     showntoasts.push(data.msg);
     }  else {
@@ -257,7 +257,8 @@ async function fetchtoast() {
     }
 }
 
-setInterval(fetchtoast, 5000);
+setInterval(fetchtoast, 51000);
+fetchtoast();
 
 async function askForPracticeRoom() {
     function showRoomModal(rooms, callback) {
