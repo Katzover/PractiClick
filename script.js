@@ -365,7 +365,7 @@ async function fetchtoast() {
     }
 }
 
-setInterval(fetchtoast, 10000);
+setInterval(fetchtoast, 15000);
 fetchtoast();
 
 async function lockapp() {
@@ -388,7 +388,7 @@ async function lockapp() {
     }
 }
 
-setInterval(lockapp, 10000);
+setInterval(lockapp, 15000);
 lockapp();
 
 async function upsertLeaderboard(ms) {
