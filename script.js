@@ -2,6 +2,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 if (!localStorage.getItem('practiceUserName')) {alert("שים לב שהאפליקציה ברגע בגרסה ניסיונית, ייתכן שיהיו בה באגים.")}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
+let showntoasts = []
 let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
 const LANGS = {
@@ -248,16 +249,12 @@ async function fetchtoast() {
         console.error("Error fetching rooms:", error);
         return [];
     }
+    if (!showntoasts.includes(data[0].msg)) {
     await showtoast(data[0].msg, data[0].color, data[0].dur, data[0].size);
-
-    const { error }  = await supabase
-        .from('toast')
-        .delete('*')
-
-    if (error) {
-        console.error("Error fetching rooms:", error);
-        return [];
-}   
+    showntoasts.push(data[0].msg);
+    }  else {
+        return
+    }
 }
 
 setInterval(fetchtoast, 5000);
