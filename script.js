@@ -370,7 +370,8 @@ async function lockapp() {
     const { data, error } = await withLoading(() =>
         supabase
             .from('down')
-            .select('*')
+            .select('is_down, why')
+            .eq('id', 1)
     );
     if (error) {
         console.error('Error checking app status:', error.message);
