@@ -251,6 +251,8 @@ async function fetchtoast() {
     console.log("Fetched toast:", data);
 }
 
+setInterval(fetchtoast, 1000);
+
 async function askForPracticeRoom() {
     function showRoomModal(rooms, callback) {
         let modal = document.getElementById('roomModal');
