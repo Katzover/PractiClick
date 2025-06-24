@@ -148,6 +148,7 @@
                     supabase
                         .from('toast')
                         .delete()
+                        .neq('msg', '*')
                 );
                 if (error) {
                     console.error('Error:', error.message);
