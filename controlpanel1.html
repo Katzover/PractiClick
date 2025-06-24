@@ -90,7 +90,7 @@
             async function sendtoast() {
                 const { data, error } = await withLoading(() =>
                     supabase
-                        .from('Send toast')
+                        .from('toast')
                         .insert([{
                             msg: document.getElementById('msg').value,
                             color: document.getElementById('color').value,
