@@ -44,6 +44,7 @@ document.getElementById('updateStatusBtn').addEventListener('click', async () =>
 
 document.getElementById('roomnames').addEventListener('change', async (event) => {
     const list = "אווז \nקאנון \nפרוג \nטוקטה \nפיוזן \nבי בופ \nדיקסילנד \nפוגה \nלאטין \nערבסק \nנוקטורן \nגראנג \nגיפסי \nפאנק \nסווינג \nתופים אלקטרונים \nפסנתרים אלקטרונים \nהרכבים קטן \nהרכבים חדש \nהכבים גדול \nכלנית"
+    alert(`Available rooms:\n${list}`);
 })
 
 async function sendtoast() {
