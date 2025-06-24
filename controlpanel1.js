@@ -99,3 +99,18 @@ document.getElementById('deletealltoasts').addEventListener('click', async () =>
     }
     alert('All toast messages deleted');
 });
+
+async function shutdown() {
+    const { error } = await withLoading(() =>
+        supabase
+            .from('down')
+            .insert([{ isdown: true, why: document.getElementById('shutmsg').value }])
+    ); if (error) {console.error('Error:', error.message); return;}
+
+    alert('server is now blocking and kicking everyone out, onlyl admins can access the app now');
+}
+
+document.getElementById('shutdown').addEventListener('click', async () => {
+    if (confirm('Are you sure you want to shut down the server? This will block all users except admins.\n אתהאם אתה בטוח שאתה רוצה לכבות את השרת? זה יחסום את כל המשתמשים מלבד מנהלים.')); {
+    await shutdown();}
+});
