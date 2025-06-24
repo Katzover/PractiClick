@@ -218,47 +218,6 @@ function updateLangUI() {
     }
 }
 
-async function showtoast(msg, color="white", duration = 10000, size = "16px") {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = msg;
-    toast.style.fontSize = size;
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.backgroundColor = color;
-    toast.style.color = '#fff';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = '5px';
-    toast.style.zIndex = '1000';
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        document.body.removeChild(toast);
-    }, duration);
-} window.showtoast = showtoast;
-let currentPracticeRoom = null;
-
-async function fetchtoast() {
-    const { data, error } = await supabase
-        .from('toast')
-        .select('*')
-
-    if (error) {
-        console.error("Error fetching rooms:", error);
-        return [];
-    }
-    if (data && !showntoasts.includes(data.msg)) {
-    await showtoast(data.msg, data.color, data.dur, data.size);
-    showntoasts.push(data.msg);
-    }  else {
-        return
-    }
-}
-
-setInterval(fetchtoast, 51000);
-fetchtoast();
 
 async function askForPracticeRoom() {
     function showRoomModal(rooms, callback) {
@@ -364,6 +323,48 @@ async function withLoading(fn) {
         hideLoading();
     }
 }
+
+async function showtoast(msg, color="white", duration = 10000, size = "16px") {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    toast.style.fontSize = size;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.backgroundColor = color;
+    toast.style.color = '#fff';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '5px';
+    toast.style.zIndex = '1000';
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        document.body.removeChild(toast);
+    }, duration);
+} window.showtoast = showtoast;
+let currentPracticeRoom = null;
+
+async function fetchtoast() {
+    const { data, error } = await supabase
+        .from('toast')
+        .select('*')
+
+    if (error) {
+        console.error("Error fetching rooms:", error);
+        return [];
+    }
+    if (data && !showntoasts.includes(data.msg)) {
+    await showtoast(data.msg, data.color, data.dur, data.size);
+    showntoasts.push(data.msg);
+    }  else {
+        return
+    }
+}
+
+setInterval(fetchtoast, 10000);
+fetchtoast();
 
 async function lockapp() {
     const { data, error } = await withLoading(() =>
