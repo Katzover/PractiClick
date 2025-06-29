@@ -2,7 +2,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 if (!localStorage.getItem('practiceUserName')) {alert("שים לב שהאפליקציה ברגע בגרסה ניסיונית, ייתכן שיהיו בה באגים.")}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
-let showntoasts = []
+let lboard = false;
+let showntoasts = [];
 let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
 const admins = ['איתמר קצובר', 'itamar katzover', 'itamar2', 'itamar3']
@@ -427,6 +428,12 @@ async function fetchLeaderboard() {
 }
 
 async function renderLeaderboard() {
+    if (!lboard) {
+        lboard = true;
+        continue;
+    } else {
+        return;
+    }
     const tbody = document.getElementById('leaderboardTable').querySelector('tbody');
     tbody.innerHTML = '';
     const rows = await withLoading(() => fetchLeaderboard());
