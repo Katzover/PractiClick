@@ -429,8 +429,7 @@ async function fetchLeaderboard() {
 
 async function renderLeaderboard() {
     if (!lboard) {
-        lboard = true;
-        continue;
+        lboard = true;;
     } else {
         return;
     }
@@ -1396,7 +1395,7 @@ function createOrUpdateFooterButtons() {
     const bugBtn = document.createElement('button');
     bugBtn.id = 'bugBtn';
     bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
-    bugBtn.style = buttonStyle
+    bugBtn.style = buttonStyle;
     bugBtn.onclick = function() {
         window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
     };
