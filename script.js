@@ -1348,7 +1348,8 @@ function createOrUpdateFooterButtons() {
         cursor: pointer;
         min-width: 80px;
         max-width: 150px;
-        box-shadow: 0 1px 4px #0002;`
+        box-shadow: 0 1px 4px #0002;
+        ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}`
 
     let footer = document.getElementById('footerBtns');
     if (!footer) {
