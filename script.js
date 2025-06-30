@@ -119,10 +119,11 @@ function detectDefaultLang() {
     if (LANGS[sysLang]) return sysLang;
     return 'he'; 
 }
+let currentLang = detectDefaultLang();
 if (!localStorage.getItem('lang')) {
     let currentLang = detectDefaultLang();
 } else {
-    let currentLang = localStorage.getItem('lang')
+    currentLang = localStorage.getItem('lang')
 }
 
 let userName = askForNameIfNeeded();
