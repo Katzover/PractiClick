@@ -42,24 +42,18 @@
 </head>
 <body>
     <div class="container">
-            <h1>תקלה:</h1>
-            <p>האפליקציה סגורה זמנית כי:</p>
+            <p id="p1"></p>
             <p id="reason"></p>
 
-
-            <h1>Error:</h1>
-            <p>The application is temporarily closed because:</p>
-            <p id="reason1"></p>
-
-            <button id="rel">Reload - רענן</button>
+            <button id="rel">Reload</button>
     </div>
     <script>
         const reason = localStorage.getItem("reason");
         if (!reason) {
             reason = "אין סיבה זמינה. No reason available.";
         }
+        localStorage.getItem("lang") === "he" ? document.getElementById("p1").innerHTML = ':האפליקציה סגורה זמנית' : document.getElementById("p1").innerHTML = 'The app is temporarily closed:';
         document.getElementById("reason").innerText = reason
-        document.getElementById("reason1").innerText = reason
 
         document.getElementById("rel").addEventListener("click", () => {
             window.location.href = "https://prac-t.netlify.app";
