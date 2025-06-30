@@ -1340,34 +1340,7 @@ function schedulePracticeReminders() {
 schedulePracticeReminders();
 
 function createOrUpdateFooterButtons() {
-    let footer = document.getElementById('footerBtns');
-    if (!footer) {
-        footer = document.createElement('div');
-        footer.id = 'footerBtns';
-        footer.style = `
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: flex-end;
-            background: none;
-            box-shadow: none;
-            width: auto;
-            padding: 0;
-        `;
-        document.body.appendChild(footer);
-    }
-    footer.innerHTML = ''; // Clear for language update
-
-    // Credits button
-    const creditsBtn = document.createElement('button');
-    creditsBtn.id = 'creditsBtn';
-    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
-    creditsBtn.style = `
-        color:rgb(0, 0, 0);
+    const buttonStyle = `color:rgb(0, 0, 0);
         padding: 6px 12px;
         font-size: 0.95em;
         border-radius: 5px;
@@ -1376,8 +1349,41 @@ function createOrUpdateFooterButtons() {
         cursor: pointer;
         min-width: 80px;
         max-width: 150px;
-        box-shadow: 0 1px 4px #0002;
+        box-shadow: 0 1px 4px #0002;`
+
+    let footer = document.getElementById('footerBtns');
+    if (!footer) {
+        footer = document.createElement('div');
+        footer.id = 'footerBtns';
+        document.body.appendChild(footer);
+    }
+    // Set footer style based on language direction
+    footer.style = `
+        position: fixed;
+        bottom: 16px;
+        ${currentLang === 'he' ? 'left: 16px; right: auto;' : 'right: 16px; left: auto;'}
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        background: none;
+        box-shadow: none;
+        width: auto;
+        padding: 0;
     `;
+    if (currentLang === 'he') {
+        footer.style.alignItems = 'flex-start';
+    } else {
+        footer.style.alignItems = 'flex-end';
+    }
+    footer.innerHTML = ''; // Clear for language update
+
+    // Credits button
+    const creditsBtn = document.createElement('button');
+    creditsBtn.id = 'creditsBtn';
+    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
+    creditsBtn.style = buttonStyle;
     creditsBtn.onclick = function() {
         alert(
             (currentLang === 'he')
@@ -1390,37 +1396,15 @@ function createOrUpdateFooterButtons() {
     const bugBtn = document.createElement('button');
     bugBtn.id = 'bugBtn';
     bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
-    bugBtn.style = `
-        color:rgb(0, 0, 0);
-        padding: 6px 12px;
-        font-size: 0.95em;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background: #f8f8f8;
-        cursor: pointer;
-        min-width: 80px;
-        max-width: 150px;
-        box-shadow: 0 1px 4px #0002;
-    `;
+    bugBtn.style = buttonStyle
     bugBtn.onclick = function() {
         window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
     };
 
     const reload = document.createElement('button');
     reload.id = 'reload';
-    bugBtn.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
-    bugBtn.style = `
-        color:rgb(0, 0, 0);
-        padding: 6px 12px;
-        font-size: 0.95em;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background: #f8f8f8;
-        cursor: pointer;
-        min-width: 80px;
-        max-width: 150px;
-        box-shadow: 0 1px 4px #0002;
-    `;
+    reload.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
+    reload.style = buttonStyle;
     reload.onclick = function() {
         window.location.reload();
     };
