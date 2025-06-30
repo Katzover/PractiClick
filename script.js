@@ -119,12 +119,17 @@ function detectDefaultLang() {
     if (LANGS[sysLang]) return sysLang;
     return 'he'; 
 }
-let currentLang = detectDefaultLang();
+if (!localStorage.getItem('lang')) {
+    let currentLang = detectDefaultLang();
+} else {
+    let currentLang = localStorage.getItem('lang')
+}
 
 let userName = askForNameIfNeeded();
 
 function updateLangUI() {
     const t = LANGS[currentLang];
+    localStorage.setItem('lang', currentLang);
     document.querySelector('h1').textContent = t.practiceTitle;
 
     // --- Tab button labels ---
