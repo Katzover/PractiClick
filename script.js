@@ -1406,6 +1406,26 @@ function createOrUpdateFooterButtons() {
         window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
     };
 
+    const reload = document.createElement('button');
+    reload.id = 'reload';
+    bugBtn.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
+    bugBtn.style = `
+        color:rgb(0, 0, 0);
+        padding: 6px 12px;
+        font-size: 0.95em;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+        background: #f8f8f8;
+        cursor: pointer;
+        min-width: 80px;
+        max-width: 150px;
+        box-shadow: 0 1px 4px #0002;
+    `;
+    reload.onclick = function() {
+        window.location.reload();
+    };
+
+    footer.appendChild(reload);
     footer.appendChild(creditsBtn);
     footer.appendChild(bugBtn);
 }
