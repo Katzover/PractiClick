@@ -392,7 +392,7 @@ async function lockapp() {
     if (data.is_down) {
         localStorage.removeItem("reason");
         localStorage.setItem('reason', data.why);
-        if(admins.includes(userName)) {showtoast("The app is currently down for maintenance. You can still access the app as an admin.", "orange", 60000, "16px");return;}
+        if(admins.includes(userName)) {showtoast("The app is currently down for maintenance. You can still access the app cause you're Sigma 🥶", "orange", 60000, "16px");return;}
         window.location.href = "https://prac-t.netlify.app/maintenance";
     }
 }
