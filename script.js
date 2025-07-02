@@ -1393,7 +1393,7 @@ function createOrUpdateFooterButtons() {
     creditsBtn.onclick = function() {
         alert(
             (currentLang === 'he')
-            ? "פיתוח: איתמר קצובר\nעיצוב: יוגב שרון\nתודה לכל המשתמשים!"
+            ? "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!"
             : "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!"
         );
     };
