@@ -58,7 +58,7 @@ const LANGS = {
         logOther: "Other",
     },
     he: {
-        practiceTitle: "🎵 פרקטיק - מעקב אימון 🎵",
+        practiceTitle: "🎵 פרקטיקליק - מעקב אימון 🎵",
         cycle: "סבב",
         stopwatch: "סטופר",
         timer: "טיימר",
