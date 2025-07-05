@@ -1,6 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-if (!localStorage.getItem('practiceUserName')) {alert("שים לב שהאפליקציה ברגע בגרסה ניסיונית, ייתכן שיהיו בה באגים.")}
+if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.")}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
 let lboard = false;
 let showntoasts = [];
