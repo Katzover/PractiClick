@@ -1358,18 +1358,24 @@ function schedulePracticeReminders() {
 schedulePracticeReminders();
 
 function createOrUpdateFooterButtons() {
-    const buttonStyle = `color:rgb(0, 0, 0);
-        padding: 6px 12px;
-        font-size: 1.5em;
-        border-radius: 5px;
+    const buttonStyle = `
+        color:rgb(0, 0, 0);
+        width: 56px;
+        height: 56px;
+        padding: 0;
+        font-size: 2em;
+        border-radius: 10px;
         border: 1px solid #bbb;
-        background: #f8f8f8;
+        background: #222;
         cursor: pointer;
-        min-width: 48px;
-        max-width: 60px;
         box-shadow: 0 1px 4px #0002;
         text-align: center;
-        ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+        ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}
+    `;
 
     let footer = document.getElementById('footerBtns');
     if (!footer) {
@@ -1403,7 +1409,7 @@ function createOrUpdateFooterButtons() {
     const creditsBtn = document.createElement('button');
     creditsBtn.id = 'creditsBtn';
     creditsBtn.title = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
-    creditsBtn.innerHTML = '🛈';
+    creditsBtn.innerHTML = '<span style="color:#fff;background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#222" stroke="#fff" stroke-width="2"/><text x="12" y="17" text-anchor="middle" fill="#fff" font-size="13" font-family="Arial" font-weight="bold">i</text></svg></span>';
     creditsBtn.style = buttonStyle;
     creditsBtn.onclick = function() {
         alert(
@@ -1417,7 +1423,7 @@ function createOrUpdateFooterButtons() {
     const bugBtn = document.createElement('button');
     bugBtn.id = 'bugBtn';
     bugBtn.title = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
-    bugBtn.innerHTML = '🐞';
+    bugBtn.innerHTML = '<span style="color:#e53935;background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#222" stroke="#e53935" stroke-width="2"/><g><ellipse cx="12" cy="15" rx="5" ry="3" fill="#e53935"/><ellipse cx="12" cy="11" rx="3" ry="3" fill="#e53935"/><ellipse cx="9" cy="13" rx="1" ry="1" fill="#222"/><ellipse cx="15" cy="13" rx="1" ry="1" fill="#222"/></g></svg></span>';
     bugBtn.style = buttonStyle;
     bugBtn.onclick = function() {
         window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
@@ -1427,7 +1433,7 @@ function createOrUpdateFooterButtons() {
     const reload = document.createElement('button');
     reload.id = 'reload';
     reload.title = (currentLang === 'he') ? 'רענן' : 'Reload';
-    reload.innerHTML = '🔄';
+    reload.innerHTML = '<span style="background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="#222"/><path d="M12 6v6l4 2" stroke="#29b6f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="8" stroke="#29b6f6" stroke-width="2"/></svg></span>';
     reload.style = buttonStyle;
     reload.onclick = function() {
         window.location.reload();
@@ -1437,7 +1443,7 @@ function createOrUpdateFooterButtons() {
     const guideBtn = document.createElement('button');
     guideBtn.id = 'guideBtn';
     guideBtn.title = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
-    guideBtn.innerHTML = '❔';
+    guideBtn.innerHTML = '<span style="color:#aaa;background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#222" stroke="#aaa" stroke-width="2"/><text x="12" y="17" text-anchor="middle" fill="#aaa" font-size="13" font-family="Arial" font-weight="bold">?</text></svg></span>';
     guideBtn.style = buttonStyle;
     guideBtn.onclick = showUsageGuide;
 
