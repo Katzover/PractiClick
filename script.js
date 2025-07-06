@@ -114,6 +114,14 @@ window.addEventListener('beforeunload', function (e) {
     }
 });
 
+window.addEventListener("error", (event) => {
+    if (currentLang === 'en') {
+    alertBox("An error occurred: " + event.message + ". The app might not work; please contact the developere.");
+    } else {
+    alertBox("אירעה שגיאה: " + event.message + ". האפליקציה עשויה לא לעבוד; אנא פנה למפתח.");
+    }
+})
+
 function detectDefaultLang() {
     const sysLang = (navigator.language || navigator.userLanguage || '').slice(0,2).toLowerCase();
     if (LANGS[sysLang]) return sysLang;
@@ -475,7 +483,6 @@ function askForNameIfNeeded() {
     let name = localStorage.getItem('practiceUserName');
     if (!name) {
         let msg = LANGS[currentLang].promptName;
-        // Replace prompt loop with async promptBox
         do {
             name = prompt(msg, "");
         } while (!name || !name.trim());
