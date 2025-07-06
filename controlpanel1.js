@@ -20,12 +20,14 @@ async function withLoading(fn) {
 async function updateRoomStatus(roomName, status, updated_at) {
     if (!roomName || roomName === "Other") return;
     if (roomName === "*") {
+        for (let i = 0; i < 21; i++) {
+            // Update each room by ID
         await withLoading(() =>
         supabase
             .from('rooms')
             .update({ status, updated_at })
-            .eq('*')
-    );
+            .eq('id ',id)
+    );}
     }
     await withLoading(() =>
         supabase
