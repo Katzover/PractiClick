@@ -1360,14 +1360,15 @@ schedulePracticeReminders();
 function createOrUpdateFooterButtons() {
     const buttonStyle = `color:rgb(0, 0, 0);
         padding: 6px 12px;
-        font-size: 0.95em;
+        font-size: 1.5em;
         border-radius: 5px;
         border: 1px solid #bbb;
         background: #f8f8f8;
         cursor: pointer;
-        min-width: 80px;
-        max-width: 150px;
+        min-width: 48px;
+        max-width: 60px;
         box-shadow: 0 1px 4px #0002;
+        text-align: center;
         ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}`
 
     let footer = document.getElementById('footerBtns');
@@ -1398,10 +1399,11 @@ function createOrUpdateFooterButtons() {
     }
     footer.innerHTML = ''; // Clear for language update
 
-    // Credits button
+    // Credits button (icon: 🛈)
     const creditsBtn = document.createElement('button');
     creditsBtn.id = 'creditsBtn';
-    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
+    creditsBtn.title = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
+    creditsBtn.innerHTML = '🛈';
     creditsBtn.style = buttonStyle;
     creditsBtn.onclick = function() {
         alert(
@@ -1411,27 +1413,31 @@ function createOrUpdateFooterButtons() {
         );
     };
 
-    // Bug report button
+    // Bug report button (icon: 🐞)
     const bugBtn = document.createElement('button');
     bugBtn.id = 'bugBtn';
-    bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
+    bugBtn.title = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
+    bugBtn.innerHTML = '🐞';
     bugBtn.style = buttonStyle;
     bugBtn.onclick = function() {
         window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
     };
 
+    // Reload button (icon: 🔄)
     const reload = document.createElement('button');
     reload.id = 'reload';
-    reload.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
+    reload.title = (currentLang === 'he') ? 'רענן' : 'Reload';
+    reload.innerHTML = '🔄';
     reload.style = buttonStyle;
     reload.onclick = function() {
         window.location.reload();
     };
 
-    // Add usage guide button
+    // Usage guide button (icon: ❔)
     const guideBtn = document.createElement('button');
     guideBtn.id = 'guideBtn';
-    guideBtn.textContent = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
+    guideBtn.title = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
+    guideBtn.innerHTML = '❔';
     guideBtn.style = buttonStyle;
     guideBtn.onclick = showUsageGuide;
 
