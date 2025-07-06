@@ -1,5 +1,11 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
+if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.")}
+window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
+let lboard = false;
+let showntoasts = [];
+let banned_names = [
+    "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
 const admins = ['איתמר קצובר', 'itamar katzover', 'itamar2', 'itamar3']
 const LANGS = {
     en: {
@@ -50,28 +56,6 @@ const LANGS = {
         statusHeader: "Status",
         logRoom: "Room",
         logOther: "Other",
-        // Add new keys for all user-facing messages
-        alertExperimental: "Note: This app is experimental and may have bugs.",
-        promptName: "Please enter your name for the leaderboard. If you enter an inappropriate name, you will be banned.",
-        promptNameBanned: "The name {name} is banned.",
-        promptNameBannedShort: "This name is banned.",
-        sessionLogged: "Session logged in practice log",
-        sessionLoggedHe: "הסשן נשמר ביומן התרגול",
-        confirmResetLogs: "Do you want to reset all saved practice logs?",
-        confirmResetLogsHe: "האם אתה רוצה לאפס את כל יומני התרגול?",
-        credits: "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!",
-        creditsHe: "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!",
-        bugReport: "Report a Bug",
-        bugReportHe: "דיווח תקלה",
-        reload: "Reload",
-        reloadHe: "רענן",
-        noData: "No data yet.",
-        noRoomData: "No room data.",
-        noSessions: "No sessions yet.",
-        autoReleaseRoom: "The room {room} has been automatically released due to inactivity.",
-        roomMarkedAvailable: "Attention! The room you are practicing in has been marked as available.",
-        roomMarkedAvailableHe: "שים לב שהחדר שאתה מתאמן בו סומן כפנוי ",
-        appDown: "The app is currently down for maintenance. You can still access the app cause you're an admin",
     },
     he: {
         practiceTitle: "🎵 פרקטיקליק - מעקב אימון 🎵",
@@ -121,28 +105,6 @@ const LANGS = {
         statusHeader: "מצב",
         logRoom: "חדר",
         logOther: "אחר",
-        // Add new keys for all user-facing messages
-        alertExperimental: "שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.",
-        promptName: "נא הכנס את שמך ללוח התוצאות. אם תכניס שם לא הולם, תיחסם.",
-        promptNameBanned: "השם הזה חסום",
-        promptNameBannedShort: "השם הזה חסום",
-        sessionLogged: "הסשן נשמר ביומן התרגול",
-        sessionLoggedHe: "הסשן נשמר ביומן התרגול",
-        confirmResetLogs: "האם אתה רוצה לאפס את כל יומני התרגול?",
-        confirmResetLogsHe: "האם אתה רוצה לאפס את כל יומני התרגול?",
-        credits: "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!",
-        creditsHe: "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!",
-        bugReport: "דיווח תקלה",
-        bugReportHe: "דיווח תקלה",
-        reload: "רענן",
-        reloadHe: "רענן",
-        noData: "אין נתונים עדיין.",
-        noRoomData: "אין נתוני חדרים.",
-        noSessions: "אין סשנים עדיין.",
-        autoReleaseRoom: "החדר {room} שוחרר אוטומטית עקב חוסר פעילות.",
-        roomMarkedAvailable: "שים לב שהחדר שאתה מתאמן בו סומן כפנוי ",
-        roomMarkedAvailableHe: "שים לב שהחדר שאתה מתאמן בו סומן כפנוי ",
-        appDown: "האפליקציה כרגע מושבתת לתחזוקה. אתה עדיין יכול להיכנס כי אתה סיגמה 🥶",
     }
 };
 
@@ -482,7 +444,7 @@ async function renderLeaderboard() {
     const rows = await withLoading(() => fetchLeaderboard());
 
     if (!rows || rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="color:#aaa;text-align:center;">${LANGS[currentLang].noData}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" style="color:#aaa;text-align:center;">No data yet.</td></tr>`;
         return;
     }
 
@@ -513,17 +475,18 @@ function askForNameIfNeeded() {
     let name = localStorage.getItem('practiceUserName');
     if (!name) {
         let msg = LANGS[currentLang].promptName;
+        // Replace prompt loop with async promptBox
         do {
             name = prompt(msg, "");
         } while (!name || !name.trim());
         if (banned_names.includes(name.toLowerCase())) {
-            alert(LANGS[currentLang].promptNameBannedShort);
+            alertBox(LANGS[currentLang].promptNameBannedShort);
             location.reload()
             localStorage.removeItem('practiceUserName');
         }
         localStorage.setItem('practiceUserName', name.trim());
     } else if (banned_names.includes(name.toLowerCase())) {
-        alert(LANGS[currentLang].promptNameBannedShort);
+        alertBox(LANGS[currentLang].promptNameBannedShort);
         location.reload()
         localStorage.removeItem('practiceUserName');
     }
@@ -562,7 +525,7 @@ async function autoReleaseStaleRooms() {
     for (const room of rooms) {
         if (room.status === "taken" && room.updated_at > 5) {
             await withLoading(() => updateRoomStatus(room.name, "available", 0));
-            alert(
+            await alertBox(
                 LANGS[currentLang].autoReleaseRoom.replace("{room}", room.name)
             );
         }
@@ -873,7 +836,7 @@ async function renderRooms() {
     tbody.innerHTML = '';
     const rooms = await withLoading(() => fetchRooms());
     if (!rooms.length) {
-        tbody.innerHTML = `<tr><td colspan="2" style="color:#aaa;">${LANGS[currentLang].noRoomData}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="2" style="color:#aaa;">No room data.</td></tr>`;
         return;
     }
     // Status translation map
@@ -986,20 +949,26 @@ function resetTimer() {
     if (resetClickCount >= 7) {
         resetClickCount = 0; 
         if (currentLang == 'he') {
-            if (confirm(LANGS[currentLang].confirmResetLogsHe)) {
-                resetBtn.disabled = true;
-                logs = [];
-                localStorage.setItem('practiceLogs', JSON.stringify(logs));
-                renderLogs();
-                renderSummary();
-            }
+            confirmBox(LANGS[currentLang].confirmResetLogsHe).then(result => {
+                if (result) {
+                    resetBtn.disabled = true;
+                    logs = [];
+                    localStorage.setItem('practiceLogs', JSON.stringify(logs));
+                    renderLogs();
+                    renderSummary();
+                }
+            });
         }
-        else if (confirm(LANGS[currentLang].confirmResetLogs)) {
-            resetBtn.disabled = true;
-            logs = [];
-            localStorage.setItem('practiceLogs', JSON.stringify(logs));
-            renderLogs();
-            renderSummary();
+        else {
+            confirmBox(LANGS[currentLang].confirmResetLogs).then(result => {
+                if (result) {
+                    resetBtn.disabled = true;
+                    logs = [];
+                    localStorage.setItem('practiceLogs', JSON.stringify(logs));
+                    renderLogs();
+                    renderSummary();
+                }
+            });
         }
     }
 }
@@ -1084,7 +1053,7 @@ autoResetLogsIfNewWeek();
 function renderLogs() {
     logList.innerHTML = '';
     if (logs.length === 0) {
-        logList.innerHTML = `<div style="text-align:center;color:#aaa;">${LANGS[currentLang].noSessions}</div>`;
+        logList.innerHTML = '<div style="text-align:center;color:#aaa;">No sessions yet.</div>';
         return;
     }
     const t = LANGS[currentLang];
@@ -1419,10 +1388,10 @@ function createOrUpdateFooterButtons() {
     // Credits button
     const creditsBtn = document.createElement('button');
     creditsBtn.id = 'creditsBtn';
-    creditsBtn.textContent = (currentLang === 'he') ? LANGS.he.creditsHe : LANGS.en.credits;
+    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
     creditsBtn.style = buttonStyle;
     creditsBtn.onclick = function() {
-        alert(
+        alertBox(
             (currentLang === 'he')
             ? LANGS.he.creditsHe
             : LANGS.en.credits
@@ -1432,7 +1401,7 @@ function createOrUpdateFooterButtons() {
     // Bug report button
     const bugBtn = document.createElement('button');
     bugBtn.id = 'bugBtn';
-    bugBtn.textContent = (currentLang === 'he') ? LANGS.he.bugReportHe : LANGS.en.bugReport;
+    bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
     bugBtn.style = buttonStyle;
     bugBtn.onclick = function() {
         window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
@@ -1440,7 +1409,7 @@ function createOrUpdateFooterButtons() {
 
     const reload = document.createElement('button');
     reload.id = 'reload';
-    reload.textContent = (currentLang === 'he') ? LANGS.he.reloadHe : LANGS.en.reload;
+    reload.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
     reload.style = buttonStyle;
     reload.onclick = function() {
         window.location.reload();
@@ -1477,128 +1446,95 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// --- Custom Modal Dialogs (alert, confirm, prompt) ---
-function createModal({ title = '', message = '', input = false, value = '', okText = 'OK', cancelText = 'Cancel', onOk, onCancel }) {
-    // Remove any existing modal
-    let old = document.getElementById('customModal');
-    if (old) old.remove();
-
-    const modal = document.createElement('div');
-    modal.id = 'customModal';
-    modal.style = `
-        position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:3000;
-        background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;
-    `;
-    const box = document.createElement('div');
-    box.style = `
-        background:#222;color:#fff;padding:24px 20px 16px 20px;border-radius:10px;min-width:260px;max-width:90vw;
-        box-shadow:0 4px 32px #0007;display:flex;flex-direction:column;align-items:center;
-    `;
-    if (title) {
-        const h3 = document.createElement('h3');
-        h3.textContent = title;
-        h3.style.margin = '0 0 10px 0';
-        box.appendChild(h3);
-    }
-    const msg = document.createElement('div');
-    msg.innerHTML = message;
-    msg.style.marginBottom = '16px';
-    box.appendChild(msg);
-
-    let inputElem = null;
-    if (input) {
-        inputElem = document.createElement('input');
-        inputElem.type = 'text';
-        inputElem.value = value || '';
-        inputElem.style = 'width:90%;padding:6px 8px;margin-bottom:12px;border-radius:5px;border:1px solid #888;font-size:1em;';
-        box.appendChild(inputElem);
-        setTimeout(() => inputElem.focus(), 100);
-    }
-
-    const btnRow = document.createElement('div');
-    btnRow.style = 'display:flex;gap:12px;justify-content:center;';
-    const okBtn = document.createElement('button');
-    okBtn.textContent = okText;
-    okBtn.style = 'padding:6px 18px;border-radius:5px;border:none;background:#4caf50;color:#fff;font-size:1em;cursor:pointer;';
-    okBtn.onclick = () => {
-        modal.remove();
-        if (onOk) onOk(inputElem ? inputElem.value : true);
-    };
-    btnRow.appendChild(okBtn);
-
-    if (onCancel) {
-        const cancelBtn = document.createElement('button');
+// --- Custom Modal Dialogs ---
+function showModalBox({title = '', message = '', input = false, confirm = false, defaultValue = '', okText = 'OK', cancelText = 'Cancel'}) {
+    return new Promise((resolve) => {
+        let modal = document.getElementById('customModalBox');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'customModalBox';
+            modal.style = `
+                position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:3000;
+                background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;
+            `;
+            modal.innerHTML = `
+                <div id="customModalContent" style="
+                    background:#222;
+                    color:#fff;
+                    border-radius:10px;
+                    min-width:260px;
+                    max-width:90vw;
+                    padding:24px 20px 16px 20px;
+                    box-shadow:0 4px 32px #0007;
+                    display:flex;
+                    flex-direction:column;
+                    align-items:center;
+                    font-family:inherit;
+                ">
+                    <div id="customModalTitle" style="font-size:1.2em;font-weight:bold;margin-bottom:10px;text-align:center;"></div>
+                    <div id="customModalMsg" style="margin-bottom:16px;text-align:center;"></div>
+                    <input id="customModalInput" style="display:none;width:90%;margin-bottom:16px;padding:6px 8px;border-radius:5px;border:1px solid #bbb;font-size:1em;" />
+                    <div style="display:flex;gap:10px;">
+                        <button id="customModalOk" style="padding:7px 18px;border-radius:5px;border:none;background:#2e3a59;color:#fff;font-size:1em;cursor:pointer;">OK</button>
+                        <button id="customModalCancel" style="padding:7px 18px;border-radius:5px;border:none;background:#888;color:#fff;font-size:1em;cursor:pointer;display:none;">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        modal.style.display = 'flex';
+        const titleDiv = modal.querySelector('#customModalTitle');
+        const msgDiv = modal.querySelector('#customModalMsg');
+        const inputBox = modal.querySelector('#customModalInput');
+        const okBtn = modal.querySelector('#customModalOk');
+        const cancelBtn = modal.querySelector('#customModalCancel');
+        titleDiv.textContent = title || '';
+        msgDiv.textContent = message || '';
+        inputBox.style.display = input ? '' : 'none';
+        inputBox.value = defaultValue || '';
+        okBtn.textContent = okText;
         cancelBtn.textContent = cancelText;
-        cancelBtn.style = 'padding:6px 18px;border-radius:5px;border:none;background:#888;color:#fff;font-size:1em;cursor:pointer;';
-        cancelBtn.onclick = () => {
-            modal.remove();
-            onCancel(inputElem ? inputElem.value : false);
+        cancelBtn.style.display = confirm || input ? '' : 'none';
+
+        function cleanup() {
+            modal.style.display = 'none';
+            okBtn.onclick = null;
+            cancelBtn.onclick = null;
+            inputBox.onkeydown = null;
+        }
+
+        okBtn.onclick = () => {
+            cleanup();
+            if (input) {
+                resolve(inputBox.value);
+            } else if (confirm) {
+                resolve(true);
+            } else {
+                resolve();
+            }
         };
-        btnRow.appendChild(cancelBtn);
-    }
-
-    box.appendChild(btnRow);
-    modal.appendChild(box);
-    document.body.appendChild(modal);
-
-    // Keyboard support
-    modal.tabIndex = -1;
-    modal.focus();
-    modal.onkeydown = (e) => {
-        if (e.key === "Escape" && onCancel) { cancelBtn.click(); }
-        if (e.key === "Enter") { okBtn.click(); }
-    };
-}
-
-// Custom alert
-function alertBox(message, title) {
-    return new Promise(resolve => {
-        createModal({
-            title: title || '',
-            message,
-            okText: LANGS[currentLang]?.ok || 'OK',
-            onOk: () => resolve()
-        });
+        cancelBtn.onclick = () => {
+            cleanup();
+            if (input) resolve(null);
+            else if (confirm) resolve(false);
+            else resolve();
+        };
+        if (input) {
+            inputBox.focus();
+            inputBox.onkeydown = (e) => {
+                if (e.key === 'Enter') okBtn.onclick();
+                if (e.key === 'Escape') cancelBtn.onclick();
+            };
+        }
     });
 }
 
-// Custom confirm
-function confirmBox(message, title) {
-    return new Promise(resolve => {
-        createModal({
-            title: title || '',
-            message,
-            okText: LANGS[currentLang]?.ok || 'OK',
-            cancelText: LANGS[currentLang]?.cancel || 'Cancel',
-            onOk: () => resolve(true),
-            onCancel: () => resolve(false)
-        });
-    });
+async function alertBox(msg, title = '') {
+    await showModalBox({title, message: msg});
 }
-
-// Custom prompt
-function promptBox(message, defaultValue = '', title) {
-    return new Promise(resolve => {
-        createModal({
-            title: title || '',
-            message,
-            input: true,
-            value: defaultValue,
-            okText: LANGS[currentLang]?.ok || 'OK',
-            cancelText: LANGS[currentLang]?.cancel || 'Cancel',
-            onOk: val => resolve(val),
-            onCancel: () => resolve(null)
-        });
-    });
+async function confirmBox(msg, title = '') {
+    return await showModalBox({title, message: msg, confirm: true, okText: LANGS[currentLang].log || 'OK', cancelText: LANGS[currentLang].cancel || 'Cancel'});
 }
-
-// Override global alert/confirm/prompt
-window.alert = alertBox;
-window.confirm = confirmBox;
-window.prompt = promptBox;
-
-// Add OK/Cancel to LANGS if not present
-Object.keys(LANGS).forEach(lang => {
-    if (!LANGS[lang].ok) LANGS[lang].ok = lang === 'he' ? 'אישור' : 'OK';
-    if (!LANGS[lang].cancel) LANGS[lang].cancel = lang === 'he' ? 'ביטול' : 'Cancel';
-});
+async function promptBox(msg, title = '', defaultValue = '') {
+    return await showModalBox({title, message: msg, input: true, defaultValue, okText: LANGS[currentLang].log || 'OK', cancelText: LANGS[currentLang].cancel || 'Cancel'});
+}
