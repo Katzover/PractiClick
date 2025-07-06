@@ -110,9 +110,9 @@ const LANGS = {
 
 window.addEventListener("error", (event) => {
     if (currentLang === 'en') {
-    alertBox("An error occurred: " + event.message + ". The app might not work; please contact the developere.");
+    alert("An error occurred: " + event.message + ". The app might not work; please contact the developere.");
     } else {
-    alertBox("אירעה שגיאה: " + event.message + ". האפליקציה עשויה לא לעבוד; אנא פנה למפתח.");
+    alert("אירעה שגיאה: " + event.message + ". האפליקציה עשויה לא לעבוד; אנא פנה למפתח.");
     }
 })
 
