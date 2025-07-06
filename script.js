@@ -185,7 +185,6 @@ function updateLangUI() {
     document.getElementById('weekTotalLabel').textContent = t.totalWeek;
 
     // Set select value and direction
-    document.getElementById('langSelect').value = currentLang;
     document.body.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
 
     // Stopwatch/Timer buttons
@@ -399,8 +398,14 @@ async function lockapp() {
 setInterval(lockapp, 15000);
 lockapp();
 
+// --- Leaderboard Opt-out Helper ---
+function isLeaderboardOptedOut() {
+    return localStorage.getItem('optOutLeaderboard') === 'true';
+}
+
+// --- Patch upsertLeaderboard and fetchLeaderboard ---
 async function upsertLeaderboard(ms) {
-    if (isLeaderboardOptOut()) return;
+    if (isLeaderboardOptedOut()) return; // skip if opted out
     const weekStart = getWeekStart(new Date());
     const { error } = await withLoading(() =>
         supabase
@@ -411,14 +416,13 @@ async function upsertLeaderboard(ms) {
                 week_start: weekStart,
             }])
     );
-
     if (error) {
         console.error('Error upserting leaderboard:', error.message);
     }
 }
 
 async function fetchLeaderboard() {
-    if (isLeaderboardOptOut()) return [];
+    if (isLeaderboardOptedOut()) return []; // skip if opted out
     const weekStart = getWeekStart(new Date());
     const { data, error } = await withLoading(() =>
         supabase
@@ -496,7 +500,6 @@ function askForNameIfNeeded() {
 }
 
 async function deleteAllLeaderboardRows() {
-    if (isLeaderboardOptOut()) return;
     const { error } = await withLoading(() =>
         supabase
             .from('leaderboard')
@@ -1351,116 +1354,6 @@ function schedulePracticeReminders() {
 // Start reminders on load
 schedulePracticeReminders();
 
-function createOrUpdateFooterButtons() {
-    const buttonStyle = `color:rgb(0, 0, 0);
-        padding: 6px 12px;
-        font-size: 0.95em;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background: #f8f8f8;
-        cursor: pointer;
-        min-width: 80px;
-        max-width: 150px;
-        box-shadow: 0 1px 4px #0002;
-        ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}`
-
-    let footer = document.getElementById('footerBtns');
-    if (!footer) {
-        footer = document.createElement('div');
-        footer.id = 'footerBtns';
-        document.body.appendChild(footer);
-    }
-    // Set footer style based on language direction
-    footer.style = `
-        position: fixed;
-        bottom: 16px;
-        ${currentLang === 'he' ? 'left: 16px; right: auto;' : 'right: 16px; left: auto;'}
-        z-index: 1001;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        align-items: flex-end;
-        background: none;
-        box-shadow: none;
-        width: auto;
-        padding: 0;
-    `;
-    if (currentLang === 'he') {
-        footer.style.alignItems = 'flex-start';
-    } else {
-        footer.style.alignItems = 'flex-end';
-    }
-    footer.innerHTML = ''; // Clear for language update
-
-    // Credits button
-    const creditsBtn = document.createElement('button');
-    creditsBtn.id = 'creditsBtn';
-    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
-    creditsBtn.style = buttonStyle;
-    creditsBtn.onclick = function() {
-        alert(
-            (currentLang === 'he')
-            ? "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!"
-            : "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!"
-        );
-    };
-
-    // Bug report button
-    const bugBtn = document.createElement('button');
-    bugBtn.id = 'bugBtn';
-    bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
-    bugBtn.style = buttonStyle;
-    bugBtn.onclick = function() {
-        window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
-    };
-
-    const reload = document.createElement('button');
-    reload.id = 'reload';
-    reload.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
-    reload.style = buttonStyle;
-    reload.onclick = function() {
-        window.location.reload();
-    };
-
-    // Add usage guide button
-    const guideBtn = document.createElement('button');
-    guideBtn.id = 'guideBtn';
-    guideBtn.textContent = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
-    guideBtn.style = buttonStyle;
-    guideBtn.onclick = showUsageGuide;
-
-    // Add settings button
-    const settingsBtn = document.createElement('button');
-    settingsBtn.id = 'settingsBtn';
-    settingsBtn.textContent = (currentLang === 'he') ? 'הגדרות' : 'Settings';
-    settingsBtn.style = buttonStyle;
-    settingsBtn.onclick = showSettingsModal;
-
-    footer.appendChild(reload);
-    footer.appendChild(creditsBtn);
-    footer.appendChild(bugBtn);
-    footer.appendChild(guideBtn);
-    footer.appendChild(settingsBtn);
-}
-
-// Ensure buttons are created on load and on language change
-document.addEventListener('DOMContentLoaded', createOrUpdateFooterButtons);
-
-const origUpdateLangUI = updateLangUI;
-updateLangUI = function() {
-    origUpdateLangUI();
-    createOrUpdateFooterButtons();
-};
-
-// Remove the language selector from the top if it exists
-document.addEventListener('DOMContentLoaded', function() {
-    // Remove language selector from the top
-    const langSelect = document.getElementById('langSelect');
-    if (langSelect && langSelect.parentElement) {
-        langSelect.parentElement.removeChild(langSelect);
-    }
-});
-
 // --- Settings Modal ---
 function showSettingsModal() {
     let modal = document.getElementById('settingsModal');
@@ -1475,43 +1368,41 @@ function showSettingsModal() {
             <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
                 <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
                 <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
-                <div style="margin-bottom:18px;">
-                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
+                <div style="margin-bottom:16px;">
+                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה' : 'Language'}:</label>
                     <select id="settingsLangSelect" style="margin-left:8px;">
-                        <option value="he">${LANGS.he.practiceTitle.replace(/[^א-ת]+/g, '') ? 'עברית' : 'עברית'}</option>
+                        <option value="he">עברית</option>
                         <option value="en">English</option>
                     </select>
                 </div>
-                <div style="margin-bottom:18px;">
+                <div style="margin-bottom:16px;">
                     <label for="settingsLeaderboardOptOut" style="font-weight:bold;">
-                        <input type="checkbox" id="settingsLeaderboardOptOut" style="margin-right:8px;">
+                        <input type="checkbox" id="settingsLeaderboardOptOut" style="vertical-align:middle;margin-right:4px;">
                         ${currentLang === 'he'
-                            ? 'אל תשתף את הנתונים שלי בלוח התוצאות'
-                            : "Don't send my data to the leaderboard"}
+                            ? 'אל תציג אותי בלוח התוצאות'
+                            : 'Opt out of leaderboard (do not send my data)'}
                     </label>
                 </div>
             </div>
         `;
         document.body.appendChild(modal);
     }
-    // Set current values
+    // Set initial values
     modal.querySelector('#settingsLangSelect').value = currentLang;
-    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
-    // Handlers
+    modal.querySelector('#settingsLeaderboardOptOut').checked = isLeaderboardOptedOut();
+
+    // Events
     modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
     modal.querySelector('#settingsLangSelect').onchange = function() {
         currentLang = this.value;
+        localStorage.setItem('lang', currentLang);
         updateLangUI();
         modal.style.display = 'none';
     };
     modal.querySelector('#settingsLeaderboardOptOut').onchange = function() {
-        localStorage.setItem('leaderboardOptOut', this.checked ? 'true' : 'false');
+        localStorage.setItem('optOutLeaderboard', this.checked ? 'true' : 'false');
         modal.style.display = 'none';
-        if (currentLang === 'he') {
-            showtoast(this.checked ? "הנתונים שלך לא יישלחו ללוח התוצאות" : "הנתונים שלך יישלחו ללוח התוצאות", "orange");
-        } else {
-            showtoast(this.checked ? "Your data will NOT be sent to the leaderboard" : "Your data will be sent to the leaderboard", "orange");
-        }
+        renderLeaderboard();
     };
     modal.style.display = 'flex';
 }
@@ -1595,18 +1486,18 @@ function createOrUpdateFooterButtons() {
     guideBtn.style = buttonStyle;
     guideBtn.onclick = showUsageGuide;
 
-    // Add settings button
+    // Settings button
     const settingsBtn = document.createElement('button');
     settingsBtn.id = 'settingsBtn';
     settingsBtn.textContent = (currentLang === 'he') ? 'הגדרות' : 'Settings';
     settingsBtn.style = buttonStyle;
     settingsBtn.onclick = showSettingsModal;
 
+    footer.appendChild(settingsBtn);
     footer.appendChild(reload);
     footer.appendChild(creditsBtn);
     footer.appendChild(bugBtn);
     footer.appendChild(guideBtn);
-    footer.appendChild(settingsBtn);
 }
 
 // Ensure buttons are created on load and on language change
@@ -1618,271 +1509,64 @@ updateLangUI = function() {
     createOrUpdateFooterButtons();
 };
 
-// Remove the language selector from the top if it exists
 document.addEventListener('DOMContentLoaded', function() {
-    // Remove language selector from the top
-    const langSelect = document.getElementById('langSelect');
-    if (langSelect && langSelect.parentElement) {
-        langSelect.parentElement.removeChild(langSelect);
+    updateLangUI();
+    // Set cycle mode as default
+    const cycleRadio = document.querySelector('input[name="mode"][value="cycle"]');
+    if (cycleRadio) {
+        cycleRadio.checked = true;
+        showMode('cycle');
     }
 });
 
-// --- Settings Modal ---
-function showSettingsModal() {
-    let modal = document.getElementById('settingsModal');
+function showUsageGuide() {
+    const guide = {
+        en: `
+        <h2>🎵 PractiClick - Quick Guide 🎵</h2>
+        <ul>
+            <li><b>Cycle:</b> Set your cycles, lengths, and breaks. Like musical intervals, but less scary.</li>
+            <li><b>Stopwatch:</b> Hit start, play, and pretend you're Usain Bolt (but with an instrument).</li>
+            <li><b>Timer:</b> Set a time, hit start, and race against the clock. No pressure (okay, maybe a little).</li>
+            <li><b>Rooms:</b> Pick a practice room so your friends know you're busy (or just hiding).</li>
+            <li><b>Leaderboard:</b> Practice more, climb higher. Bragging rights included, trophies not (yet).</li>
+            <li><b>Metronome:</b> Stay in time. Or at least try.</li>
+            <li><b>Logs & Summary:</b> See your practice history. Yes, it counts even if you practiced scales.</li>
+        </ul>
+        <p style="color:gray;font-size:0.95em;">Tip: Click the language selector to switch languages. No pop quizzes, promise.</p>
+        <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the footer buttons. Or just yell at your screen, we won't judge.</p>
+        `,
+        he: `
+        <h2>🎵 מדריך זריז לפרקטיקליק 🎵</h2>
+        <ul>
+            <li><b>סבב:</b> קבעו סבבים, אורכים והפסקות. כמו שיעור סולפג', רק פחות מלחיץ.</li>
+            <li><b>סטופר:</b> התחילו, נגנו, ותדמיינו שאתם יוסיין בולט (רק עם כלי נגינה).</li>
+            <li><b>טיימר:</b> קבעו זמן, התחילו, ותנסו להספיק לפני שהשעון מצלצל. בהצלחה!</li>
+            <li><b>חדרים:</b> בחרו חדר תרגול כדי שידעו שאתם עסוקים (או סתם מתחבאים).</li>
+            <li><b>לוח תוצאות:</b> מתרגלים יותר? עולים למעלה! תהילה מובטחת, גביעים פחות.</li>
+            <li><b>מטרונום:</b> שמרו על קצב. או לפחות תנסו.</li>
+            <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול שלכם.</li>
+        </ul>
+        <p style="color:gray;font-size:0.95em;">טיפ: אפשר להחליף שפה מהתפריט למעלה. בלי בוחן פתע, מבטיחים.</p>
+        <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתורים בתחתית. או תצעקו על המסך, לא נשפוט.</p>
+        `
+    };
+    let modal = document.getElementById('usageGuideModal');
     if (!modal) {
         modal = document.createElement('div');
-        modal.id = 'settingsModal';
+        modal.id = 'usageGuideModal';
         modal.style = `
             position:fixed;top:0;left:0;width:100vw;height:100vh;
-            background:rgba(0,0,0,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;
+            background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;
         `;
         modal.innerHTML = `
-            <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-                <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
-                <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
-                <div style="margin-bottom:18px;">
-                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
-                    <select id="settingsLangSelect" style="margin-left:8px;">
-                        <option value="he">${LANGS.he.practiceTitle.replace(/[^א-ת]+/g, '') ? 'עברית' : 'עברית'}</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
-                <div style="margin-bottom:18px;">
-                    <label for="settingsLeaderboardOptOut" style="font-weight:bold;">
-                        <input type="checkbox" id="settingsLeaderboardOptOut" style="margin-right:8px;">
-                        ${currentLang === 'he'
-                            ? 'אל תשתף את הנתונים שלי בלוח התוצאות'
-                            : "Don't send my data to the leaderboard"}
-                    </label>
-                </div>
+            <div style="background:#fff;color:#222;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
+                <button id="closeGuideBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+                <div id="guideContent"></div>
             </div>
         `;
         document.body.appendChild(modal);
     }
-    // Set current values
-    modal.querySelector('#settingsLangSelect').value = currentLang;
-    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
-    // Handlers
-    modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
-    modal.querySelector('#settingsLangSelect').onchange = function() {
-        currentLang = this.value;
-        updateLangUI();
-        modal.style.display = 'none';
-    };
-    modal.querySelector('#settingsLeaderboardOptOut').onchange = function() {
-        localStorage.setItem('leaderboardOptOut', this.checked ? 'true' : 'false');
-        modal.style.display = 'none';
-        if (currentLang === 'he') {
-            showtoast(this.checked ? "הנתונים שלך לא יישלחו ללוח התוצאות" : "הנתונים שלך יישלחו ללוח התוצאות", "orange");
-        } else {
-            showtoast(this.checked ? "Your data will NOT be sent to the leaderboard" : "Your data will be sent to the leaderboard", "orange");
-        }
-    };
+    modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
     modal.style.display = 'flex';
+    modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
 }
-
-// --- Footer Buttons ---
-function createOrUpdateFooterButtons() {
-    const buttonStyle = `color:rgb(0, 0, 0);
-        padding: 6px 12px;
-        font-size: 0.95em;
-        border-radius: 5px;
-        border: 1px solid #bbb;
-        background: #f8f8f8;
-        cursor: pointer;
-        min-width: 80px;
-        max-width: 150px;
-        box-shadow: 0 1px 4px #0002;
-        ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}`
-
-    let footer = document.getElementById('footerBtns');
-    if (!footer) {
-        footer = document.createElement('div');
-        footer.id = 'footerBtns';
-        document.body.appendChild(footer);
-    }
-    // Set footer style based on language direction
-    footer.style = `
-        position: fixed;
-        bottom: 16px;
-        ${currentLang === 'he' ? 'left: 16px; right: auto;' : 'right: 16px; left: auto;'}
-        z-index: 1001;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        align-items: flex-end;
-        background: none;
-        box-shadow: none;
-        width: auto;
-        padding: 0;
-    `;
-    if (currentLang === 'he') {
-        footer.style.alignItems = 'flex-start';
-    } else {
-        footer.style.alignItems = 'flex-end';
-    }
-    footer.innerHTML = ''; // Clear for language update
-
-    // Credits button
-    const creditsBtn = document.createElement('button');
-    creditsBtn.id = 'creditsBtn';
-    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
-    creditsBtn.style = buttonStyle;
-    creditsBtn.onclick = function() {
-        alert(
-            (currentLang === 'he')
-            ? "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!"
-            : "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!"
-        );
-    };
-
-    // Bug report button
-    const bugBtn = document.createElement('button');
-    bugBtn.id = 'bugBtn';
-    bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
-    bugBtn.style = buttonStyle;
-    bugBtn.onclick = function() {
-        window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
-    };
-
-    const reload = document.createElement('button');
-    reload.id = 'reload';
-    reload.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
-    reload.style = buttonStyle;
-    reload.onclick = function() {
-        window.location.reload();
-    };
-
-    // Add usage guide button
-    const guideBtn = document.createElement('button');
-    guideBtn.id = 'guideBtn';
-    guideBtn.textContent = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
-    guideBtn.style = buttonStyle;
-    guideBtn.onclick = showUsageGuide;
-
-    // Add settings button
-    const settingsBtn = document.createElement('button');
-    settingsBtn.id = 'settingsBtn';
-    settingsBtn.textContent = (currentLang === 'he') ? 'הגדרות' : 'Settings';
-    settingsBtn.style = buttonStyle;
-    settingsBtn.onclick = showSettingsModal;
-
-    footer.appendChild(reload);
-    footer.appendChild(creditsBtn);
-    footer.appendChild(bugBtn);
-    footer.appendChild(guideBtn);
-    footer.appendChild(settingsBtn);
-}
-
-// Ensure buttons are created on load and on language change
-document.addEventListener('DOMContentLoaded', createOrUpdateFooterButtons);
-
-const origUpdateLangUI = updateLangUI;
-updateLangUI = function() {
-    origUpdateLangUI();
-    createOrUpdateFooterButtons();
-};
-
-// Remove the language selector from the top if it exists
-document.addEventListener('DOMContentLoaded', function() {
-    // Remove language selector from the top
-    const langSelect = document.getElementById('langSelect');
-    if (langSelect && langSelect.parentElement) {
-        langSelect.parentElement.removeChild(langSelect);
-    }
-});
-
-// --- Settings Modal ---
-function showSettingsModal() {
-    let modal = document.getElementById('settingsModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'settingsModal';
-        modal.style = `
-            position:fixed;top:0;left:0;width:100vw;height:100vh;
-            background:rgba(0,0,0,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;
-        `;
-        modal.innerHTML = `
-            <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-                <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
-                <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
-                <div style="margin-bottom:18px;">
-                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
-                    <select id="settingsLangSelect" style="margin-left:8px;">
-                        <option value="he">${LANGS.he.practiceTitle.replace(/[^א-ת]+/g, '') ? 'עברית' : 'עברית'}</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
-                <div style="margin-bottom:18px;">
-                    <label for="settingsLeaderboardOptOut" style="font-weight:bold;">
-                        <input type="checkbox" id="settingsLeaderboardOptOut" style="margin-right:8px;">
-                        ${currentLang === 'he'
-                            ? 'אל תשתף את הנתונים שלי בלוח התוצאות'
-                            : "Don't send my data to the leaderboard"}
-                    </label>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-    }
-    // Set current values
-    modal.querySelector('#settingsLangSelect').value = currentLang;
-    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
-    // Handlers
-    modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
-    modal.querySelector('#settingsLangSelect').onchange = function() {
-        currentLang = this.value;
-        updateLangUI();
-        modal.style.display = 'none';
-    };
-    modal.querySelector('#settingsLeaderboardOptOut').onchange = function() {
-        localStorage.setItem('leaderboardOptOut', this.checked ? 'true' : 'false');
-        modal.style.display = 'none';
-        if (currentLang === 'he') {
-            showtoast(this.checked ? "הנתונים שלך לא יישלחו ללוח התוצאות" : "הנתונים שלך יישלחו ללוח התוצאות", "orange");
-        } else {
-            showtoast(this.checked ? "Your data will NOT be sent to the leaderboard" : "Your data will be sent to the leaderboard", "orange");
-        }
-    };
-    modal.style.display = 'flex';
-}
-
-// --- Leaderboard Opt-Out Logic ---
-function isLeaderboardOptOut() {
-    return !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
-}
-
-// Patch upsertLeaderboard and deleteAllLeaderboardRows to respect opt-out
-async function upsertLeaderboard(ms) {
-    if (isLeaderboardOptOut()) return;
-    const weekStart = getWeekStart(new Date());
-    const { error } = await withLoading(() =>
-        supabase
-            .from('leaderboard')
-            .upsert([{
-                user_name: userName,
-                total_time: ms,
-                week_start: weekStart,
-            }])
-    );
-    if (error) {
-        console.error('Error upserting leaderboard:', error.message);
-    }
-}
-
-async function deleteAllLeaderboardRows() {
-    if (isLeaderboardOptOut()) return;
-    const { error } = await withLoading(() =>
-        supabase
-            .from('leaderboard')
-            .delete()
-            .neq('user_name', '___impossible_value___')
-    );
-    if (error) {
-        console.error('Failed to delete leaderboard rows:', error.message);
-    } else {
-        console.log('All leaderboard rows deleted.');
-    }
-}
-window.deleteAllLeaderboardRows = deleteAllLeaderboardRows;
