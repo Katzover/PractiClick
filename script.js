@@ -1390,18 +1390,18 @@ function createOrUpdateFooterButtons() {
         ${currentLang === 'he' ? 'left: 16px; right: auto;' : 'right: 16px; left: auto;'}
         z-index: 1001;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 8px;
-        align-items: flex-end;
+        align-items: center;
         background: none;
         box-shadow: none;
         width: auto;
         padding: 0;
     `;
     if (currentLang === 'he') {
-        footer.style.alignItems = 'flex-start';
+        footer.style.justifyContent = 'flex-start';
     } else {
-        footer.style.alignItems = 'flex-end';
+        footer.style.justifyContent = 'flex-end';
     }
     footer.innerHTML = ''; // Clear for language update
 
