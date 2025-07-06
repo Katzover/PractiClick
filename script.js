@@ -305,11 +305,11 @@ async function askForPracticeRoom() {
 // yes, ik its not secure to expose these keys, but it doesnt really matter in this case
 // and im really lazy to use an actual secure method
 const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZGt6cXlvampmc2hzZHlya3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDc0MDIsImV4cCI6MjA2NTM4MzQwMn0.-NcMckWGJ_Dz5YzzAXRl1VAIcUL8E2XBilicEEX3CVQ';
+const SUPABASE_ANON_KEY = import.meta.env.MAINAPI;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- Loading Animation Helper ---
-function showLoading(msg = "Loading...") {
+function showLoading() {
     let loading = document.getElementById('loadingOverlay');
     if (!loading) {
         loading = document.createElement('div');
@@ -322,7 +322,6 @@ function showLoading(msg = "Loading...") {
         loading.innerHTML = `<div style="font-size:2em;color:#333;">
             <span class="loader" style="display:inline-block;width:2em;height:2em;border:4px solid #ccc;border-top:4px solid #333;border-radius:50%;animation:spin 1s linear infinite;"></span>
         </div>
-        <h1>${msg}</h1>
         <style>
         @keyframes spin { 50% { transform: rotate(360deg); } }
         </style>`;
