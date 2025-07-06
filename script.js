@@ -108,12 +108,6 @@ const LANGS = {
     }
 };
 
-window.addEventListener('beforeunload', function (e) {
-    if (currentPracticeRoom && currentPracticeRoom !== "Other") {
-        navigator.sendBeacon && updateRoomStatus(currentPracticeRoom, "available", room.updated_at);
-    }
-});
-
 window.addEventListener("error", (event) => {
     if (currentLang === 'en') {
     alertBox("An error occurred: " + event.message + ". The app might not work; please contact the developere.");
@@ -121,6 +115,12 @@ window.addEventListener("error", (event) => {
     alertBox("אירעה שגיאה: " + event.message + ". האפליקציה עשויה לא לעבוד; אנא פנה למפתח.");
     }
 })
+
+window.addEventListener('beforeunload', function (e) {
+    if (currentPracticeRoom && currentPracticeRoom !== "Other") {
+        navigator.sendBeacon && updateRoomStatus(currentPracticeRoom, "available", room.updated_at);
+    }
+});
 
 function detectDefaultLang() {
     const sysLang = (navigator.language || navigator.userLanguage || '').slice(0,2).toLowerCase();
@@ -482,18 +482,20 @@ async function renderLeaderboard() {
 function askForNameIfNeeded() {
     let name = localStorage.getItem('practiceUserName');
     if (!name) {
-        let msg = LANGS[currentLang].promptName;
+        let msg = currentLang === 'he'
+            ? "נא הכנס את שמך ללוח התוצאות. אם תכניס שם לא הולם, תיחסם."
+            : "Please enter your name for the leaderboard. If you enter an inappropriate name, you will be banned.";
         do {
             name = prompt(msg, "");
         } while (!name || !name.trim());
         if (banned_names.includes(name.toLowerCase())) {
-            alertBox(LANGS[currentLang].promptNameBannedShort);
+            currentLang === 'he' ? alert("השם הזה חסום") : alert("The name " + name + " is banned.");
             location.reload()
             localStorage.removeItem('practiceUserName');
         }
         localStorage.setItem('practiceUserName', name.trim());
     } else if (banned_names.includes(name.toLowerCase())) {
-        alertBox(LANGS[currentLang].promptNameBannedShort);
+        currentLang === 'he' ? alert("השם הזה חסום") : alert("The name " + name + " is banned.");
         location.reload()
         localStorage.removeItem('practiceUserName');
     }
@@ -532,9 +534,7 @@ async function autoReleaseStaleRooms() {
     for (const room of rooms) {
         if (room.status === "taken" && room.updated_at > 5) {
             await withLoading(() => updateRoomStatus(room.name, "available", 0));
-            await alertBox(
-                LANGS[currentLang].autoReleaseRoom.replace("{room}", room.name)
-            );
+            alert("The room " + room.name + " has been automatically released due to inactivity.");
         }
     }
 }
@@ -557,13 +557,12 @@ async function update_stamp() {
         }
 
         if (currentPracticeRoom === room.name && room.status !== "taken") {
-            showtoast(
-                LANGS[currentLang].roomMarkedAvailable,
-                "orange", "10000", "32px"
-            );
-        }
+            if (currentLang === 'he') {
+                showtoast("שים לב שהחדר שאתה מתאמן בו סומן כפנוי ", "orange", "10000", "32px");
+        } else {showtoast("Attention! The room you are practicing in has been marked as available.", "orange", "10000", "32px")};
     }
-}
+
+}}
 
 setInterval(update_stamp, 1000 * 60 * 30);
 
@@ -746,7 +745,11 @@ async function logCycleSession() {
     await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", room.updated_at));
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
-    showtoast(LANGS[currentLang].sessionLogged, "green");
+    if (currentLang === 'he') {
+        showtoast("הסשן נשמר ביומן התרגול", "green");
+    } else {
+        showtoast("Session logged in practice log", "green");
+    }
 }
 
 cycleStartBtn.onclick = function() {
@@ -956,26 +959,20 @@ function resetTimer() {
     if (resetClickCount >= 7) {
         resetClickCount = 0; 
         if (currentLang == 'he') {
-            confirmBox(LANGS[currentLang].confirmResetLogsHe).then(result => {
-                if (result) {
-                    resetBtn.disabled = true;
-                    logs = [];
-                    localStorage.setItem('practiceLogs', JSON.stringify(logs));
-                    renderLogs();
-                    renderSummary();
-                }
-            });
+            if (confirm("האם אתה רוצה לאפס את כל יומני התרגול?")) {
+                resetBtn.disabled = true;
+                logs = [];
+                localStorage.setItem('practiceLogs', JSON.stringify(logs));
+                renderLogs();
+                renderSummary();
+            }
         }
-        else {
-            confirmBox(LANGS[currentLang].confirmResetLogs).then(result => {
-                if (result) {
-                    resetBtn.disabled = true;
-                    logs = [];
-                    localStorage.setItem('practiceLogs', JSON.stringify(logs));
-                    renderLogs();
-                    renderSummary();
-                }
-            });
+        else if (confirm("Do you want to reset all saved practice logs?")) {
+            resetBtn.disabled = true;
+            logs = [];
+            localStorage.setItem('practiceLogs', JSON.stringify(logs));
+            renderLogs();
+            renderSummary();
         }
     }
 }
@@ -1028,7 +1025,11 @@ async function logSession() {
     schedulePracticeReminders();
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
-    showtoast(LANGS[currentLang].sessionLogged, "green");
+    if (currentLang === 'he') {
+        showtoast("הסשן נשמר ביומן התרגול", "green");
+    } else {
+        showtoast("Session logged in practice log", "green");
+    }
 }
 
 function getCurrentWeekNumber() {
@@ -1398,10 +1399,10 @@ function createOrUpdateFooterButtons() {
     creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
     creditsBtn.style = buttonStyle;
     creditsBtn.onclick = function() {
-        alertBox(
+        alert(
             (currentLang === 'he')
-            ? LANGS.he.creditsHe
-            : LANGS.en.credits
+            ? "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!"
+            : "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!"
         );
     };
 
@@ -1452,96 +1453,3 @@ document.addEventListener('DOMContentLoaded', function() {
         showMode('cycle');
     }
 });
-
-// --- Custom Modal Dialogs ---
-function showModalBox({title = '', message = '', input = false, confirm = false, defaultValue = '', okText = 'OK', cancelText = 'Cancel'}) {
-    return new Promise((resolve) => {
-        let modal = document.getElementById('customModalBox');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'customModalBox';
-            modal.style = `
-                position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:3000;
-                background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;
-            `;
-            modal.innerHTML = `
-                <div id="customModalContent" style="
-                    background:#222;
-                    color:#fff;
-                    border-radius:10px;
-                    min-width:260px;
-                    max-width:90vw;
-                    padding:24px 20px 16px 20px;
-                    box-shadow:0 4px 32px #0007;
-                    display:flex;
-                    flex-direction:column;
-                    align-items:center;
-                    font-family:inherit;
-                ">
-                    <div id="customModalTitle" style="font-size:1.2em;font-weight:bold;margin-bottom:10px;text-align:center;"></div>
-                    <div id="customModalMsg" style="margin-bottom:16px;text-align:center;"></div>
-                    <input id="customModalInput" style="display:none;width:90%;margin-bottom:16px;padding:6px 8px;border-radius:5px;border:1px solid #bbb;font-size:1em;" />
-                    <div style="display:flex;gap:10px;">
-                        <button id="customModalOk" style="padding:7px 18px;border-radius:5px;border:none;background:#2e3a59;color:#fff;font-size:1em;cursor:pointer;">OK</button>
-                        <button id="customModalCancel" style="padding:7px 18px;border-radius:5px;border:none;background:#888;color:#fff;font-size:1em;cursor:pointer;display:none;">Cancel</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-        modal.style.display = 'flex';
-        const titleDiv = modal.querySelector('#customModalTitle');
-        const msgDiv = modal.querySelector('#customModalMsg');
-        const inputBox = modal.querySelector('#customModalInput');
-        const okBtn = modal.querySelector('#customModalOk');
-        const cancelBtn = modal.querySelector('#customModalCancel');
-        titleDiv.textContent = title || '';
-        msgDiv.textContent = message || '';
-        inputBox.style.display = input ? '' : 'none';
-        inputBox.value = defaultValue || '';
-        okBtn.textContent = okText;
-        cancelBtn.textContent = cancelText;
-        cancelBtn.style.display = confirm || input ? '' : 'none';
-
-        function cleanup() {
-            modal.style.display = 'none';
-            okBtn.onclick = null;
-            cancelBtn.onclick = null;
-            inputBox.onkeydown = null;
-        }
-
-        okBtn.onclick = () => {
-            cleanup();
-            if (input) {
-                resolve(inputBox.value);
-            } else if (confirm) {
-                resolve(true);
-            } else {
-                resolve();
-            }
-        };
-        cancelBtn.onclick = () => {
-            cleanup();
-            if (input) resolve(null);
-            else if (confirm) resolve(false);
-            else resolve();
-        };
-        if (input) {
-            inputBox.focus();
-            inputBox.onkeydown = (e) => {
-                if (e.key === 'Enter') okBtn.onclick();
-                if (e.key === 'Escape') cancelBtn.onclick();
-            };
-        }
-    });
-}
-
-async function alertBox(msg, title = '') {
-    await showModalBox({title, message: msg});
-}
-async function confirmBox(msg, title = '') {
-    return await showModalBox({title, message: msg, confirm: true, okText: LANGS[currentLang].log || 'OK', cancelText: LANGS[currentLang].cancel || 'Cancel'});
-}
-async function promptBox(msg, title = '', defaultValue = '') {
-    return await showModalBox({title, message: msg, input: true, defaultValue, okText: LANGS[currentLang].log || 'OK', cancelText: LANGS[currentLang].cancel || 'Cancel'});
-}
