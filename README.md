@@ -1,7 +1,6 @@
 [There's a Hebrew version at the bottom - יש גרסא בעברית למטה](#hebrew-version)
 
 # PractiClick - Music Practice Tracker
-[![Netlify Status](https://prac-t.netlify.app)](https://prac-t.netlify.app)
 
 PractiClick is a web-based application designed to help musicians and students track their practice sessions, manage room usage, and stay motivated with features like a metronome, practice logs, weekly summaries, and a leaderboard. The app supports both English and Hebrew languages.
 
