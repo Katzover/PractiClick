@@ -1358,13 +1358,14 @@ function schedulePracticeReminders() {
 schedulePracticeReminders();
 
 function createOrUpdateFooterButtons() {
+    // Use emoji for icons, smaller size, and responsive width
     const buttonStyle = `
-        color:rgb(0, 0, 0);
-        width: 28px;
-        height: 56px;
+        color: #fff;
+        width: 40px;
+        height: 40px;
         padding: 0;
-        font-size: 2em;
-        border-radius: 10px;
+        font-size: 1.4em;
+        border-radius: 8px;
         border: 1px solid #bbb;
         background: #222;
         cursor: pointer;
@@ -1374,6 +1375,10 @@ function createOrUpdateFooterButtons() {
         align-items: center;
         justify-content: center;
         transition: background 0.15s;
+        min-width: 40px;
+        min-height: 40px;
+        max-width: 40px;
+        max-height: 40px;
         ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}
     `;
 
@@ -1383,33 +1388,32 @@ function createOrUpdateFooterButtons() {
         footer.id = 'footerBtns';
         document.body.appendChild(footer);
     }
-    // Set footer style based on language direction
+    // Responsive horizontal layout, scroll if overflow
     footer.style = `
         position: fixed;
-        bottom: 16px;
-        ${currentLang === 'he' ? 'left: 16px; right: auto;' : 'right: 16px; left: auto;'}
+        bottom: 12px;
+        left: 0;
+        right: 0;
         z-index: 1001;
         display: flex;
         flex-direction: row;
         gap: 8px;
         align-items: center;
+        justify-content: center;
         background: none;
         box-shadow: none;
-        width: auto;
-        padding: 0;
+        width: 100vw;
+        padding: 0 4px;
+        overflow-x: auto;
+        pointer-events: auto;
     `;
-    if (currentLang === 'he') {
-        footer.style.justifyContent = 'flex-start';
-    } else {
-        footer.style.justifyContent = 'flex-end';
-    }
     footer.innerHTML = ''; // Clear for language update
 
-    // Credits button (icon: 🛈)
+    // Credits button (emoji: ℹ️)
     const creditsBtn = document.createElement('button');
     creditsBtn.id = 'creditsBtn';
     creditsBtn.title = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
-    creditsBtn.innerHTML = '<span style="color:#fff;background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#222" stroke="#fff" stroke-width="2"/><text x="12" y="17" text-anchor="middle" fill="#fff" font-size="13" font-family="Arial" font-weight="bold">i</text></svg></span>';
+    creditsBtn.innerHTML = 'ℹ️';
     creditsBtn.style = buttonStyle;
     creditsBtn.onclick = function() {
         alert(
@@ -1419,31 +1423,31 @@ function createOrUpdateFooterButtons() {
         );
     };
 
-    // Bug report button (icon: 🐞)
+    // Bug report button (emoji: 🐞)
     const bugBtn = document.createElement('button');
     bugBtn.id = 'bugBtn';
     bugBtn.title = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
-    bugBtn.innerHTML = '<span style="color:#e53935;background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#222" stroke="#e53935" stroke-width="2"/><g><ellipse cx="12" cy="15" rx="5" ry="3" fill="#e53935"/><ellipse cx="12" cy="11" rx="3" ry="3" fill="#e53935"/><ellipse cx="9" cy="13" rx="1" ry="1" fill="#222"/><ellipse cx="15" cy="13" rx="1" ry="1" fill="#222"/></g></svg></span>';
+    bugBtn.innerHTML = '🐞';
     bugBtn.style = buttonStyle;
     bugBtn.onclick = function() {
         window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
     };
 
-    // Reload button (icon: 🔄)
+    // Reload button (emoji: 🔄)
     const reload = document.createElement('button');
     reload.id = 'reload';
     reload.title = (currentLang === 'he') ? 'רענן' : 'Reload';
-    reload.innerHTML = '<span style="background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="12" fill="#222"/><path d="M12 6v6l4 2" stroke="#29b6f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="8" stroke="#29b6f6" stroke-width="2"/></svg></span>';
+    reload.innerHTML = '🔄';
     reload.style = buttonStyle;
     reload.onclick = function() {
         window.location.reload();
     };
 
-    // Usage guide button (icon: ❔)
+    // Usage guide button (emoji: ❔)
     const guideBtn = document.createElement('button');
     guideBtn.id = 'guideBtn';
     guideBtn.title = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
-    guideBtn.innerHTML = '<span style="color:#aaa;background:#222;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;margin:auto;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#222" stroke="#aaa" stroke-width="2"/><text x="12" y="17" text-anchor="middle" fill="#aaa" font-size="13" font-family="Arial" font-weight="bold">?</text></svg></span>';
+    guideBtn.innerHTML = '❔';
     guideBtn.style = buttonStyle;
     guideBtn.onclick = showUsageGuide;
 
