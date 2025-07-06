@@ -400,7 +400,7 @@ setInterval(lockapp, 15000);
 lockapp();
 
 async function upsertLeaderboard(ms) {
-    if (!shouldSendLeaderboard()) return;
+    if (isLeaderboardOptOut()) return;
     const weekStart = getWeekStart(new Date());
     const { error } = await withLoading(() =>
         supabase
@@ -418,7 +418,7 @@ async function upsertLeaderboard(ms) {
 }
 
 async function fetchLeaderboard() {
-    if (!shouldSendLeaderboard()) return [];
+    if (isLeaderboardOptOut()) return [];
     const weekStart = getWeekStart(new Date());
     const { data, error } = await withLoading(() =>
         supabase
@@ -496,6 +496,7 @@ function askForNameIfNeeded() {
 }
 
 async function deleteAllLeaderboardRows() {
+    if (isLeaderboardOptOut()) return;
     const { error } = await withLoading(() =>
         supabase
             .from('leaderboard')
@@ -1451,12 +1452,12 @@ updateLangUI = function() {
     createOrUpdateFooterButtons();
 };
 
-// Remove the language selector from the top (if it exists)
+// Remove the language selector from the top if it exists
 document.addEventListener('DOMContentLoaded', function() {
-    // Remove language selector from top
+    // Remove language selector from the top
     const langSelect = document.getElementById('langSelect');
-    if (langSelect && langSelect.parentNode) {
-        langSelect.parentNode.removeChild(langSelect);
+    if (langSelect && langSelect.parentElement) {
+        langSelect.parentElement.removeChild(langSelect);
     }
 });
 
@@ -1474,54 +1475,387 @@ function showSettingsModal() {
             <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
                 <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
                 <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
-                <div style="margin-bottom:14px;">
-                    <label style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
+                <div style="margin-bottom:18px;">
+                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
                     <select id="settingsLangSelect" style="margin-left:8px;">
-                        <option value="en"${currentLang === 'en' ? ' selected' : ''}>English</option>
-                        <option value="he"${currentLang === 'he' ? ' selected' : ''}>עברית</option>
+                        <option value="he">${LANGS.he.practiceTitle.replace(/[^א-ת]+/g, '') ? 'עברית' : 'עברית'}</option>
+                        <option value="en">English</option>
                     </select>
                 </div>
-                <div style="margin-bottom:14px;">
-                    <label>
-                        <input type="checkbox" id="settingsLeaderboardOptOut">
-                        ${currentLang === 'he' ? 'אל תשתף את הנתונים שלי בלוח התוצאות' : "Don't send my data to the leaderboard"}
+                <div style="margin-bottom:18px;">
+                    <label for="settingsLeaderboardOptOut" style="font-weight:bold;">
+                        <input type="checkbox" id="settingsLeaderboardOptOut" style="margin-right:8px;">
+                        ${currentLang === 'he'
+                            ? 'אל תשתף את הנתונים שלי בלוח התוצאות'
+                            : "Don't send my data to the leaderboard"}
                     </label>
                 </div>
-                <button id="settingsSaveBtn" style="margin-top:10px;padding:6px 18px;border-radius:5px;border:1px solid #bbb;background:#f8f8f8;cursor:pointer;">
-                    ${currentLang === 'he' ? 'שמור' : 'Save'}
-                </button>
             </div>
         `;
         document.body.appendChild(modal);
     }
     // Set current values
     modal.querySelector('#settingsLangSelect').value = currentLang;
-    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('optOutLeaderboard') || 'false');
-    modal.style.display = 'flex';
-
+    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
+    // Handlers
     modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
-    modal.querySelector('#settingsSaveBtn').onclick = function() {
-        // Save language
-        const newLang = modal.querySelector('#settingsLangSelect').value;
-        currentLang = newLang;
-        localStorage.setItem('lang', newLang);
+    modal.querySelector('#settingsLangSelect').onchange = function() {
+        currentLang = this.value;
         updateLangUI();
-        // Save leaderboard opt-out
-        const optOut = modal.querySelector('#settingsLeaderboardOptOut').checked;
-        localStorage.setItem('optOutLeaderboard', JSON.stringify(optOut));
         modal.style.display = 'none';
-        showtoast(currentLang === 'he' ? 'ההגדרות נשמרו' : 'Settings saved', "green", 2000);
     };
+    modal.querySelector('#settingsLeaderboardOptOut').onchange = function() {
+        localStorage.setItem('leaderboardOptOut', this.checked ? 'true' : 'false');
+        modal.style.display = 'none';
+        if (currentLang === 'he') {
+            showtoast(this.checked ? "הנתונים שלך לא יישלחו ללוח התוצאות" : "הנתונים שלך יישלחו ללוח התוצאות", "orange");
+        } else {
+            showtoast(this.checked ? "Your data will NOT be sent to the leaderboard" : "Your data will be sent to the leaderboard", "orange");
+        }
+    };
+    modal.style.display = 'flex';
 }
 
-// --- Leaderboard Opt-out Logic ---
-function shouldSendLeaderboard() {
-    return !JSON.parse(localStorage.getItem('optOutLeaderboard') || 'false');
+// --- Footer Buttons ---
+function createOrUpdateFooterButtons() {
+    const buttonStyle = `color:rgb(0, 0, 0);
+        padding: 6px 12px;
+        font-size: 0.95em;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+        background: #f8f8f8;
+        cursor: pointer;
+        min-width: 80px;
+        max-width: 150px;
+        box-shadow: 0 1px 4px #0002;
+        ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}`
+
+    let footer = document.getElementById('footerBtns');
+    if (!footer) {
+        footer = document.createElement('div');
+        footer.id = 'footerBtns';
+        document.body.appendChild(footer);
+    }
+    // Set footer style based on language direction
+    footer.style = `
+        position: fixed;
+        bottom: 16px;
+        ${currentLang === 'he' ? 'left: 16px; right: auto;' : 'right: 16px; left: auto;'}
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        background: none;
+        box-shadow: none;
+        width: auto;
+        padding: 0;
+    `;
+    if (currentLang === 'he') {
+        footer.style.alignItems = 'flex-start';
+    } else {
+        footer.style.alignItems = 'flex-end';
+    }
+    footer.innerHTML = ''; // Clear for language update
+
+    // Credits button
+    const creditsBtn = document.createElement('button');
+    creditsBtn.id = 'creditsBtn';
+    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
+    creditsBtn.style = buttonStyle;
+    creditsBtn.onclick = function() {
+        alert(
+            (currentLang === 'he')
+            ? "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!"
+            : "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!"
+        );
+    };
+
+    // Bug report button
+    const bugBtn = document.createElement('button');
+    bugBtn.id = 'bugBtn';
+    bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
+    bugBtn.style = buttonStyle;
+    bugBtn.onclick = function() {
+        window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
+    };
+
+    const reload = document.createElement('button');
+    reload.id = 'reload';
+    reload.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
+    reload.style = buttonStyle;
+    reload.onclick = function() {
+        window.location.reload();
+    };
+
+    // Add usage guide button
+    const guideBtn = document.createElement('button');
+    guideBtn.id = 'guideBtn';
+    guideBtn.textContent = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
+    guideBtn.style = buttonStyle;
+    guideBtn.onclick = showUsageGuide;
+
+    // Add settings button
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id = 'settingsBtn';
+    settingsBtn.textContent = (currentLang === 'he') ? 'הגדרות' : 'Settings';
+    settingsBtn.style = buttonStyle;
+    settingsBtn.onclick = showSettingsModal;
+
+    footer.appendChild(reload);
+    footer.appendChild(creditsBtn);
+    footer.appendChild(bugBtn);
+    footer.appendChild(guideBtn);
+    footer.appendChild(settingsBtn);
 }
 
-// Patch upsertLeaderboard and fetchLeaderboard to respect opt-out
+// Ensure buttons are created on load and on language change
+document.addEventListener('DOMContentLoaded', createOrUpdateFooterButtons);
+
+const origUpdateLangUI = updateLangUI;
+updateLangUI = function() {
+    origUpdateLangUI();
+    createOrUpdateFooterButtons();
+};
+
+// Remove the language selector from the top if it exists
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove language selector from the top
+    const langSelect = document.getElementById('langSelect');
+    if (langSelect && langSelect.parentElement) {
+        langSelect.parentElement.removeChild(langSelect);
+    }
+});
+
+// --- Settings Modal ---
+function showSettingsModal() {
+    let modal = document.getElementById('settingsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'settingsModal';
+        modal.style = `
+            position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(0,0,0,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;
+        `;
+        modal.innerHTML = `
+            <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
+                <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+                <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
+                <div style="margin-bottom:18px;">
+                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
+                    <select id="settingsLangSelect" style="margin-left:8px;">
+                        <option value="he">${LANGS.he.practiceTitle.replace(/[^א-ת]+/g, '') ? 'עברית' : 'עברית'}</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:18px;">
+                    <label for="settingsLeaderboardOptOut" style="font-weight:bold;">
+                        <input type="checkbox" id="settingsLeaderboardOptOut" style="margin-right:8px;">
+                        ${currentLang === 'he'
+                            ? 'אל תשתף את הנתונים שלי בלוח התוצאות'
+                            : "Don't send my data to the leaderboard"}
+                    </label>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    // Set current values
+    modal.querySelector('#settingsLangSelect').value = currentLang;
+    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
+    // Handlers
+    modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
+    modal.querySelector('#settingsLangSelect').onchange = function() {
+        currentLang = this.value;
+        updateLangUI();
+        modal.style.display = 'none';
+    };
+    modal.querySelector('#settingsLeaderboardOptOut').onchange = function() {
+        localStorage.setItem('leaderboardOptOut', this.checked ? 'true' : 'false');
+        modal.style.display = 'none';
+        if (currentLang === 'he') {
+            showtoast(this.checked ? "הנתונים שלך לא יישלחו ללוח התוצאות" : "הנתונים שלך יישלחו ללוח התוצאות", "orange");
+        } else {
+            showtoast(this.checked ? "Your data will NOT be sent to the leaderboard" : "Your data will be sent to the leaderboard", "orange");
+        }
+    };
+    modal.style.display = 'flex';
+}
+
+// --- Footer Buttons ---
+function createOrUpdateFooterButtons() {
+    const buttonStyle = `color:rgb(0, 0, 0);
+        padding: 6px 12px;
+        font-size: 0.95em;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+        background: #f8f8f8;
+        cursor: pointer;
+        min-width: 80px;
+        max-width: 150px;
+        box-shadow: 0 1px 4px #0002;
+        ${currentLang === 'he' ? 'direction: ltr;' : 'direction: rtl;'}`
+
+    let footer = document.getElementById('footerBtns');
+    if (!footer) {
+        footer = document.createElement('div');
+        footer.id = 'footerBtns';
+        document.body.appendChild(footer);
+    }
+    // Set footer style based on language direction
+    footer.style = `
+        position: fixed;
+        bottom: 16px;
+        ${currentLang === 'he' ? 'left: 16px; right: auto;' : 'right: 16px; left: auto;'}
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        background: none;
+        box-shadow: none;
+        width: auto;
+        padding: 0;
+    `;
+    if (currentLang === 'he') {
+        footer.style.alignItems = 'flex-start';
+    } else {
+        footer.style.alignItems = 'flex-end';
+    }
+    footer.innerHTML = ''; // Clear for language update
+
+    // Credits button
+    const creditsBtn = document.createElement('button');
+    creditsBtn.id = 'creditsBtn';
+    creditsBtn.textContent = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
+    creditsBtn.style = buttonStyle;
+    creditsBtn.onclick = function() {
+        alert(
+            (currentLang === 'he')
+            ? "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!"
+            : "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!"
+        );
+    };
+
+    // Bug report button
+    const bugBtn = document.createElement('button');
+    bugBtn.id = 'bugBtn';
+    bugBtn.textContent = (currentLang === 'he') ? 'דיווח תקלה' : 'Report a Bug';
+    bugBtn.style = buttonStyle;
+    bugBtn.onclick = function() {
+        window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
+    };
+
+    const reload = document.createElement('button');
+    reload.id = 'reload';
+    reload.textContent = (currentLang === 'he') ? 'רענן' : 'Reload';
+    reload.style = buttonStyle;
+    reload.onclick = function() {
+        window.location.reload();
+    };
+
+    // Add usage guide button
+    const guideBtn = document.createElement('button');
+    guideBtn.id = 'guideBtn';
+    guideBtn.textContent = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
+    guideBtn.style = buttonStyle;
+    guideBtn.onclick = showUsageGuide;
+
+    // Add settings button
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id = 'settingsBtn';
+    settingsBtn.textContent = (currentLang === 'he') ? 'הגדרות' : 'Settings';
+    settingsBtn.style = buttonStyle;
+    settingsBtn.onclick = showSettingsModal;
+
+    footer.appendChild(reload);
+    footer.appendChild(creditsBtn);
+    footer.appendChild(bugBtn);
+    footer.appendChild(guideBtn);
+    footer.appendChild(settingsBtn);
+}
+
+// Ensure buttons are created on load and on language change
+document.addEventListener('DOMContentLoaded', createOrUpdateFooterButtons);
+
+const origUpdateLangUI = updateLangUI;
+updateLangUI = function() {
+    origUpdateLangUI();
+    createOrUpdateFooterButtons();
+};
+
+// Remove the language selector from the top if it exists
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove language selector from the top
+    const langSelect = document.getElementById('langSelect');
+    if (langSelect && langSelect.parentElement) {
+        langSelect.parentElement.removeChild(langSelect);
+    }
+});
+
+// --- Settings Modal ---
+function showSettingsModal() {
+    let modal = document.getElementById('settingsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'settingsModal';
+        modal.style = `
+            position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(0,0,0,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;
+        `;
+        modal.innerHTML = `
+            <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
+                <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+                <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
+                <div style="margin-bottom:18px;">
+                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
+                    <select id="settingsLangSelect" style="margin-left:8px;">
+                        <option value="he">${LANGS.he.practiceTitle.replace(/[^א-ת]+/g, '') ? 'עברית' : 'עברית'}</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:18px;">
+                    <label for="settingsLeaderboardOptOut" style="font-weight:bold;">
+                        <input type="checkbox" id="settingsLeaderboardOptOut" style="margin-right:8px;">
+                        ${currentLang === 'he'
+                            ? 'אל תשתף את הנתונים שלי בלוח התוצאות'
+                            : "Don't send my data to the leaderboard"}
+                    </label>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    // Set current values
+    modal.querySelector('#settingsLangSelect').value = currentLang;
+    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
+    // Handlers
+    modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
+    modal.querySelector('#settingsLangSelect').onchange = function() {
+        currentLang = this.value;
+        updateLangUI();
+        modal.style.display = 'none';
+    };
+    modal.querySelector('#settingsLeaderboardOptOut').onchange = function() {
+        localStorage.setItem('leaderboardOptOut', this.checked ? 'true' : 'false');
+        modal.style.display = 'none';
+        if (currentLang === 'he') {
+            showtoast(this.checked ? "הנתונים שלך לא יישלחו ללוח התוצאות" : "הנתונים שלך יישלחו ללוח התוצאות", "orange");
+        } else {
+            showtoast(this.checked ? "Your data will NOT be sent to the leaderboard" : "Your data will be sent to the leaderboard", "orange");
+        }
+    };
+    modal.style.display = 'flex';
+}
+
+// --- Leaderboard Opt-Out Logic ---
+function isLeaderboardOptOut() {
+    return !!JSON.parse(localStorage.getItem('leaderboardOptOut') || 'false');
+}
+
+// Patch upsertLeaderboard and deleteAllLeaderboardRows to respect opt-out
 async function upsertLeaderboard(ms) {
-    if (!shouldSendLeaderboard()) return;
+    if (isLeaderboardOptOut()) return;
     const weekStart = getWeekStart(new Date());
     const { error } = await withLoading(() =>
         supabase
@@ -1537,176 +1871,18 @@ async function upsertLeaderboard(ms) {
     }
 }
 
-async function fetchLeaderboard() {
-    if (!shouldSendLeaderboard()) return [];
-    const weekStart = getWeekStart(new Date());
-    const { data, error } = await withLoading(() =>
+async function deleteAllLeaderboardRows() {
+    if (isLeaderboardOptOut()) return;
+    const { error } = await withLoading(() =>
         supabase
             .from('leaderboard')
-            .select('user_name, total_time')
-            .eq('week_start', weekStart)
-            .order('total_time', { ascending: false })
+            .delete()
+            .neq('user_name', '___impossible_value___')
     );
     if (error) {
-        console.error('Error fetching leaderboard:', error.message);
-        return [];
+        console.error('Failed to delete leaderboard rows:', error.message);
+    } else {
+        console.log('All leaderboard rows deleted.');
     }
-    return data || [];
 }
-
-// --- Debugging / Development ---
-// window.ssupabase = supabase; // Uncomment to expose supabase client for debugging
-// window.lboard = () => { lboard = false; renderLeaderboard(); }; // Reset leaderboard for testing
-// window.resetLogs = () => { logs = []; localStorage.setItem('practiceLogs', JSON.stringify(logs)); renderLogs(); }; // Reset logs
-// window.showUsageGuide = showUsageGuide; // Expose guide function
-// window.fetchtoast = fetchtoast; // Expose toast fetch function
-// window.lockapp = lockapp; // Expose app lock function
-// window.update_stamp = update_stamp; // Expose update_stamp function
-// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose auto release function
-// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose release function
-// window.updateRoomStatus = updateRoomStatus; // Expose updateRoomStatus function
-// window.upsertLeaderboard = upsertLeaderboard; // Expose upsertLeaderboard function
-// window.fetchLeaderboard = fetchLeaderboard; // Expose fetchLeaderboard function
-// window.renderLeaderboard = renderLeaderboard; // Expose renderLeaderboard function
-// window.showtoast = showtoast; // Expose showtoast function
-// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose delete function
-// window.askForPracticeRoom = askForPracticeRoom; // Expose room selection function
-// window.startCycle = startCycle; // Expose cycle start function
-// window.stopCycle = stopCycle; // Expose cycle stop function
-// window.pauseCycle = pauseCycle; // Expose cycle pause function
-// window.resumeCycle = resumeCycle; // Expose cycle resume function
-// window.logCycleSession = logCycleSession; // Expose cycle log function
-// window.resetCycle = resetCycle; // Expose cycle reset function
-// window.switchMode = switchMode; // Expose mode switch function
-// window.renderLogs = renderLogs; // Expose logs render function
-// window.renderSummary = renderSummary; // Expose summary render function
-// window.getWeekTotal = getWeekTotal; // Expose week total function
-// window.updateWeekTotal = updateWeekTotal; // Expose week total update function
-// window.showUsageGuide = showUsageGuide; // Expose usage guide function
-// window.schedulePracticeReminders = schedulePracticeReminders; // Expose reminder function
-// window.sendPracticeNotification = sendPracticeNotification; // Expose notification function
-// window.fetchtoast = fetchtoast; // Expose toast fetching function
-// window.lockapp = lockapp; // Expose app locking function
-// window.update_stamp = update_stamp; // Expose timestamp updating function
-// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
-// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
-// window.updateRoomStatus = updateRoomStatus; // Expose room status update function
-// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upsert function
-// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
-// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
-// window.showtoast = showtoast; // Expose toast showing function
-// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
-// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
-// window.startCycle = startCycle; // Expose cycle starting function
-// window.stopCycle = stopCycle; // Expose cycle stopping function
-// window.pauseCycle = pauseCycle; // Expose cycle pausing function
-// window.resumeCycle = resumeCycle; // Expose cycle resuming function
-// window.logCycleSession = logCycleSession; // Expose cycle session logging function
-// window.resetCycle = resetCycle; // Expose cycle resetting function
-// window.switchMode = switchMode; // Expose mode switching function
-// window.renderLogs = renderLogs; // Expose logs rendering function
-// window.renderSummary = renderSummary; // Expose summary rendering function
-// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
-// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
-// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
-// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
-// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
-// window.fetchtoast = fetchtoast; // Expose toast fetching function
-// window.lockapp = lockapp; // Expose app locking function
-// window.update_stamp = update_stamp; // Expose timestamp updating function
-// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
-// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
-// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
-// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
-// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
-// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
-// window.showtoast = showtoast; // Expose toast showing function
-// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
-// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
-// window.startCycle = startCycle; // Expose cycle starting function
-// window.stopCycle = stopCycle; // Expose cycle stopping function
-// window.pauseCycle = pauseCycle; // Expose cycle pausing function
-// window.resumeCycle = resumeCycle; // Expose cycle resuming function
-// window.logCycleSession = logCycleSession; // Expose cycle session logging function
-// window.resetCycle = resetCycle; // Expose cycle resetting function
-// window.switchMode = switchMode; // Expose mode switching function
-// window.renderLogs = renderLogs; // Expose logs rendering function
-// window.renderSummary = renderSummary; // Expose summary rendering function
-// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
-// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
-// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
-// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
-// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
-// window.fetchtoast = fetchtoast; // Expose toast fetching function
-// window.lockapp = lockapp; // Expose app locking function
-// window.update_stamp = update_stamp; // Expose timestamp updating function
-// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
-// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
-// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
-// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
-// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
-// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
-// window.showtoast = showtoast; // Expose toast showing function
-// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
-// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
-// window.startCycle = startCycle; // Expose cycle starting function
-// window.stopCycle = stopCycle; // Expose cycle stopping function
-// window.pauseCycle = pauseCycle; // Expose cycle pausing function
-// window.resumeCycle = resumeCycle; // Expose cycle resuming function
-// window.logCycleSession = logCycleSession; // Expose cycle session logging function
-// window.resetCycle = resetCycle; // Expose cycle resetting function
-// window.switchMode = switchMode; // Expose mode switching function
-// window.renderLogs = renderLogs; // Expose logs rendering function
-// window.renderSummary = renderSummary; // Expose summary rendering function
-// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
-// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
-// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
-// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
-// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
-// window.fetchtoast = fetchtoast; // Expose toast fetching function
-// window.lockapp = lockapp; // Expose app locking function
-// window.update_stamp = update_stamp; // Expose timestamp updating function
-// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
-// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
-// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
-// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
-// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
-// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
-// window.showtoast = showtoast; // Expose toast showing function
-// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
-// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
-// window.startCycle = startCycle; // Expose cycle starting function
-// window.stopCycle = stopCycle; // Expose cycle stopping function
-// window.pauseCycle = pauseCycle; // Expose cycle pausing function
-// window.resumeCycle = resumeCycle; // Expose cycle resuming function
-// window.logCycleSession = logCycleSession; // Expose cycle session logging function
-// window.resetCycle = resetCycle; // Expose cycle resetting function
-// window.switchMode = switchMode; // Expose mode switching function
-// window.renderLogs = renderLogs; // Expose logs rendering function
-// window.renderSummary = renderSummary; // Expose summary rendering function
-// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
-// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
-// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
-// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
-// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
-// window.fetchtoast = fetchtoast; // Expose toast fetching function
-// window.lockapp = lockapp; // Expose app locking function
-// window.update_stamp = update_stamp; // Expose timestamp updating function
-// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
-// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
-// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
-// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
-// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
-// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
-// window.showtoast = showtoast; // Expose toast showing function
-// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
-// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
-// window.startCycle = startCycle; // Expose cycle starting function
-// window.stopCycle = stopCycle; // Expose cycle stopping function
-// window.pauseCycle = pauseCycle; // Expose cycle pausing function
-// window.resumeCycle = resumeCycle; // Expose cycle resuming function
-// window.logCycleSession = logCycleSession; // Expose cycle session logging function
-// window.resetCycle = resetCycle; // Expose cycle resetting function
-// window.switchMode = switchMode; // Expose mode switching function
-// window.renderLogs = renderLogs; // Expose logs rendering function
-// window.renderSummary =
+window.deleteAllLeaderboardRows = deleteAllLeaderboardRows;
