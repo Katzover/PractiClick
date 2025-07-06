@@ -320,9 +320,9 @@ function showLoading(msg = "Loading...") {
             display:flex;align-items:center;justify-content:center;
         `;
         loading.innerHTML = `<div style="font-size:2em;color:#333;">
-            <h1>${msg}</h1>
             <span class="loader" style="display:inline-block;width:2em;height:2em;border:4px solid #ccc;border-top:4px solid #333;border-radius:50%;animation:spin 1s linear infinite;"></span>
         </div>
+        <h1>${msg}</h1>
         <style>
         @keyframes spin { 50% { transform: rotate(360deg); } }
         </style>`;
