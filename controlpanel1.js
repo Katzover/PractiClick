@@ -27,7 +27,7 @@ async function updateRoomStatus(roomName, status, updated_at) {
             .from('rooms')
             .update({ status, updated_at })
             .eq('id ',id)
-    );}
+    );} alert('all rooms updated successfully!'); return;
     }
     await withLoading(() =>
         supabase
