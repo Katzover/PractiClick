@@ -830,8 +830,7 @@ document.getElementById('tabStopwatch').onclick = function() { mode = 'stopwatch
 document.getElementById('tabTimer').onclick = function() { mode = 'timer'; showMode('timer'); };
 document.getElementById('tabRooms').onclick = function() { mode = 'rooms'; showMode('rooms'); };
 
-// On load, show cycle mode by default
-showMode('cycle');
+showMode(mode);
 
 async function fetchRooms() {
     const { data, error } = await withLoading(() =>
