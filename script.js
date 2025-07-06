@@ -1428,9 +1428,17 @@ function createOrUpdateFooterButtons() {
         window.location.reload();
     };
 
+    // Add usage guide button
+    const guideBtn = document.createElement('button');
+    guideBtn.id = 'guideBtn';
+    guideBtn.textContent = (currentLang === 'he') ? 'מדריך שימוש' : 'Usage Guide';
+    guideBtn.style = buttonStyle;
+    guideBtn.onclick = showUsageGuide;
+
     footer.appendChild(reload);
     footer.appendChild(creditsBtn);
     footer.appendChild(bugBtn);
+    footer.appendChild(guideBtn);
 }
 
 // Ensure buttons are created on load and on language change
@@ -1458,3 +1466,55 @@ document.addEventListener('DOMContentLoaded', function() {
         showMode('cycle');
     }
 });
+
+function showUsageGuide() {
+    const guide = {
+        en: `
+        <h2>🎵 PractiClick - Quick Guide 🎵</h2>
+        <ul>
+            <li><b>Cycle:</b> Set your cycles, lengths, and breaks. Like musical intervals, but less scary.</li>
+            <li><b>Stopwatch:</b> Hit start, play, and pretend you're Usain Bolt (but with an instrument).</li>
+            <li><b>Timer:</b> Set a time, hit start, and race against the clock. No pressure (okay, maybe a little).</li>
+            <li><b>Rooms:</b> Pick a practice room so your friends know you're busy (or just hiding).</li>
+            <li><b>Leaderboard:</b> Practice more, climb higher. Bragging rights included, trophies not (yet).</li>
+            <li><b>Metronome:</b> Stay in time. Or at least try.</li>
+            <li><b>Logs & Summary:</b> See your practice history. Yes, it counts even if you practiced scales.</li>
+        </ul>
+        <p style="color:gray;font-size:0.95em;">Tip: Click the language selector to switch languages. No pop quizzes, promise.</p>
+        <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the footer buttons. Or just yell at your screen, we won't judge.</p>
+        `,
+        he: `
+        <h2>🎵 מדריך זריז לפרקטיקליק 🎵</h2>
+        <ul>
+            <li><b>סבב:</b> קבעו סבבים, אורכים והפסקות. כמו שיעור סולפג', רק פחות מלחיץ.</li>
+            <li><b>סטופר:</b> התחילו, נגנו, ותדמיינו שאתם יוסיין בולט (רק עם כלי נגינה).</li>
+            <li><b>טיימר:</b> קבעו זמן, התחילו, ותנסו להספיק לפני שהשעון מצלצל. בהצלחה!</li>
+            <li><b>חדרים:</b> בחרו חדר תרגול כדי שידעו שאתם עסוקים (או סתם מתחבאים).</li>
+            <li><b>לוח תוצאות:</b> מתרגלים יותר? עולים למעלה! תהילה מובטחת, גביעים פחות.</li>
+            <li><b>מטרונום:</b> שמרו על קצב. או לפחות תנסו.</li>
+            <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול שלכם. גם סולמות נחשבים!</li>
+        </ul>
+        <p style="color:gray;font-size:0.95em;">טיפ: אפשר להחליף שפה מהתפריט למעלה. בלי בוחן פתע, מבטיחים.</p>
+        <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתורים בתחתית. או תצעקו על המסך, לא נשפוט.</p>
+        `
+    };
+    let modal = document.getElementById('usageGuideModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'usageGuideModal';
+        modal.style = `
+            position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;
+        `;
+        modal.innerHTML = `
+            <div style="background:#fff;color:#222;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
+                <button id="closeGuideBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+                <div id="guideContent"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
+    modal.style.display = 'flex';
+    modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
+}
