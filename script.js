@@ -765,7 +765,13 @@ cycleLogBtn.onclick = logCycleSession;
 
 
 // --- Stopwatch/Timer Logic ---
-let mode = 'cycle';
+
+let mode;
+if (!localStorage.getItem('mode')) {
+    mode = 'cycle';
+} else {
+    mode = localStorage.getItem('mode')
+}
 let interval = null;
 let startTime = null;
 let elapsed = 0;
