@@ -185,6 +185,7 @@ function updateLangUI() {
     document.getElementById('weekTotalLabel').textContent = t.totalWeek;
 
     // Set select value and direction
+    document.getElementById('langSelect').value = currentLang;
     document.body.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
 
     // Stopwatch/Timer buttons
@@ -216,6 +217,15 @@ function updateLangUI() {
             ths[1].textContent = t.roomHeader;
         }
     }
+
+    document.getElementById('langSelect').addEventListener('change', function() {
+    currentLang = this.value;
+    updateLangUI();
+
+    if (!localStorage.getItem('practiceUserName')) {
+        userName = askForNameIfNeeded();
+    }
+    });
 
     // Update "No sessions yet" message if needed
     if (document.getElementById('logList').children.length === 1) {
@@ -398,14 +408,7 @@ async function lockapp() {
 setInterval(lockapp, 15000);
 lockapp();
 
-// --- Leaderboard Opt-out Helper ---
-function isLeaderboardOptedOut() {
-    return localStorage.getItem('optOutLeaderboard') === 'true';
-}
-
-// --- Patch upsertLeaderboard and fetchLeaderboard ---
 async function upsertLeaderboard(ms) {
-    if (isLeaderboardOptedOut()) return; // skip if opted out
     const weekStart = getWeekStart(new Date());
     const { error } = await withLoading(() =>
         supabase
@@ -416,13 +419,13 @@ async function upsertLeaderboard(ms) {
                 week_start: weekStart,
             }])
     );
+
     if (error) {
         console.error('Error upserting leaderboard:', error.message);
     }
 }
 
 async function fetchLeaderboard() {
-    if (isLeaderboardOptedOut()) return []; // skip if opted out
     const weekStart = getWeekStart(new Date());
     const { data, error } = await withLoading(() =>
         supabase
@@ -1354,73 +1357,6 @@ function schedulePracticeReminders() {
 // Start reminders on load
 schedulePracticeReminders();
 
-// --- Settings Modal ---
-function showSettingsModal() {
-    let modal = document.getElementById('settingsModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'settingsModal';
-        modal.style = `
-            position:fixed;top:0;left:0;width:100vw;height:100vh;
-            background:rgba(0,0,0,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;
-        `;
-        modal.innerHTML = `
-            <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-                <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
-                <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
-                <div style="margin-bottom:16px;">
-                    <label for="settingsLangSelect" style="font-weight:bold;">${currentLang === 'he' ? 'שפה' : 'Language'}:</label>
-                    <select id="settingsLangSelect" style="margin-left:8px;">
-                        <option value="he">עברית</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
-                <div style="margin-bottom:16px;">
-                    <button id="settingsLeaderboardOptOutBtn" style="padding:6px 12px;border-radius:5px;border:1px solid #bbb;background:#f8f8f8;cursor:pointer;">
-                        ${currentLang === 'he'
-                            ? (isLeaderboardOptedOut() ? 'החזר אותי ללוח התוצאות' : 'הסר אותי מלוח התוצאות')
-                            : (isLeaderboardOptedOut() ? 'Opt back in to leaderboard' : 'Opt out of leaderboard')}
-                    </button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-    }
-    // Set initial values
-    modal.querySelector('#settingsLangSelect').value = currentLang;
-
-    // Events
-    modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
-    modal.querySelector('#settingsLangSelect').onchange = function() {
-        currentLang = this.value;
-        localStorage.setItem('lang', currentLang);
-        updateLangUI();
-        modal.style.display = 'none';
-    };
-    modal.querySelector('#settingsLeaderboardOptOutBtn').onclick = function() {
-        const optedOut = isLeaderboardOptedOut();
-        let msg = optedOut
-            ? (currentLang === 'he'
-                ? "האם להחזיר אותך ללוח התוצאות? הנתונים שלך יישלחו שוב."
-                : "Opt back in to the leaderboard? Your data will be sent again.")
-            : (currentLang === 'he'
-                ? "האם אתה בטוח שברצונך להסיר את עצמך מלוח התוצאות? הנתונים שלך לא יישלחו."
-                : "Are you sure you want to opt out of the leaderboard? Your data will not be sent.");
-        if (confirm(msg)) {
-            localStorage.setItem('optOutLeaderboard', optedOut ? 'false' : 'true');
-            modal.style.display = 'none';
-            renderLeaderboard();
-        }
-    };
-    // Update button text if modal is reused
-    const btn = modal.querySelector('#settingsLeaderboardOptOutBtn');
-    btn.textContent = currentLang === 'he'
-        ? (isLeaderboardOptedOut() ? 'החזר אותי ללוח התוצאות' : 'הסר אותי מלוח התוצאות')
-        : (isLeaderboardOptedOut() ? 'Opt back in to leaderboard' : 'Opt out of leaderboard');
-    modal.style.display = 'flex';
-}
-
-// --- Footer Buttons ---
 function createOrUpdateFooterButtons() {
     const buttonStyle = `color:rgb(0, 0, 0);
         padding: 6px 12px;
@@ -1499,14 +1435,6 @@ function createOrUpdateFooterButtons() {
     guideBtn.style = buttonStyle;
     guideBtn.onclick = showUsageGuide;
 
-    // Settings button
-    const settingsBtn = document.createElement('button');
-    settingsBtn.id = 'settingsBtn';
-    settingsBtn.textContent = (currentLang === 'he') ? 'הגדרות' : 'Settings';
-    settingsBtn.style = buttonStyle;
-    settingsBtn.onclick = showSettingsModal;
-
-    footer.appendChild(settingsBtn);
     footer.appendChild(reload);
     footer.appendChild(creditsBtn);
     footer.appendChild(bugBtn);
@@ -1522,8 +1450,15 @@ updateLangUI = function() {
     createOrUpdateFooterButtons();
 };
 
+document.getElementById('langSelect').addEventListener('change', function() {
+    currentLang = this.value;
+    updateLangUI();
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     updateLangUI();
+    document.getElementById('langSelect').value = currentLang;
+    document.body.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
     // Set cycle mode as default
     const cycleRadio = document.querySelector('input[name="mode"][value="cycle"]');
     if (cycleRadio) {
@@ -1555,7 +1490,7 @@ function showUsageGuide() {
             <li><b>סטופר:</b> התחילו, נגנו, ותדמיינו שאתם יוסיין בולט (רק עם כלי נגינה).</li>
             <li><b>טיימר:</b> קבעו זמן, התחילו, ותנסו להספיק לפני שהשעון מצלצל. בהצלחה!</li>
             <li><b>חדרים:</b> בחרו חדר תרגול כדי שידעו שאתם עסוקים (או סתם מתחבאים).</li>
-            <li><b>לוח תוצאות:</b> מתרגלים יותר? עולים למעלה! תהילה מובטחת, גביעים פחות.</li>
+            <li><b>לוח תוצאות:</b> מתרגלים יותר? עולים למעלה!.</li>
             <li><b>מטרונום:</b> שמרו על קצב. או לפחות תנסו.</li>
             <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול שלכם.</li>
         </ul>
@@ -1572,22 +1507,12 @@ function showUsageGuide() {
             background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;
         `;
         modal.innerHTML = `
-            <div style="background:#fff;color:#222;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;${currentLang === 'he' ? 'direction:rtl;' : ''}">
-                <button id="closeGuideBtn" style="position:absolute;top:8px;${currentLang === 'he' ? 'left:12px;right:auto;' : 'right:12px;left:auto;'}font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+            <div style="background:#fff;color:#222;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
+                <button id="closeGuideBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
                 <div id="guideContent"></div>
             </div>
         `;
         document.body.appendChild(modal);
-    } else {
-        // Update close button position if language changed
-        const closeBtn = modal.querySelector('#closeGuideBtn');
-        if (closeBtn) {
-            closeBtn.style.left = currentLang === 'he' ? '12px' : 'auto';
-            closeBtn.style.right = currentLang === 'he' ? 'auto' : '12px';
-        }
-        // Update direction
-        const inner = modal.querySelector('div');
-        if (inner) inner.style.direction = currentLang === 'he' ? 'rtl' : '';
     }
     modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
     modal.style.display = 'flex';
