@@ -874,7 +874,6 @@ async function renderRooms() {
             <tr>
             <td style="color:${color};font-weight:bold;">${statusLabel}</td>
                 <td>${room.name || "Room " + room.id}</td>
-                <td>${room.updated_at}</td>
             </tr>
         `;
     });
