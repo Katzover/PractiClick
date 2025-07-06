@@ -869,7 +869,7 @@ async function renderRooms() {
         if (room.status === "available") color = "green";
         else if (room.status === "taken") color = "orange";
         else if (room.status === "unavailable") color = "red";
-        const uat = `${parseInt(room.updated_at) * 30}+`;
+        const uat = `${room.updated_at}+`;
         let statusLabel = statusMap[currentLang] && statusMap[currentLang][room.status] ? statusMap[currentLang][room.status] : room.status;
         tbody.innerHTML += `
             <tr>
