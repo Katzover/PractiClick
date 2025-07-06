@@ -1,6 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.")}
+if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות."); showUsageGuide();}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
 let lboard = false;
 let showntoasts = [];
@@ -218,15 +218,6 @@ function updateLangUI() {
         }
     }
 
-    document.getElementById('langSelect').addEventListener('change', function() {
-    currentLang = this.value;
-    updateLangUI();
-
-    if (!localStorage.getItem('practiceUserName')) {
-        userName = askForNameIfNeeded();
-    }
-    });
-
     // Update "No sessions yet" message if needed
     if (document.getElementById('logList').children.length === 1) {
         const first = document.getElementById('logList').firstChild;
@@ -409,6 +400,7 @@ setInterval(lockapp, 15000);
 lockapp();
 
 async function upsertLeaderboard(ms) {
+    if (!shouldSendLeaderboard()) return;
     const weekStart = getWeekStart(new Date());
     const { error } = await withLoading(() =>
         supabase
@@ -426,6 +418,7 @@ async function upsertLeaderboard(ms) {
 }
 
 async function fetchLeaderboard() {
+    if (!shouldSendLeaderboard()) return [];
     const weekStart = getWeekStart(new Date());
     const { data, error } = await withLoading(() =>
         supabase
@@ -1435,10 +1428,18 @@ function createOrUpdateFooterButtons() {
     guideBtn.style = buttonStyle;
     guideBtn.onclick = showUsageGuide;
 
+    // Add settings button
+    const settingsBtn = document.createElement('button');
+    settingsBtn.id = 'settingsBtn';
+    settingsBtn.textContent = (currentLang === 'he') ? 'הגדרות' : 'Settings';
+    settingsBtn.style = buttonStyle;
+    settingsBtn.onclick = showSettingsModal;
+
     footer.appendChild(reload);
     footer.appendChild(creditsBtn);
     footer.appendChild(bugBtn);
     footer.appendChild(guideBtn);
+    footer.appendChild(settingsBtn);
 }
 
 // Ensure buttons are created on load and on language change
@@ -1450,71 +1451,262 @@ updateLangUI = function() {
     createOrUpdateFooterButtons();
 };
 
-document.getElementById('langSelect').addEventListener('change', function() {
-    currentLang = this.value;
-    updateLangUI();
-});
-
+// Remove the language selector from the top (if it exists)
 document.addEventListener('DOMContentLoaded', function() {
-    updateLangUI();
-    document.getElementById('langSelect').value = currentLang;
-    document.body.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
-    // Set cycle mode as default
-    const cycleRadio = document.querySelector('input[name="mode"][value="cycle"]');
-    if (cycleRadio) {
-        cycleRadio.checked = true;
-        showMode('cycle');
+    // Remove language selector from top
+    const langSelect = document.getElementById('langSelect');
+    if (langSelect && langSelect.parentNode) {
+        langSelect.parentNode.removeChild(langSelect);
     }
 });
 
-function showUsageGuide() {
-    const guide = {
-        en: `
-        <h2>🎵 PractiClick - Quick Guide 🎵</h2>
-        <ul>
-            <li><b>Cycle:</b> Set your cycles, lengths, and breaks. Like musical intervals, but less scary.</li>
-            <li><b>Stopwatch:</b> Hit start, play, and pretend you're Usain Bolt (but with an instrument).</li>
-            <li><b>Timer:</b> Set a time, hit start, and race against the clock. No pressure (okay, maybe a little).</li>
-            <li><b>Rooms:</b> Pick a practice room so your friends know you're busy (or just hiding).</li>
-            <li><b>Leaderboard:</b> Practice more, climb higher. Bragging rights included, trophies not (yet).</li>
-            <li><b>Metronome:</b> Stay in time. Or at least try.</li>
-            <li><b>Logs & Summary:</b> See your practice history. Yes, it counts even if you practiced scales.</li>
-        </ul>
-        <p style="color:gray;font-size:0.95em;">Tip: Click the language selector to switch languages. No pop quizzes, promise.</p>
-        <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the footer buttons. Or just yell at your screen, we won't judge.</p>
-        `,
-        he: `
-        <h2>🎵 מדריך זריז לפרקטיקליק 🎵</h2>
-        <ul>
-            <li><b>סבב:</b> קבעו סבבים, אורכים והפסקות. כמו שיעור סולפג', רק פחות מלחיץ.</li>
-            <li><b>סטופר:</b> התחילו, נגנו, ותדמיינו שאתם יוסיין בולט (רק עם כלי נגינה).</li>
-            <li><b>טיימר:</b> קבעו זמן, התחילו, ותנסו להספיק לפני שהשעון מצלצל. בהצלחה!</li>
-            <li><b>חדרים:</b> בחרו חדר תרגול כדי שידעו שאתם עסוקים (או סתם מתחבאים).</li>
-            <li><b>לוח תוצאות:</b> מתרגלים יותר? עולים למעלה! תהילה מובטחת, גביעים פחות.</li>
-            <li><b>מטרונום:</b> שמרו על קצב. או לפחות תנסו.</li>
-            <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול שלכם.</li>
-        </ul>
-        <p style="color:gray;font-size:0.95em;">טיפ: אפשר להחליף שפה מהתפריט למעלה. בלי בוחן פתע, מבטיחים.</p>
-        <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתורים בתחתית. או תצעקו על המסך, לא נשפוט.</p>
-        `
-    };
-    let modal = document.getElementById('usageGuideModal');
+// --- Settings Modal ---
+function showSettingsModal() {
+    let modal = document.getElementById('settingsModal');
     if (!modal) {
         modal = document.createElement('div');
-        modal.id = 'usageGuideModal';
+        modal.id = 'settingsModal';
         modal.style = `
             position:fixed;top:0;left:0;width:100vw;height:100vh;
-            background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;
+            background:rgba(0,0,0,0.7);z-index:4000;display:flex;align-items:center;justify-content:center;
         `;
         modal.innerHTML = `
-            <div style="background:#fff;color:#222;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-                <button id="closeGuideBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
-                <div id="guideContent"></div>
+            <div style="background:#fff;color:#222;padding:24px 18px;max-width:350px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
+                <button id="closeSettingsBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+                <h3 style="margin-top:0">${currentLang === 'he' ? 'הגדרות' : 'Settings'}</h3>
+                <div style="margin-bottom:14px;">
+                    <label style="font-weight:bold;">${currentLang === 'he' ? 'שפה:' : 'Language:'}</label>
+                    <select id="settingsLangSelect" style="margin-left:8px;">
+                        <option value="en"${currentLang === 'en' ? ' selected' : ''}>English</option>
+                        <option value="he"${currentLang === 'he' ? ' selected' : ''}>עברית</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label>
+                        <input type="checkbox" id="settingsLeaderboardOptOut">
+                        ${currentLang === 'he' ? 'אל תשתף את הנתונים שלי בלוח התוצאות' : "Don't send my data to the leaderboard"}
+                    </label>
+                </div>
+                <button id="settingsSaveBtn" style="margin-top:10px;padding:6px 18px;border-radius:5px;border:1px solid #bbb;background:#f8f8f8;cursor:pointer;">
+                    ${currentLang === 'he' ? 'שמור' : 'Save'}
+                </button>
             </div>
         `;
         document.body.appendChild(modal);
     }
-    modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
+    // Set current values
+    modal.querySelector('#settingsLangSelect').value = currentLang;
+    modal.querySelector('#settingsLeaderboardOptOut').checked = !!JSON.parse(localStorage.getItem('optOutLeaderboard') || 'false');
     modal.style.display = 'flex';
-    modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
+
+    modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
+    modal.querySelector('#settingsSaveBtn').onclick = function() {
+        // Save language
+        const newLang = modal.querySelector('#settingsLangSelect').value;
+        currentLang = newLang;
+        localStorage.setItem('lang', newLang);
+        updateLangUI();
+        // Save leaderboard opt-out
+        const optOut = modal.querySelector('#settingsLeaderboardOptOut').checked;
+        localStorage.setItem('optOutLeaderboard', JSON.stringify(optOut));
+        modal.style.display = 'none';
+        showtoast(currentLang === 'he' ? 'ההגדרות נשמרו' : 'Settings saved', "green", 2000);
+    };
 }
+
+// --- Leaderboard Opt-out Logic ---
+function shouldSendLeaderboard() {
+    return !JSON.parse(localStorage.getItem('optOutLeaderboard') || 'false');
+}
+
+// Patch upsertLeaderboard and fetchLeaderboard to respect opt-out
+async function upsertLeaderboard(ms) {
+    if (!shouldSendLeaderboard()) return;
+    const weekStart = getWeekStart(new Date());
+    const { error } = await withLoading(() =>
+        supabase
+            .from('leaderboard')
+            .upsert([{
+                user_name: userName,
+                total_time: ms,
+                week_start: weekStart,
+            }])
+    );
+    if (error) {
+        console.error('Error upserting leaderboard:', error.message);
+    }
+}
+
+async function fetchLeaderboard() {
+    if (!shouldSendLeaderboard()) return [];
+    const weekStart = getWeekStart(new Date());
+    const { data, error } = await withLoading(() =>
+        supabase
+            .from('leaderboard')
+            .select('user_name, total_time')
+            .eq('week_start', weekStart)
+            .order('total_time', { ascending: false })
+    );
+    if (error) {
+        console.error('Error fetching leaderboard:', error.message);
+        return [];
+    }
+    return data || [];
+}
+
+// --- Debugging / Development ---
+// window.ssupabase = supabase; // Uncomment to expose supabase client for debugging
+// window.lboard = () => { lboard = false; renderLeaderboard(); }; // Reset leaderboard for testing
+// window.resetLogs = () => { logs = []; localStorage.setItem('practiceLogs', JSON.stringify(logs)); renderLogs(); }; // Reset logs
+// window.showUsageGuide = showUsageGuide; // Expose guide function
+// window.fetchtoast = fetchtoast; // Expose toast fetch function
+// window.lockapp = lockapp; // Expose app lock function
+// window.update_stamp = update_stamp; // Expose update_stamp function
+// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose auto release function
+// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose release function
+// window.updateRoomStatus = updateRoomStatus; // Expose updateRoomStatus function
+// window.upsertLeaderboard = upsertLeaderboard; // Expose upsertLeaderboard function
+// window.fetchLeaderboard = fetchLeaderboard; // Expose fetchLeaderboard function
+// window.renderLeaderboard = renderLeaderboard; // Expose renderLeaderboard function
+// window.showtoast = showtoast; // Expose showtoast function
+// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose delete function
+// window.askForPracticeRoom = askForPracticeRoom; // Expose room selection function
+// window.startCycle = startCycle; // Expose cycle start function
+// window.stopCycle = stopCycle; // Expose cycle stop function
+// window.pauseCycle = pauseCycle; // Expose cycle pause function
+// window.resumeCycle = resumeCycle; // Expose cycle resume function
+// window.logCycleSession = logCycleSession; // Expose cycle log function
+// window.resetCycle = resetCycle; // Expose cycle reset function
+// window.switchMode = switchMode; // Expose mode switch function
+// window.renderLogs = renderLogs; // Expose logs render function
+// window.renderSummary = renderSummary; // Expose summary render function
+// window.getWeekTotal = getWeekTotal; // Expose week total function
+// window.updateWeekTotal = updateWeekTotal; // Expose week total update function
+// window.showUsageGuide = showUsageGuide; // Expose usage guide function
+// window.schedulePracticeReminders = schedulePracticeReminders; // Expose reminder function
+// window.sendPracticeNotification = sendPracticeNotification; // Expose notification function
+// window.fetchtoast = fetchtoast; // Expose toast fetching function
+// window.lockapp = lockapp; // Expose app locking function
+// window.update_stamp = update_stamp; // Expose timestamp updating function
+// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
+// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
+// window.updateRoomStatus = updateRoomStatus; // Expose room status update function
+// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upsert function
+// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
+// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
+// window.showtoast = showtoast; // Expose toast showing function
+// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
+// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
+// window.startCycle = startCycle; // Expose cycle starting function
+// window.stopCycle = stopCycle; // Expose cycle stopping function
+// window.pauseCycle = pauseCycle; // Expose cycle pausing function
+// window.resumeCycle = resumeCycle; // Expose cycle resuming function
+// window.logCycleSession = logCycleSession; // Expose cycle session logging function
+// window.resetCycle = resetCycle; // Expose cycle resetting function
+// window.switchMode = switchMode; // Expose mode switching function
+// window.renderLogs = renderLogs; // Expose logs rendering function
+// window.renderSummary = renderSummary; // Expose summary rendering function
+// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
+// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
+// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
+// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
+// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
+// window.fetchtoast = fetchtoast; // Expose toast fetching function
+// window.lockapp = lockapp; // Expose app locking function
+// window.update_stamp = update_stamp; // Expose timestamp updating function
+// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
+// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
+// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
+// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
+// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
+// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
+// window.showtoast = showtoast; // Expose toast showing function
+// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
+// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
+// window.startCycle = startCycle; // Expose cycle starting function
+// window.stopCycle = stopCycle; // Expose cycle stopping function
+// window.pauseCycle = pauseCycle; // Expose cycle pausing function
+// window.resumeCycle = resumeCycle; // Expose cycle resuming function
+// window.logCycleSession = logCycleSession; // Expose cycle session logging function
+// window.resetCycle = resetCycle; // Expose cycle resetting function
+// window.switchMode = switchMode; // Expose mode switching function
+// window.renderLogs = renderLogs; // Expose logs rendering function
+// window.renderSummary = renderSummary; // Expose summary rendering function
+// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
+// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
+// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
+// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
+// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
+// window.fetchtoast = fetchtoast; // Expose toast fetching function
+// window.lockapp = lockapp; // Expose app locking function
+// window.update_stamp = update_stamp; // Expose timestamp updating function
+// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
+// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
+// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
+// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
+// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
+// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
+// window.showtoast = showtoast; // Expose toast showing function
+// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
+// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
+// window.startCycle = startCycle; // Expose cycle starting function
+// window.stopCycle = stopCycle; // Expose cycle stopping function
+// window.pauseCycle = pauseCycle; // Expose cycle pausing function
+// window.resumeCycle = resumeCycle; // Expose cycle resuming function
+// window.logCycleSession = logCycleSession; // Expose cycle session logging function
+// window.resetCycle = resetCycle; // Expose cycle resetting function
+// window.switchMode = switchMode; // Expose mode switching function
+// window.renderLogs = renderLogs; // Expose logs rendering function
+// window.renderSummary = renderSummary; // Expose summary rendering function
+// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
+// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
+// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
+// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
+// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
+// window.fetchtoast = fetchtoast; // Expose toast fetching function
+// window.lockapp = lockapp; // Expose app locking function
+// window.update_stamp = update_stamp; // Expose timestamp updating function
+// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
+// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
+// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
+// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
+// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
+// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
+// window.showtoast = showtoast; // Expose toast showing function
+// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
+// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
+// window.startCycle = startCycle; // Expose cycle starting function
+// window.stopCycle = stopCycle; // Expose cycle stopping function
+// window.pauseCycle = pauseCycle; // Expose cycle pausing function
+// window.resumeCycle = resumeCycle; // Expose cycle resuming function
+// window.logCycleSession = logCycleSession; // Expose cycle session logging function
+// window.resetCycle = resetCycle; // Expose cycle resetting function
+// window.switchMode = switchMode; // Expose mode switching function
+// window.renderLogs = renderLogs; // Expose logs rendering function
+// window.renderSummary = renderSummary; // Expose summary rendering function
+// window.getWeekTotal = getWeekTotal; // Expose week total calculation function
+// window.updateWeekTotal = updateWeekTotal; // Expose week total updating function
+// window.showUsageGuide = showUsageGuide; // Expose usage guide displaying function
+// window.schedulePracticeReminders = schedulePracticeReminders; // Expose practice reminders scheduling function
+// window.sendPracticeNotification = sendPracticeNotification; // Expose practice notification sending function
+// window.fetchtoast = fetchtoast; // Expose toast fetching function
+// window.lockapp = lockapp; // Expose app locking function
+// window.update_stamp = update_stamp; // Expose timestamp updating function
+// window.autoReleaseStaleRooms = autoReleaseStaleRooms; // Expose stale room auto-release function
+// window.releaseCurrentPracticeRoom = releaseCurrentPracticeRoom; // Expose current room release function
+// window.updateRoomStatus = updateRoomStatus; // Expose room status updating function
+// window.upsertLeaderboard = upsertLeaderboard; // Expose leaderboard upserting function
+// window.fetchLeaderboard = fetchLeaderboard; // Expose leaderboard fetching function
+// window.renderLeaderboard = renderLeaderboard; // Expose leaderboard rendering function
+// window.showtoast = showtoast; // Expose toast showing function
+// window.deleteAllLeaderboardRows = deleteAllLeaderboardRows; // Expose leaderboard rows deletion function
+// window.askForPracticeRoom = askForPracticeRoom; // Expose practice room asking function
+// window.startCycle = startCycle; // Expose cycle starting function
+// window.stopCycle = stopCycle; // Expose cycle stopping function
+// window.pauseCycle = pauseCycle; // Expose cycle pausing function
+// window.resumeCycle = resumeCycle; // Expose cycle resuming function
+// window.logCycleSession = logCycleSession; // Expose cycle session logging function
+// window.resetCycle = resetCycle; // Expose cycle resetting function
+// window.switchMode = switchMode; // Expose mode switching function
+// window.renderLogs = renderLogs; // Expose logs rendering function
+// window.renderSummary =
