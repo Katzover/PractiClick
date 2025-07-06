@@ -1360,7 +1360,7 @@ schedulePracticeReminders();
 function createOrUpdateFooterButtons() {
     const buttonStyle = `
         color:rgb(0, 0, 0);
-        width: 56px;
+        width: 28px;
         height: 56px;
         padding: 0;
         font-size: 2em;
