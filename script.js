@@ -309,7 +309,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- Loading Animation Helper ---
-function showLoading() {
+function showLoading(msg = "Loading...") {
     let loading = document.getElementById('loadingOverlay');
     if (!loading) {
         loading = document.createElement('div');
@@ -320,6 +320,7 @@ function showLoading() {
             display:flex;align-items:center;justify-content:center;
         `;
         loading.innerHTML = `<div style="font-size:2em;color:#333;">
+            <h1>${msg}</h1>
             <span class="loader" style="display:inline-block;width:2em;height:2em;border:4px solid #ccc;border-top:4px solid #333;border-radius:50%;animation:spin 1s linear infinite;"></span>
         </div>
         <style>
