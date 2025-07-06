@@ -19,16 +19,18 @@ async function withLoading(fn) {
 }
 async function updateRoomStatus(roomName, status, updated_at) {
     if (!roomName || roomName === "Other") return;
-    await withLoading(() =>
+    if (roomName === "*") {
+        await withLoading(() =>
         supabase
             .from('rooms')
-            .update({ status })
-            .eq('name', roomName)
+            .update({ status, updated_at })
+            .eq('*')
     );
+    }
     await withLoading(() =>
         supabase
             .from('rooms')
-            .update({ updated_at })
+            .update({ status, updated_at })
             .eq('name', roomName)
     );
 }
