@@ -857,7 +857,7 @@ async function renderRooms() {
     // Status translation map
     let statusMap = {
         en: { available: "available", taken: "taken", unavailable: "unavailable" },
-        he: { available: "פנוי", taken: "תפוס", unavailable: "לא זמין" }
+        he: { available: "פנוי", taken: "תפוס", unavailable: "נעול" }
     };
     const t = LANGS[currentLang];
     // Update table headers
