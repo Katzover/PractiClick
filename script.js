@@ -1376,12 +1376,11 @@ function showSettingsModal() {
                     </select>
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label for="settingsLeaderboardOptOut" style="font-weight:bold;">
-                        <input type="checkbox" id="settingsLeaderboardOptOut" style="vertical-align:middle;margin-right:4px;">
+                    <button id="settingsLeaderboardOptOutBtn" style="padding:6px 12px;border-radius:5px;border:1px solid #bbb;background:#f8f8f8;cursor:pointer;">
                         ${currentLang === 'he'
-                            ? 'אל תציג אותי בלוח התוצאות'
-                            : 'Opt out of leaderboard (do not send my data)'}
-                    </label>
+                            ? (isLeaderboardOptedOut() ? 'החזר אותי ללוח התוצאות' : 'הסר אותי מלוח התוצאות')
+                            : (isLeaderboardOptedOut() ? 'Opt back in to leaderboard' : 'Opt out of leaderboard')}
+                    </button>
                 </div>
             </div>
         `;
@@ -1389,7 +1388,6 @@ function showSettingsModal() {
     }
     // Set initial values
     modal.querySelector('#settingsLangSelect').value = currentLang;
-    modal.querySelector('#settingsLeaderboardOptOut').checked = isLeaderboardOptedOut();
 
     // Events
     modal.querySelector('#closeSettingsBtn').onclick = () => { modal.style.display = 'none'; };
@@ -1399,11 +1397,26 @@ function showSettingsModal() {
         updateLangUI();
         modal.style.display = 'none';
     };
-    modal.querySelector('#settingsLeaderboardOptOut').onchange = function() {
-        localStorage.setItem('optOutLeaderboard', this.checked ? 'true' : 'false');
-        modal.style.display = 'none';
-        renderLeaderboard();
+    modal.querySelector('#settingsLeaderboardOptOutBtn').onclick = function() {
+        const optedOut = isLeaderboardOptedOut();
+        let msg = optedOut
+            ? (currentLang === 'he'
+                ? "האם להחזיר אותך ללוח התוצאות? הנתונים שלך יישלחו שוב."
+                : "Opt back in to the leaderboard? Your data will be sent again.")
+            : (currentLang === 'he'
+                ? "האם אתה בטוח שברצונך להסיר את עצמך מלוח התוצאות? הנתונים שלך לא יישלחו."
+                : "Are you sure you want to opt out of the leaderboard? Your data will not be sent.");
+        if (confirm(msg)) {
+            localStorage.setItem('optOutLeaderboard', optedOut ? 'false' : 'true');
+            modal.style.display = 'none';
+            renderLeaderboard();
+        }
     };
+    // Update button text if modal is reused
+    const btn = modal.querySelector('#settingsLeaderboardOptOutBtn');
+    btn.textContent = currentLang === 'he'
+        ? (isLeaderboardOptedOut() ? 'החזר אותי ללוח התוצאות' : 'הסר אותי מלוח התוצאות')
+        : (isLeaderboardOptedOut() ? 'Opt back in to leaderboard' : 'Opt out of leaderboard');
     modal.style.display = 'flex';
 }
 
@@ -1559,12 +1572,22 @@ function showUsageGuide() {
             background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;
         `;
         modal.innerHTML = `
-            <div style="background:#fff;color:#222;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-                <button id="closeGuideBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+            <div style="background:#fff;color:#222;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;${currentLang === 'he' ? 'direction:rtl;' : ''}">
+                <button id="closeGuideBtn" style="position:absolute;top:8px;${currentLang === 'he' ? 'left:12px;right:auto;' : 'right:12px;left:auto;'}font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
                 <div id="guideContent"></div>
             </div>
         `;
         document.body.appendChild(modal);
+    } else {
+        // Update close button position if language changed
+        const closeBtn = modal.querySelector('#closeGuideBtn');
+        if (closeBtn) {
+            closeBtn.style.left = currentLang === 'he' ? '12px' : 'auto';
+            closeBtn.style.right = currentLang === 'he' ? 'auto' : '12px';
+        }
+        // Update direction
+        const inner = modal.querySelector('div');
+        if (inner) inner.style.direction = currentLang === 'he' ? 'rtl' : '';
     }
     modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
     modal.style.display = 'flex';
