@@ -1388,25 +1388,46 @@ function createOrUpdateFooterButtons() {
         footer.id = 'footerBtns';
         document.body.appendChild(footer);
     }
-    // Responsive horizontal layout, scroll if overflow
-    footer.style = `
-        position: fixed;
-        bottom: 12px;
-        left: 0;
-        right: 0;
-        z-index: 1001;
-        display: flex;
-        flex-direction: row;
-        gap: 8px;
-        align-items: center;
-        justify-content: center;
-        background: none;
-        box-shadow: none;
-        width: 100vw;
-        padding: 0 4px;
-        overflow-x: auto;
-        pointer-events: auto;
-    `;
+
+    // Responsive: side on desktop, bottom on mobile
+    const isMobile = window.innerWidth <= 600;
+    if (isMobile) {
+        footer.style = `
+            position: fixed;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            box-shadow: none;
+            width: 100vw;
+            padding: 0 4px;
+            overflow-x: auto;
+            pointer-events: auto;
+        `;
+    } else {
+        footer.style = `
+            position: fixed;
+            top: auto;
+            bottom: 32px;
+            ${currentLang === 'he' ? 'left: 24px; right: auto;' : 'right: 24px; left: auto;'}
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: ${currentLang === 'he' ? 'flex-start' : 'flex-end'};
+            background: none;
+            box-shadow: none;
+            width: auto;
+            padding: 0;
+            pointer-events: auto;
+        `;
+    }
     footer.innerHTML = ''; // Clear for language update
 
     // Credits button (emoji: ℹ️)
