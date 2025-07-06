@@ -789,7 +789,7 @@ const secondsInput = document.getElementById('seconds');
 
 // --- Mode Switching Logic (Tab Buttons) ---
 function showMode(mode) {
-
+    localStorage.setItem('mode', mode);
     document.getElementById('cycle-inputs').style.display = 'none';
     document.getElementById('cycleDisplay').style.display = 'none';
     document.getElementById('cycle-controls').style.display = 'none';
