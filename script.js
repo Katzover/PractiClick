@@ -110,7 +110,7 @@ const LANGS = {
 
 window.addEventListener("error", (event) => {
     if (currentLang === 'en') {
-    alert("An error occurred: " + event.message + ". The app might not work; please contact the developer.");
+    alert("An error occurred: " + event.message + ". The app might not work; please contact the developere.");
     } else {
     alert("אירעה שגיאה: " + event.message + ". האפליקציה עשויה לא לעבוד; אנא פנה למפתח.");
     }
@@ -308,6 +308,25 @@ const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZGt6cXlvampmc2hzZHlya3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDc0MDIsImV4cCI6MjA2NTM4MzQwMn0.-NcMckWGJ_Dz5YzzAXRl1VAIcUL8E2XBilicEEX3CVQ';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Add preconnect for Supabase CDN (performance boost)
+(function() {
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = 'https://cdn.jsdelivr.net';
+    link.crossOrigin = '';
+    document.head.appendChild(link);
+})();
+
+// Defer Supabase import until DOMContentLoaded for faster first paint
+let createClient;
+document.addEventListener('DOMContentLoaded', async function() {
+    if (!createClient) {
+        createClient = (await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm")).createClient;
+    }
+    // ...existing code that uses createClient...
+    // You may need to move supabase initialization here if you want true deferral.
+});
+
 // --- Loading Animation Helper ---
 function showLoading() {
     let loading = document.getElementById('loadingOverlay');
@@ -319,19 +338,31 @@ function showLoading() {
             background:rgba(255,255,255,0.7);z-index:2000;
             display:flex;align-items:center;justify-content:center;
         `;
-        loading.innerHTML = `<div style="font-size:2em;color:#333;">
-            <span class="loader" style="display:inline-block;width:2em;height:2em;border:4px solid #ccc;border-top:4px solid #333;border-radius:50%;animation:spin 1s linear infinite;"></span>
-        </div>
-        <style>
-        @keyframes spin { 50% { transform: rotate(360deg); } }
-        </style>`;
+        loading.innerHTML = `<div id="loadingSpinner" style="font-size:2em;color:#333;">
+            <span class="loader" style="display:inline-block;width:2em;height:2em;border:4px solid #ccc;border-top:4px solid #333;border-radius:50%;"></span>
+        </div>`;
         document.body.appendChild(loading);
+
+        // Use JS animation for better performance
+        let angle = 0, running = true;
+        const spinner = loading.querySelector('.loader');
+        function spin() {
+            if (!running) return;
+            angle = (angle + 6) % 360;
+            spinner.style.transform = `rotate(${angle}deg)`;
+            requestAnimationFrame(spin);
+        }
+        loading._stopSpin = () => { running = false; };
+        requestAnimationFrame(spin);
     }
     loading.style.display = 'flex';
 }
 function hideLoading() {
     const loading = document.getElementById('loadingOverlay');
-    if (loading) loading.style.display = 'none';
+    if (loading) {
+        loading.style.display = 'none';
+        if (loading._stopSpin) loading._stopSpin();
+    }
 }
 async function withLoading(fn) {
     showLoading();
