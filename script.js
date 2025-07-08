@@ -1,6 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות."); showUsageGuide();}
+if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
 let lboard = false;
 let showntoasts = [];
@@ -1555,3 +1555,5 @@ function showUsageGuide() {
     modal.style.display = 'flex';
     modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
 }
+
+if (!localStorage.getItem('practiceUserName')) {showUsageGuide();}
