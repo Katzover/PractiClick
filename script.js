@@ -171,6 +171,7 @@ function updateLangUI() {
     document.getElementById('cyclePauseBtn').textContent = t.pause;
     document.getElementById('cycleResetBtn').textContent = t.reset;
     document.getElementById('cycleLogBtn').textContent = t.log;
+    document.getElementById('cycleDisplay').textContent = t.cycle
 
     // Log and summary section titles
     document.getElementById('practiceLogTitle').textContent = t.practiceLog;
@@ -592,10 +593,15 @@ const cycleLogBtn = document.getElementById('cycleLogBtn');
 const cycleStatus = document.getElementById('cycleStatus');
 
 function updateCycleDisplay() {
+    const t = LANGS[currentLang];
     if (cycleMode.inBreak) {
-        cycleDisplay.textContent = "Break: " + formatTime(cycleMode.breakLength - cycleMode.breakElapsed);
+        cycleDisplay.textContent = (currentLang === 'he'
+            ? t.break
+            : "Break") + ": " + formatTime(cycleMode.breakLength - cycleMode.breakElapsed);
     } else {
-        cycleDisplay.textContent = "Cycle " + cycleMode.currentCycle + ": " + formatTime(cycleMode.cycleLength - cycleMode.elapsed);
+        cycleDisplay.textContent = (currentLang === 'he'
+            ? t.cycle
+            : "Cycle") + " " + cycleMode.currentCycle + ": " + formatTime(cycleMode.cycleLength - cycleMode.elapsed);
     }
     // Enable log button if any time has elapsed
     if (cycleMode.totalElapsed > 0 && cycleMode.running) {
@@ -604,10 +610,15 @@ function updateCycleDisplay() {
 }
 
 function updateCycleStatus() {
+    const t = LANGS[currentLang];
     if (cycleMode.inBreak) {
-        cycleStatus.textContent = `Break before cycle ${cycleMode.currentCycle + 1} of ${cycleMode.totalCycles}`;
+        cycleStatus.textContent = (currentLang === 'he'
+            ? `${t.break} לפני ${t.cycle} ${cycleMode.currentCycle + 1} מתוך ${cycleMode.totalCycles}`
+            : `Break before cycle ${cycleMode.currentCycle + 1} of ${cycleMode.totalCycles}`);
     } else {
-        cycleStatus.textContent = `Cycle ${cycleMode.currentCycle} of ${cycleMode.totalCycles}`;
+        cycleStatus.textContent = (currentLang === 'he'
+            ? `${t.cycle} ${cycleMode.currentCycle} מתוך ${cycleMode.totalCycles}`
+            : `Cycle ${cycleMode.currentCycle} of ${cycleMode.totalCycles}`);
     }
 }
 
