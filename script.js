@@ -171,7 +171,6 @@ function updateLangUI() {
     document.getElementById('cyclePauseBtn').textContent = t.pause;
     document.getElementById('cycleResetBtn').textContent = t.reset;
     document.getElementById('cycleLogBtn').textContent = t.log;
-    document.getElementById('cycleDisplay').textContent = t.cycle
 
     // Log and summary section titles
     document.getElementById('practiceLogTitle').textContent = t.practiceLog;
