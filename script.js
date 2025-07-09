@@ -597,6 +597,10 @@ function updateCycleDisplay() {
     } else {
         cycleDisplay.textContent = "Cycle " + cycleMode.currentCycle + ": " + formatTime(cycleMode.cycleLength - cycleMode.elapsed);
     }
+    // Enable log button if any time has elapsed
+    if (cycleMode.totalElapsed > 0 && cycleMode.running) {
+        cycleLogBtn.disabled = false;
+    }
 }
 
 function updateCycleStatus() {
@@ -683,18 +687,30 @@ function cycleTick() {
             }
         }
     }
+    // Enable log button if any time has elapsed
+    if (cycleMode.totalElapsed > 0 && cycleMode.running) {
+        cycleLogBtn.disabled = false;
+    }
 }
 
 function pauseCycle() {
     cycleMode.paused = true;
     cyclePauseBtn.disabled = true;
     cycleStartBtn.disabled = false;
+    // Enable log button if any time has elapsed
+    if (cycleMode.totalElapsed > 0) {
+        cycleLogBtn.disabled = false;
+    }
 }
 
 function resumeCycle() {
     cycleMode.paused = false;
     cyclePauseBtn.disabled = false;
     cycleStartBtn.disabled = true;
+    // Enable log button if any time has elapsed
+    if (cycleMode.totalElapsed > 0) {
+        cycleLogBtn.disabled = false;
+    }
 }
 
 function stopCycle() {
@@ -706,6 +722,10 @@ function stopCycle() {
     cycleCountInput.disabled = cycleLengthInput.disabled = cycleBreakInput.disabled = false;
     // Release room when stopping
     releaseCurrentPracticeRoom();
+    // Enable log button if any time has elapsed
+    if (cycleMode.totalElapsed > 0) {
+        cycleLogBtn.disabled = false;
+    }
 }
 
 function resetCycle() {
@@ -728,6 +748,7 @@ function resetCycle() {
     cycleStatus.textContent = "";
 }
 
+// Allow logging at any time if some time has elapsed
 async function logCycleSession() {
     if (cycleMode.totalElapsed < 1000) return;
     const now = new Date();
@@ -742,7 +763,7 @@ async function logCycleSession() {
     renderLogs();
     renderSummary();
     resetCycle();
-    await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", room.updated_at));
+    await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", 0));
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
     if (currentLang === 'he') {
