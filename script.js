@@ -803,8 +803,8 @@ if (!localStorage.getItem('mode')) {
 } else {
     mode = localStorage.getItem('mode')
 }
-let interval = null;
-let startTime = null;
+let interval = 0;
+let startTime = 0;
 let elapsed = 0;
 let timerDuration = 0;
 let running = false;
