@@ -716,7 +716,7 @@ function pauseCycle() {
     }
 }
 
-function resumeCycle() {
+async function resumeCycle() {
     wakeLock = await navigator.wakeLock.request('screen');
     cycleMode.paused = false;
     cyclePauseBtn.disabled = false;
