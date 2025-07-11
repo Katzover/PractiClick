@@ -951,7 +951,7 @@ function tick() {
     updateDisplay();
 }
 
-function startTimer() {
+async function startTimer() {
     wakeLock = await navigator.wakeLock.request('screen');
     if (mode === 'timer') {
         let min = parseInt(minutesInput.value) || 0;
