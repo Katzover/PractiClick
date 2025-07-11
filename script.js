@@ -3,6 +3,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
 let lboard = false;
+let wakeLock = null;
 let showntoasts = [];
 let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
@@ -641,6 +642,7 @@ window.updateRoomStatus = updateRoomStatus;
 
 // --- Cycle Mode Logic ---
 async function startCycle() {
+    wakeLock = await navigator.wakeLock.request('screen');
     currentPracticeRoom = await withLoading(() => askForPracticeRoom());
     if (!currentPracticeRoom) return;
     await withLoading(() => updateRoomStatus(currentPracticeRoom, "taken", 0));
@@ -704,6 +706,7 @@ function cycleTick() {
 }
 
 function pauseCycle() {
+    wakeLock = null;
     cycleMode.paused = true;
     cyclePauseBtn.disabled = true;
     cycleStartBtn.disabled = false;
@@ -714,6 +717,7 @@ function pauseCycle() {
 }
 
 function resumeCycle() {
+    wakeLock = await navigator.wakeLock.request('screen');
     cycleMode.paused = false;
     cyclePauseBtn.disabled = false;
     cycleStartBtn.disabled = true;
@@ -724,6 +728,7 @@ function resumeCycle() {
 }
 
 function stopCycle() {
+    wakeLock = null;
     cycleMode.running = false;
     clearInterval(cycleMode.interval);
     cycleStartBtn.disabled = true;
@@ -820,6 +825,7 @@ const secondsInput = document.getElementById('seconds');
 
 // --- Mode Switching Logic (Tab Buttons) ---
 function showMode(mode) {
+    wakeLock = null;
     localStorage.setItem('mode', mode);
     document.getElementById('cycle-inputs').style.display = 'none';
     document.getElementById('cycleDisplay').style.display = 'none';
@@ -946,6 +952,7 @@ function tick() {
 }
 
 function startTimer() {
+    wakeLock = await navigator.wakeLock.request('screen');
     if (mode === 'timer') {
         let min = parseInt(minutesInput.value) || 0;
         let sec = parseInt(secondsInput.value) || 0;
@@ -968,6 +975,7 @@ function startTimer() {
 }
 
 function pauseTimer() {
+    wakeLock = null;
     running = false;
     clearInterval(interval);
     startBtn.disabled = false;
@@ -976,6 +984,7 @@ function pauseTimer() {
 }
 
 function resetTimer() {
+    wakeLock = null;
     running = false;
     clearInterval(interval);
     elapsed = 0;
