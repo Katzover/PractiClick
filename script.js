@@ -803,8 +803,8 @@ if (!localStorage.getItem('mode')) {
 } else {
     mode = localStorage.getItem('mode')
 }
-let interval = 0;
-let startTime = 0;
+let interval = null;
+let startTime = null;
 let elapsed = 0;
 let timerDuration = 0;
 let running = false;
@@ -945,168 +945,73 @@ function tick() {
     updateDisplay();
 }
 
-// --- Restore session state on load ---
-function saveSessionState() {
-    const state = {
-        mode,
-        currentPracticeRoom,
-        // Timer/Stopwatch
-        elapsed,
-        timerDuration,
-        running,
-        // Cycle
-        cycleMode: {
-            ...cycleMode
-        }
-    };
-    localStorage.setItem('practiceSessionState', JSON.stringify(state));
+function startTimer() {
+    if (mode === 'timer') {
+        let min = parseInt(minutesInput.value) || 0;
+        let sec = parseInt(secondsInput.value) || 0;
+        timerDuration = (min * 60 + sec) * 1000;
+        if (timerDuration <= 0) return;
+    }
+    withLoading(() => askForPracticeRoom()).then(async room => {
+        if (!room) return; // Cancel if user aborts
+        currentPracticeRoom = room;
+        await withLoading(() => updateRoomStatus(currentPracticeRoom, "taken", room.updated_at)); // Mark as taken
+        running = true;
+        startTime = Date.now() - elapsed;
+        interval = setInterval(tick, 200);
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        resetBtn.disabled = false;
+        logBtn.disabled = true;
+        minutesInput.disabled = secondsInput.disabled = true;
+    });
 }
 
-function clearSessionState() {
-    localStorage.removeItem('practiceSessionState');
+function pauseTimer() {
+    running = false;
+    clearInterval(interval);
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+    logBtn.disabled = false;
 }
 
-function restoreSessionState() {
-    const stateStr = localStorage.getItem('practiceSessionState');
-    if (!stateStr) return false;
-    try {
-        const state = JSON.parse(stateStr);
-        if (!state || !state.mode) return false;
-
-        // Ask user if they want to restore
-        let restore = false;
-        if (state.mode === 'cycle') {
-            restore = confirm(currentLang === 'he'
-                ? "נמצא סשן סבב שלא הסתיים. להמשיך אותו?"
-                : "A cycle session was in progress. Continue?");
-        } else if (state.mode === 'timer') {
-            restore = confirm(currentLang === 'he'
-                ? "נמצא סשן טיימר שלא הסתיים. להמשיך אותו?"
-                : "A timer session was in progress. Continue?");
-        } else if (state.mode === 'stopwatch') {
-            restore = confirm(currentLang === 'he'
-                ? "נמצא סשן סטופר שלא הסתיים. להמשיך אותו?"
-                : "A stopwatch session was in progress. Continue?");
-        }
-        if (!restore) {
-            clearSessionState();
-            return false;
-        }
-
-        // Restore mode and state
-        mode = state.mode;
-        currentPracticeRoom = state.currentPracticeRoom;
-        if (mode === 'cycle' && state.cycleMode) {
-            Object.assign(cycleMode, state.cycleMode);
-            updateCycleDisplay();
-            updateCycleStatus();
-            cycleStartBtn.disabled = cycleMode.running;
-            cyclePauseBtn.disabled = !cycleMode.running || cycleMode.paused;
-            cycleResetBtn.disabled = !cycleMode.running && !cycleMode.paused;
-            cycleLogBtn.disabled = cycleMode.totalElapsed < 1000;
-            cycleCountInput.disabled = cycleLengthInput.disabled = cycleBreakInput.disabled = cycleMode.running;
-            if (cycleMode.running && !cycleMode.paused) {
-                cycleMode.interval = setInterval(cycleTick, 200);
-            }
-        } else if (mode === 'timer' || mode === 'stopwatch') {
-            elapsed = state.elapsed || 0;
-            timerDuration = state.timerDuration || 0;
-            running = state.running || false;
-            updateDisplay();
-            startBtn.disabled = running;
-            pauseBtn.disabled = !running;
-            resetBtn.disabled = false;
-            logBtn.disabled = elapsed < 1000;
-            minutesInput.disabled = secondsInput.disabled = running;
-            if (running) {
-                startTime = Date.now() - elapsed;
-                interval = setInterval(tick, 200);
+function resetTimer() {
+    running = false;
+    clearInterval(interval);
+    elapsed = 0;
+    updateDisplay();
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+    logBtn.disabled = true;
+    minutesInput.disabled = secondsInput.disabled = false;
+    // Release room when resetting timer
+    releaseCurrentPracticeRoom();
+    // --- Reset click logic ---
+    if (typeof resetClickCount === "undefined") window.resetClickCount = 0;
+    if (typeof resetClickTimer === "undefined") window.resetClickTimer = null;
+    resetClickCount++;
+    if (resetClickTimer) clearTimeout(resetClickTimer);
+    resetClickTimer = setTimeout(() => { resetClickCount = 0; }, 1000); // 1s window
+    if (resetClickCount >= 7) {
+        resetClickCount = 0; 
+        if (currentLang == 'he') {
+            if (confirm("האם אתה רוצה לאפס את כל יומני התרגול?")) {
+                resetBtn.disabled = true;
+                logs = [];
+                localStorage.setItem('practiceLogs', JSON.stringify(logs));
+                renderLogs();
+                renderSummary();
             }
         }
-        showMode(mode);
-        return true;
-    } catch (e) {
-        clearSessionState();
-        return false;
+        else if (confirm("Do you want to reset all saved practice logs?")) {
+            resetBtn.disabled = true;
+            logs = [];
+            localStorage.setItem('practiceLogs', JSON.stringify(logs));
+            renderLogs();
+            renderSummary();
+        }
     }
 }
-
-// --- Save session state on relevant events ---
-function setupSessionPersistence() {
-    // Save on every tick/cycleTick
-    const origTick = tick;
-    window.tick = function() {
-        origTick.apply(this, arguments);
-        saveSessionState();
-    };
-    const origCycleTick = cycleTick;
-    window.cycleTick = function() {
-        origCycleTick.apply(this, arguments);
-        saveSessionState();
-    };
-
-    // Save on pause, start, resume, etc.
-    const origPauseTimer = pauseTimer;
-    pauseTimer = function() {
-        origPauseTimer.apply(this, arguments);
-        saveSessionState();
-    };
-    const origStartTimer = startTimer;
-    startTimer = function() {
-        origStartTimer.apply(this, arguments);
-        saveSessionState();
-    };
-    const origPauseCycle = pauseCycle;
-    pauseCycle = function() {
-        origPauseCycle.apply(this, arguments);
-        saveSessionState();
-    };
-    const origResumeCycle = resumeCycle;
-    resumeCycle = function() {
-        origResumeCycle.apply(this, arguments);
-        saveSessionState();
-    };
-    const origStartCycle = startCycle;
-    startCycle = async function() {
-        await origStartCycle.apply(this, arguments);
-        saveSessionState();
-    };
-
-    // Clear on log/reset
-    const origResetTimer = resetTimer;
-    resetTimer = function() {
-        origResetTimer.apply(this, arguments);
-        clearSessionState();
-    };
-    const origResetCycle = resetCycle;
-    resetCycle = function() {
-        origResetCycle.apply(this, arguments);
-        clearSessionState();
-    };
-    const origLogSession = logSession;
-    logSession = async function() {
-        await origLogSession.apply(this, arguments);
-        clearSessionState();
-    };
-    const origLogCycleSession = logCycleSession;
-    logCycleSession = async function() {
-        await origLogCycleSession.apply(this, arguments);
-        clearSessionState();
-    };
-}
-
-// --- Restore session on load ---
-document.addEventListener('DOMContentLoaded', function() {
-    // ...existing code...
-    restoreSessionState();
-    setupSessionPersistence();
-    // ...existing code...
-});
-
-window.addEventListener('beforeunload', function (e) {
-    // ...existing code...
-    saveSessionState();
-});
 
 function switchMode(newMode) {
     releaseCurrentPracticeRoom();
