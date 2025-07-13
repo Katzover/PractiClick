@@ -1067,7 +1067,6 @@ async function logSession() {
     renderSummary();
     resetTimer();
     await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", 0)); // Mark as available
-    schedulePracticeReminders();
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
     if (currentLang === 'he') {
