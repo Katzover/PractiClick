@@ -1343,24 +1343,24 @@ function sendPracticeNotification() {
         if (practicedMin === 0) {
             new Notification("⏰ זמן לתרגל!", {
                 body: "עדיין לא תרגלת היום. התחל סשן כדי לשמור על הרצף!",
-                icon: "favicon-32x32.png"
+                icon: "android-chrome-512x512.png"
             });
         } else if (practicedMin < 120) {
             new Notification("🎶 לתרגל עוד קצת?", {
                 body: `תרגלת ${practicedMin} דקות היום. תוכל להגיע לשעתיים?`,
-                icon: "favicon-32x32.png"
+                icon: "android-chrome-512x512.png"
             });
         }
     } else {
         if (practicedMin === 0) {
             new Notification("⏰ Time to practice!", {
                 body: "You haven't practiced yet today. Start a session to keep your streak going!",
-                icon: "favicon-32x32.png"
+                icon: "android-chrome-512x512.png"
             });
         } else if (practicedMin < 120) {
             new Notification("🎶 Practice a bit more?", {
                 body: `You've practiced ${practicedMin} min today. Can you reach 2 hours?`,
-                icon: "favicon-32x32.png"
+                icon: "android-chrome-512x512.png"
             });
         }
     }
