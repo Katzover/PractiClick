@@ -1363,7 +1363,7 @@ async function sendPracticeNotification() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Basic YOUR_REST_API_KEY" // ← Replace this
+                "Authorization": "os_v2_app_2etnx6e5xbcddf4go6eapp2b5seluslvt4uewreo3c2bqplomvs7pt7425blvhceqbvtompnrzk4vdvkzxt6tysumrqsvneerscuq2y"
             },
             body: JSON.stringify({
                 app_id: "d126dbf8-9db8-4431-9786-778807bf41ec",
