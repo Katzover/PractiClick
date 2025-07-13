@@ -1504,7 +1504,6 @@ function createOrUpdateFooterButtons() {
     guideBtn.onclick = showUsageGuide;
 
     footer.appendChild(reload);
-    footer.appendChild(creditsBtn);
     footer.appendChild(bugBtn);
     footer.appendChild(guideBtn);
 }
