@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+        appId: "d126dbf8-9db8-4431-9786-778807bf41ec",
+        safari_web_id: "web.onesignal.auto.017f9378-7499-4b97-8d47-e55f2bb151c0",
+        notifyButton: {
+            enable: true,
+        },
+        });
+    });
+    </script>
     <div class="container">
 <div style="text-align:right; margin-bottom:10px;">
     <select id="langSelect">

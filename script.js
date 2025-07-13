@@ -1333,69 +1333,60 @@ function getTodayPracticeMs() {
     return total;
 }
 
-function sendPracticeNotification() {
-    if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
+async function sendPracticeNotification() {
     const practicedMs = getTodayPracticeMs();
     const practicedMin = Math.floor(practicedMs / 60000);
 
+    let title, body;
+
     if (currentLang === 'he') {
         if (practicedMin === 0) {
-            new Notification("⏰ זמן לתרגל!", {
-                body: "עדיין לא תרגלת היום. התחל סשן כדי לשמור על הרצף!",
-                icon: "android-chrome-512x512.png"
-            });
+            title = "⏰ זמן לתרגל!";
+            body = "עדיין לא תרגלת היום. התחל סשן כדי לשמור על הרצף!";
         } else if (practicedMin < 120) {
-            new Notification("🎶 לתרגל עוד קצת?", {
-                body: `תרגלת ${practicedMin} דקות היום. תוכל להגיע לשעתיים?`,
-                icon: "android-chrome-512x512.png"
-            });
+            title = "🎶 לתרגל עוד קצת?";
+            body = `תרגלת ${practicedMin} דקות היום. תוכל להגיע לשעתיים?`;
         }
     } else {
         if (practicedMin === 0) {
-            new Notification("⏰ Time to practice!", {
-                body: "You haven't practiced yet today. Start a session to keep your streak going!",
-                icon: "android-chrome-512x512.png"
-            });
+            title = "⏰ Time to practice!";
+            body = "You haven't practiced yet today. Start a session to keep your streak going!";
         } else if (practicedMin < 120) {
-            new Notification("🎶 Practice a bit more?", {
-                body: `You've practiced ${practicedMin} min today. Can you reach 2 hours?`,
-                icon: "android-chrome-512x512.png"
-            });
+            title = "🎶 Practice a bit more?";
+            body = `You've practiced ${practicedMin} min today. Can you reach 2 hours?`;
         }
     }
-}
 
+    // Push via OneSignal REST API (TEST ONLY)
+    try {
+        const response = await fetch("https://onesignal.com/api/v1/notifications", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Basic YOUR_REST_API_KEY" // ← Replace this
+            },
+            body: JSON.stringify({
+                app_id: "d126dbf8-9db8-4431-9786-778807bf41ec",
+                included_segments: ["Subscribed Users"],
+                headings: { en: title },
+                contents: { en: body },
+                url: "https://prac-t.netlify.app/"
+            })
+        });
 
-if ('Notification' in window && Notification.permission !== 'granted') {
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(() => {
-            Notification.requestPermission();
-        }, 1000);
-    });
-}
+        const result = await response.json();
+        console.log("Push response:", result);
 
-function schedulePracticeReminders() {
-    if (practiceReminderInterval) clearInterval(practiceReminderInterval);
-
-    // Random interval between 60 and 90 minutes (in ms)
-    function nextInterval() {
-        return (60 + Math.floor(Math.random() * 31)) * 60 * 1000;
+        if (response.ok) {
+            alert("✅ Push sent!");
+        } else {
+            alert("❌ Push failed: " + JSON.stringify(result));
+        }
+    } catch (error) {
+        console.error("Push error:", error);
+        alert("❌ Error sending push");
     }
-
-    function reminderLoop() {
-        sendPracticeNotification();
-        practiceReminderInterval = setTimeout(reminderLoop, nextInterval());
-    }
-
-    // Only schedule if notifications are allowed
-    if ('Notification' in window && Notification.permission === 'granted') {
-        practiceReminderInterval = setTimeout(reminderLoop, nextInterval());
-    }
 }
-
-// Start reminders on load
-schedulePracticeReminders();
 
 function createOrUpdateFooterButtons() {
     // Use emoji for icons, smaller size, and responsive width
@@ -1488,11 +1479,6 @@ function createOrUpdateFooterButtons() {
     reload.style = buttonStyle;
     reload.onclick = function() {
         window.location.reload();
-
-        new Notification("E", {
-                body: "noti works yipppiiieeee!",
-                icon: "android-chrome-512x512.png"
-            });
     };
 
     // Usage guide button (emoji: ❔)
