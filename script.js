@@ -1343,24 +1343,24 @@ function sendPracticeNotification() {
         if (practicedMin === 0) {
             new Notification("⏰ זמן לתרגל!", {
                 body: "עדיין לא תרגלת היום. התחל סשן כדי לשמור על הרצף!",
-                icon: "https://cdn-icons-png.flaticon.com/512/727/727245.png"
+                icon: "favicon-32x32.png"
             });
         } else if (practicedMin < 120) {
             new Notification("🎶 לתרגל עוד קצת?", {
                 body: `תרגלת ${practicedMin} דקות היום. תוכל להגיע לשעתיים?`,
-                icon: "https://cdn-icons-png.flaticon.com/512/727/727245.png"
+                icon: "favicon-32x32.png"
             });
         }
     } else {
         if (practicedMin === 0) {
             new Notification("⏰ Time to practice!", {
                 body: "You haven't practiced yet today. Start a session to keep your streak going!",
-                icon: "https://cdn-icons-png.flaticon.com/512/727/727245.png"
+                icon: "favicon-32x32.png"
             });
         } else if (practicedMin < 120) {
             new Notification("🎶 Practice a bit more?", {
                 body: `You've practiced ${practicedMin} min today. Can you reach 2 hours?`,
-                icon: "https://cdn-icons-png.flaticon.com/512/727/727245.png"
+                icon: "favicon-32x32.png"
             });
         }
     }
@@ -1536,7 +1536,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateLangUI();
     document.getElementById('langSelect').value = currentLang;
     document.body.dir = (currentLang === 'he') ? 'rtl' : 'ltr';
-    // Set cycle mode as default
     const cycleRadio = document.querySelector('input[name="mode"][value="cycle"]');
     if (cycleRadio) {
         cycleRadio.checked = true;
