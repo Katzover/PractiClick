@@ -1470,20 +1470,6 @@ function createOrUpdateFooterButtons() {
     }
     footer.innerHTML = ''; // Clear for language update
 
-    // Credits button (emoji: ℹ️)
-    const creditsBtn = document.createElement('button');
-    creditsBtn.id = 'creditsBtn';
-    creditsBtn.title = (currentLang === 'he') ? 'קרדיטים' : 'Credits';
-    creditsBtn.innerHTML = 'ℹ️';
-    creditsBtn.style = buttonStyle;
-    creditsBtn.onclick = function() {
-        alert(
-            (currentLang === 'he')
-            ? "פיתוח: איתמר קצובר\nעיצוב: גם איתמר קצובר\nתודה לכל המשתמשים!"
-            : "Developed by Itamar Katzover\nDesign: yogev sharon\nThanks to all users!"
-        );
-    };
-
     // Bug report button (emoji: 🐞)
     const bugBtn = document.createElement('button');
     bugBtn.id = 'bugBtn';
@@ -1502,6 +1488,11 @@ function createOrUpdateFooterButtons() {
     reload.style = buttonStyle;
     reload.onclick = function() {
         window.location.reload();
+
+        new Notification("E", {
+                body: "noti works yipppiiieeee!",
+                icon: "android-chrome-512x512.png"
+            });
     };
 
     // Usage guide button (emoji: ❔)
