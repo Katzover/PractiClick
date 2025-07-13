@@ -1549,30 +1549,30 @@ function showUsageGuide() {
         en: `
         <h2>🎵 PractiClick - Quick Guide 🎵</h2>
         <ul>
-            <li><b>Cycle:</b> Set your cycles, lengths, and breaks. Like musical intervals, but less scary.</li>
-            <li><b>Stopwatch:</b> Hit start, play, and pretend you're Usain Bolt (but with an instrument).</li>
-            <li><b>Timer:</b> Set a time, hit start, and race against the clock. No pressure (okay, maybe a little).</li>
-            <li><b>Rooms:</b> Pick a practice room so your friends know you're busy (or just hiding).</li>
+            <li><b>Cycle:</b> Set your cycles, lengths, and breaks.</li>
+            <li><b>Stopwatch:</b> Hit start, and play for as long you can.</li>
+            <li><b>Timer:</b> Set a time, hit start, and race against the clock. No pressur.</li>
+            <li><b>Rooms:</b> Know what room is taken from your bed.</li>
             <li><b>Leaderboard:</b> Practice more, climb higher. Bragging rights included, trophies not (yet).</li>
             <li><b>Metronome:</b> Stay in time. Or at least try.</li>
-            <li><b>Logs & Summary:</b> See your practice history. Yes, it counts even if you practiced scales.</li>
+            <li><b>Logs & Summary:</b> See your practice history. Yes, it counts even if you "practiced" random stuff.</li>
         </ul>
-        <p style="color:gray;font-size:0.95em;">Tip: Click the language selector to switch languages. No pop quizzes, promise.</p>
-        <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the footer buttons. Or just yell at your screen, we won't judge.</p>
+        <p style="color:gray;font-size:0.95em;">Tip: Click the language selector to switch languages.</p>
+        <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the '🐞' button. Or just contact me on whatsapp.</p>
         `,
         he: `
         <h2>🎵 מדריך זריז לפרקטיקליק 🎵</h2>
         <ul>
-            <li><b>סבב:</b> קבעו סבבים, אורכים והפסקות. כמו שיעור סולפג', רק פחות מלחיץ.</li>
-            <li><b>סטופר:</b> התחילו, נגנו, ותדמיינו שאתם יוסיין בולט (רק עם כלי נגינה).</li>
+            <li><b>סבב:</b> קבעו סבבים, אורכים והפסקות.</li>
+            <li><b>סטופר:</b> התחילו, נגנו, לכמה זמן שאתם יכולים.</li>
             <li><b>טיימר:</b> קבעו זמן, התחילו, ותנסו להספיק לפני שהשעון מצלצל. בהצלחה!</li>
-            <li><b>חדרים:</b> בחרו חדר תרגול כדי שידעו שאתם עסוקים (או סתם מתחבאים).</li>
+            <li><b>חדרים:</b> ראו איזה חדרים תפוסים בלי לצאת מהפנימיה</li>
             <li><b>לוח תוצאות:</b> מתרגלים יותר? עולים למעלה!.</li>
             <li><b>מטרונום:</b> שמרו על קצב. או לפחות תנסו.</li>
             <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול שלכם.</li>
         </ul>
-        <p style="color:gray;font-size:0.95em;">טיפ: אפשר להחליף שפה מהתפריט למעלה. בלי בוחן פתע, מבטיחים.</p>
-        <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתורים בתחתית. או תצעקו על המסך, לא נשפוט.</p>
+        <p style="color:gray;font-size:0.95em;">טיפ: אפשר להחליף שפה מהתפריט למעלה.</p>
+        <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתור ה"🐞". או תפנו אלי בוואצאפ.</p>
         `
     };
     let modal = document.getElementById('usageGuideModal');
