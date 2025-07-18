@@ -1,4 +1,5 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { platform } from "os";
 
 if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
@@ -1571,4 +1572,6 @@ function showUsageGuide() {
 }
 
 if (!localStorage.getItem('lang')) {showUsageGuide();}
-alert(navigator.platform)
+if (navigator.userAgentData) {
+  const platform = navigator.userAgentData.platform;
+} alert(platform)
