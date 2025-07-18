@@ -1572,6 +1572,12 @@ function showUsageGuide() {
 }
 
 if (!localStorage.getItem('lang')) {showUsageGuide();}
-if (navigator.userAgentData) {
-  const platform = navigator.userAgentData.platform;
-} alert(platform)
+function getOS() {
+  const userAgent = navigator.userAgent.toLowerCase();
+  if (userAgent.includes("android")) return "Android";
+  if (userAgent.includes("iphone") || userAgent.includes("ipad")) return "iOS";
+  if (userAgent.includes("win")) return "Windows";
+  if (userAgent.includes("mac")) return "MacOS";
+  if (userAgent.includes("linux")) return "Linux";
+  return "Unknown";
+} alert(getOS())
