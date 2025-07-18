@@ -1570,4 +1570,5 @@ function showUsageGuide() {
     modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
 }
 
-if (!localStorage.getItem('practiceUserName')) {showUsageGuide();}
+if (!localStorage.getItem('lang')) {showUsageGuide();}
+alert(navigator.platform)
