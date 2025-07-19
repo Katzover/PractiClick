@@ -1491,6 +1491,20 @@ function createOrUpdateFooterButtons() {
     footer.appendChild(reload);
     footer.appendChild(bugBtn);
     footer.appendChild(guideBtn);
+
+
+    // Developer console button (emoji: 🛠️)
+    const consoleBtn = document.createElement('button');
+    consoleBtn.id = 'consoleBtn';
+    consoleBtn.title = (currentLang === 'he') ? 'קונסולה' : 'Console';
+    consoleBtn.innerHTML = '🛠️';
+    consoleBtn.style = buttonStyle;
+    consoleBtn.onclick = devconsole;
+
+    footer.appendChild(reload);
+    footer.appendChild(bugBtn);
+    footer.appendChild(guideBtn);
+    footer.appendChild(consoleBtn);
 }
 
 // Ensure buttons are created on load and on language change
@@ -1506,6 +1520,7 @@ document.getElementById('langSelect').addEventListener('change', function() {
     currentLang = this.value;
     updateLangUI();
 });
+
 
 document.addEventListener('DOMContentLoaded', function() {
     updateLangUI();
@@ -1568,6 +1583,15 @@ function showUsageGuide() {
     modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
     modal.style.display = 'flex';
     modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
+}
+
+function devconsole() {
+    if (lang === 'he') {
+        msg = 'אם אין לך מושג מה זה פשוט תתעלם'
+    } else {
+        msg = 'If you have no idea what this is, just ignore it'}
+    command = prompt(msg)
+    eval(commmand)
 }
 
 if (!localStorage.getItem('lang')) {showUsageGuide();}
