@@ -1593,12 +1593,11 @@ function devconsole() {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
     try {
-        if (command) {return;}
         output = eval(command);
     } catch (e) {
-        if (command) {return;}
         output = e.message;
     }
+    if (command) {return;}
     alert(output);
 }
 
