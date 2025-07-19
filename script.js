@@ -1586,6 +1586,7 @@ function showUsageGuide() {
 }
 
 function devconsole() {
+    let msg, command, output;
     if (currentLang === 'he') {
         msg = 'אם אין לך מושג מה זה פשוט תתעלם'
     } else {
