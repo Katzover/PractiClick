@@ -1595,6 +1595,7 @@ function devconsole() {
     try {
     output = eval(command);
     } catch (e) {
+        if (command) {return;}
         output = e.message;
     }
     alert(output);
