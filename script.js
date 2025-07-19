@@ -1591,7 +1591,7 @@ function devconsole() {
         msg = 'אם אין לך מושג מה זה פשוט תתעלם'
     } else {
         msg = 'If you have no idea what this is, just ignore it'}
-    command = prompt(msg);
+    command = prompt(msg, "");
     output = eval(commmand);
     alert(output);
 }
