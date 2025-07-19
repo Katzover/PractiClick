@@ -1592,7 +1592,7 @@ function devconsole() {
     } else {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
-    output = eval(commmand);
+    output = eval(command);
     alert(output);
 }
 
