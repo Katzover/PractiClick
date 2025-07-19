@@ -1592,7 +1592,11 @@ function devconsole() {
     } else {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
+    try {
     output = eval(command);
+    } catch (e) {
+        output = e.message;
+    }
     alert(output);
 }
 
