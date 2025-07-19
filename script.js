@@ -1586,12 +1586,13 @@ function showUsageGuide() {
 }
 
 function devconsole() {
-    if (lang === 'he') {
+    if (currentLang === 'he') {
         msg = 'אם אין לך מושג מה זה פשוט תתעלם'
     } else {
         msg = 'If you have no idea what this is, just ignore it'}
-    command = prompt(msg)
-    eval(commmand)
+    command = prompt(msg);
+    output = eval(commmand);
+    alert(output);
 }
 
 if (!localStorage.getItem('lang')) {showUsageGuide();}
