@@ -350,7 +350,7 @@ async function showtoast(msg, color="white", duration = 10000, size = "16px") {
     toast.textContent = msg;
     toast.style.fontSize = size;
     toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
+    toast.style.bottom = '40px';
     toast.style.left = '50%';
     toast.style.transform = 'translateX(-50%)';
     toast.style.backgroundColor = color;
