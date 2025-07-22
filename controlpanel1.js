@@ -136,4 +136,15 @@ document.getElementById('reopen').addEventListener('click', async () => {
 
     alert('server is now unblocked, everyone can access the app again');
 });
-// whoever touched my code; you are a mean person ):
+
+document.getElementById('updateversion').addEventListener('click', async () => {
+    const { data, error } = await withLoading(() =>
+        supabase
+            .from('down')
+            .update('why', version)
+            .eq('id', 2)
+    ); if (error) {
+        console.error('Error fetching version:', error.message);
+        return;
+    } alert(`Version updated to ${version}`);
+});

@@ -1586,7 +1586,7 @@ function showUsageGuide() {
     modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
 }
 
-async function devconsole() {
+function devconsole() {
     let msg, command, output;
     if (currentLang === 'he') {
         msg = 'אם אין לך מושג מה זה פשוט תתעלם'
@@ -1594,7 +1594,7 @@ async function devconsole() {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
     try {
-        output = await eval(command);
+        output = eval(command);
     } catch (e) {
         output = e.message;
     }
@@ -1625,16 +1625,5 @@ async function getversion() {
     return data[0].why;
 }
 
-window.setversion = async function setVersion(version) {
-    let { data, error } = await withLoading(() =>
-        supabase
-            .from('down')
-            .update('why', version)
-            .eq('id', 2)
-    ); if (error) {
-        console.error('Error fetching version:', error.message);
-        return;
-    } return `Version updated to ${version}`;
-};
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
