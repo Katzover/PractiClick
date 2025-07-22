@@ -1586,7 +1586,7 @@ function showUsageGuide() {
     modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
 }
 
-function devconsole() {
+async function devconsole() {
     let msg, command, output;
     if (currentLang === 'he') {
         msg = 'אם אין לך מושג מה זה פשוט תתעלם'
@@ -1594,7 +1594,7 @@ function devconsole() {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
     try {
-        output = eval(command);
+        output = await eval(command);
     } catch (e) {
         output = e.message;
     }
@@ -1625,7 +1625,7 @@ async function getversion() {
     return data[0].why;
 }
 
-window.updatversion = async function updateVersion(version) {
+window.setversion = async function setVersion(version) {
     let { data, error } = await withLoading(() =>
         supabase
             .from('down')
@@ -1637,4 +1637,4 @@ window.updatversion = async function updateVersion(version) {
     } return `Version updated to ${version}`;
 };
 getversion();
-setInterval(getversion, 1000 * 60 * 60 );
+setInterval(getversion, 1000 * 60 * 60);
