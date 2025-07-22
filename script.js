@@ -1625,7 +1625,7 @@ async function getversion() {
     return data[0].why;
 }
 
-window.updatversion(version) = async function() {
+window.updatversion = async function updateVersion(version) {
     let { data, error } = await withLoading(() =>
         supabase
             .from('down')
@@ -1637,4 +1637,4 @@ window.updatversion(version) = async function() {
     } return `Version updated to ${version}`;
 };
 getversion();
-setInterval(getversion, 1000 * 60 * 60 ); // Check for updates every hour
+setInterval(getversion, 1000 * 60 * 60 );
