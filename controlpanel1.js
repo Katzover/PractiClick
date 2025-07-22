@@ -146,5 +146,5 @@ document.getElementById('updateversion').addEventListener('click', async () => {
     ); if (error) {
         console.error('Error fetching version:', error.message);
         return;
-    } alert(`Version updated to ${version}`);
+    } alert(`Version updated to ${document.getElementById('version').value}`);
 });
