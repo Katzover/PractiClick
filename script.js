@@ -1,3 +1,5 @@
+const version = localStorage.getItem('version');
+
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
@@ -1602,3 +1604,23 @@ function devconsole() {
 }
 
 if (!localStorage.getItem('lang')) {showUsageGuide();}
+
+await function getversion() {
+    let { data } = await withLoading(() =>
+        supabase
+            .from('down')
+            .select('why')
+            .eq('id', 2)
+    );
+    if (data[0].why !== localStorage.getItem('version')) {
+        if (currentLang === 'he') {
+            alert("האפליקציה עודכנה.")
+        } else {
+            alert("The app has been updated.");
+        }
+        localStorage.setItem('version', data[0].why);
+    }
+    return data[0].why;
+}
+
+setinterval(getversion, 1000 * 60 * 60 ); // Check for updates every hour
