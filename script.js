@@ -1,7 +1,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 const version = localStorage.getItem('version');
 
-window.control = function location() {window.location.href = 'https://prac-t.netlify.app/controlpanel1';}
+window.control = function control() {window.location.href = 'https://prac-t.netlify.app/controlpanel1';}
 if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
 let lboard = false;
