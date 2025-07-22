@@ -1,6 +1,5 @@
-const version = localStorage.getItem('version');
-
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+const version = localStorage.getItem('version');
 
 if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
@@ -1606,12 +1605,15 @@ function devconsole() {
 if (!localStorage.getItem('lang')) {showUsageGuide();}
 
 await function getversion() {
-    let { data } = await withLoading(() =>
+    let { data, error } = await withLoading(() =>
         supabase
             .from('down')
             .select('why')
             .eq('id', 2)
-    );
+    ); if (error) {
+        console.error('Error fetching version:', error.message);
+        return;
+    }
     if (data[0].why !== localStorage.getItem('version')) {
         if (currentLang === 'he') {
             alert("האפליקציה עודכנה.")
