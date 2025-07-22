@@ -1624,5 +1624,5 @@ async function getversion() {
     }
     return data[0].why;
 }
-
+getversion();
 setinterval(getversion, 1000 * 60 * 60 ); // Check for updates every hour
