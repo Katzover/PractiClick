@@ -1605,7 +1605,7 @@ function devconsole() {
 if (!localStorage.getItem('lang')) {showUsageGuide();}
 
 async function getversion() {
-    const { data, error } = await withLoading(() =>
+    let { data, error } = await withLoading(() =>
         supabase
             .from('down')
             .select('why')
