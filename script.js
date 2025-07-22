@@ -1624,5 +1624,17 @@ async function getversion() {
     }
     return data[0].why;
 }
+
+window.updatversion(version) = async function() {
+    let { data, error } = await withLoading(() =>
+        supabase
+            .from('down')
+            .update('why', version)
+            .eq('id', 2)
+    ); if (error) {
+        console.error('Error fetching version:', error.message);
+        return;
+    } return `Version updated to ${version}`;
+};
 getversion();
 setInterval(getversion, 1000 * 60 * 60 ); // Check for updates every hour
