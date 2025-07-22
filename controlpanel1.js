@@ -141,7 +141,7 @@ document.getElementById('updateversion').addEventListener('click', async () => {
     const { data, error } = await withLoading(() =>
         supabase
             .from('down')
-            .update('why', version)
+            .update([{ why: document.getElementById('version').value }])
             .eq('id', 2)
     ); if (error) {
         console.error('Error fetching version:', error.message);
