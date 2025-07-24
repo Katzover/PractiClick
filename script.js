@@ -330,11 +330,6 @@ function showLoading() {
         document.body.appendChild(loading);
     }
     loading.style.display = 'flex';
-    window.addEventListener('click', function(e){   
-    if (!document.getElementById('loading').contains(e.target)){
-        hideLoading();
-    }
-});
 }
 function hideLoading() {
     const loading = document.getElementById('loadingOverlay');
@@ -1573,6 +1568,7 @@ function showUsageGuide() {
         <p style="color:gray;font-size:0.95em;">העמוד הזה יופיע כל פעם שהאפליקציה מקבלת עדכון!</p>
         `
     };
+    
     let modal = document.getElementById('usageGuideModal');
     if (!modal) {
         modal = document.createElement('div');
@@ -1588,10 +1584,20 @@ function showUsageGuide() {
             </div>
         `;
         document.body.appendChild(modal);
+        
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
     }
+    
     modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
     modal.style.display = 'flex';
-    modal.querySelector('#closeGuideBtn').onclick = () => { modal.style.display = 'none'; };
+    
+    modal.querySelector('#closeGuideBtn').onclick = () => { 
+        modal.style.display = 'none'; 
+    };
 }
 
 function devconsole() {
