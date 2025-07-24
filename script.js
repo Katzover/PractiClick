@@ -483,7 +483,7 @@ async function renderLeaderboard() {
 }
 
 
-function askForNameIfNeeded() {
+async function askForNameIfNeeded() {
     let name = localStorage.getItem('practiceUserName');
     if (!name) {
         let msg = currentLang === 'he'
@@ -503,6 +503,10 @@ function askForNameIfNeeded() {
         location.reload()
         localStorage.removeItem('practiceUserName');
     }
+    const { data, error } = await withLoading(() => supabase
+        .from('online')
+        .insert({ username: name.trim(), is_on: true })
+        );
     return name;
 }
 
@@ -1038,6 +1042,26 @@ function switchMode(newMode) {
 document.querySelectorAll('input[name="mode"]').forEach(radio => {
     radio.addEventListener('change', e => switchMode(e.target.value));
 });
+
+window.addEventListener('onload', async () => {
+    if (localStorage.getItem('practiceUserName')) {
+        const { data, error } = await withLoading(() => supabase
+            .from('online')
+            .upsert({ username: localStorage.getItem('practiceUserName'), is_on: true })
+            .eq('username', userName)
+        );
+    }
+})
+
+window.addEventListener('beforeunload', async () => {
+    if (localStorage.getItem('practiceUserName')) {
+        const { data, error} = await withLoading(() => supabase
+            .from('online')
+            .update({ is_on: false })
+            .eq('username', userName)
+        );
+    }
+})
 
 startBtn.onclick = startTimer;
 pauseBtn.onclick = pauseTimer;
