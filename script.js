@@ -351,7 +351,7 @@ async function showtoast(msg, color="white", duration = 10000, size = "16px") {
     toast.textContent = msg;
     toast.style.fontSize = size;
     toast.style.position = 'fixed';
-    toast.style.bottom = '40px';
+    toast.style.bottom = '80px';
     toast.style.left = '50%';
     toast.style.transform = 'translateX(-50%)';
     toast.style.backgroundColor = color;
@@ -373,16 +373,15 @@ async function fetchtoast() {
         .select('*')
 
     if (error) {
-        console.error("Error fetching rooms:", error);
+        console.error("Error fetching toast:", error);
         return [];
     }
-    if (data.msg) {data = data[0];
+    if (data[0].msg) {data = data[0];
     if (!showntoasts.includes(data.msg)) {
     await showtoast(data.msg, data.color, data.dur, data.size);
-    showntoasts.push(data.msg);}
-    }  else {
-        return
-    }
+    showntoasts.push(data.msg);}}
+    return;
+
 }
 
 setInterval(fetchtoast, 15000);
