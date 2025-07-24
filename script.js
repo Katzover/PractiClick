@@ -375,7 +375,8 @@ async function fetchtoast() {
         console.error("Error fetching toast:", error);
         return [];
     }
-    if (data[0].msg) {data = data[0];
+    if (data[0]) {
+    data = data[0];
     if (!showntoasts.includes(data.msg)) {
     await showtoast(data.msg, data.color, data.dur, data.size);
     showntoasts.push(data.msg);}}
