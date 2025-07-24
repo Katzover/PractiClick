@@ -1289,9 +1289,9 @@ function scheduleMetronomeTick(time, accented) {
     const o = ctx.createOscillator();
     const g = ctx.createGain();
     let freq = 1000;
-    if (metroSoundValue === "high") freq = accented ? 1200 : 800;
-    if (metroSoundValue === "mid") freq = accented ? 900 : 600;
-    if (metroSoundValue === "low") freq = accented ? 600 : 400;
+    if (metroSoundValue === "high") freq = accented ? 900 : 600;
+    if (metroSoundValue === "mid") freq = accented ? 600 : 400;
+    if (metroSoundValue === "low") freq = accented ? 300 : 100;
     o.type = "square";
     o.frequency.value = freq;
     g.gain.value = metroVolumeValue * (accented ? 1 : 0.7);
@@ -1306,6 +1306,7 @@ function scheduleMetronomeTick(time, accented) {
 }
 
 function metroScheduler() {
+    existancesnitcher()
     const ctx = metroAudioCtx;
     while (metroNextTickTime < ctx.currentTime + 0.5) { // Schedule 0.5s ahead
         const accented = (metroTickCount % metroAccentValue === 0);
