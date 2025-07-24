@@ -1039,21 +1039,15 @@ document.querySelectorAll('input[name="mode"]').forEach(radio => {
     radio.addEventListener('change', e => switchMode(e.target.value));
 });
 
-window.addEventListener('click', async () => {
-    if (localStorage.getItem('practiceUserName')) {
-        const { data, error } = await withLoading(() => supabase
-            .from('online')
-            .upsert({ username: localStorage.getItem('practiceUserName'), is_on: true })
-            .eq('username', userName)
-        );
-    }
-})
+window.addEventListener('click', existancesnitcher);
+window.addEventListener('scroll', existancesnitcher)
+
 let idleTimer
 window.addEventListener('beforeunload', exitsnitcher);
 window.addEventListener('pagehide', exitsnitcher);
 function resetIdleTimer() {
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(exitsnitcher, 3000)
+    idleTimer = setTimeout(exitsnitcher, 1000)
 }
 
 window.addEventListener('mousemove', resetIdleTimer);
@@ -1063,6 +1057,15 @@ window.addEventListener('scroll', resetIdleTimer);
 
 resetIdleTimer();
 
+async function existancesnitcher() {
+    if (localStorage.getItem('practiceUserName')) {
+        const { data, error } = await withLoading(() => supabase
+            .from('online')
+            .upsert({ username: localStorage.getItem('practiceUserName'), is_on: true })
+            .eq('username', userName)
+        );
+    }
+}
 
 async function exitsnitcher() {
     if (localStorage.getItem('practiceUserName')) {
