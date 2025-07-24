@@ -1061,11 +1061,10 @@ resetIdleTimer();
 
 async function existancesnitcher() {
     if (localStorage.getItem('practiceUserName')) {
-        const { data, error } = await (() => supabase
+        const { data, error } = await  supabase
             .from('online')
             .upsert({ username: localStorage.getItem('practiceUserName'), is_on: true })
-            .eq('username', userName)
-        );
+            .eq('username', userName);
     }
 }
 
