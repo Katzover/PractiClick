@@ -266,7 +266,7 @@ async function askForPracticeRoom() {
             ? "בחר חדר תרגול"
             : "Choose a practice room";
         optionsDiv.innerHTML = '';
-        
+
         // "Other" option
         const otherBtn = document.createElement('button');
         otherBtn.textContent = currentLang === 'he' ? "אחר" : "Other";
@@ -1661,6 +1661,7 @@ function devconsole() {
     } else {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
+    if (command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1'}
     try {
         output = eval(command);
     } catch (e) {
