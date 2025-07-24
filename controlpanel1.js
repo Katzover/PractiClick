@@ -176,8 +176,8 @@ function updateTable(creatures) {
     
     const statusCell = document.createElement('td');
     statusCell.innerHTML = creature.is_on 
-      ? '<span class="online">Online</span>' 
-      : '<span class="offline">Offline</span>';
+      ? '<span class="online">Active</span>' 
+      : '<span class="offline">Idle</span>';
     row.appendChild(statusCell);
     
     tbody.appendChild(row);
