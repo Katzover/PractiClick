@@ -1043,7 +1043,7 @@ document.querySelectorAll('input[name="mode"]').forEach(radio => {
     radio.addEventListener('change', e => switchMode(e.target.value));
 });
 
-window.addEventListener('onload', async () => {
+window.addEventListener('click', async () => {
     if (localStorage.getItem('practiceUserName')) {
         const { data, error } = await withLoading(() => supabase
             .from('online')
