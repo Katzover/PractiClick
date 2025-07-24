@@ -1550,6 +1550,7 @@ function showUsageGuide() {
         </ul>
         <p style="color:gray;font-size:0.95em;">Tip: Click the language selector to switch languages.</p>
         <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the '🐞' button. Or just contact me on whatsapp.</p>
+        <p style="color:gray;font-size:0.95em;">Side note: This page will pop up everytime the app is updated</p>
         `,
         he: `
         <h2>🎵 מדריך זריז לפרקטיקליק 🎵</h2>
@@ -1564,6 +1565,7 @@ function showUsageGuide() {
         </ul>
         <p style="color:gray;font-size:0.95em;">טיפ: אפשר להחליף שפה מהתפריט למעלה.</p>
         <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתור ה"🐞". או תפנו אלי בוואצאפ.</p>
+        <p style="color:gray;font-size:0.95em;">העמוד הזה יופיע כל פעם שהאפליקציה מקבלת עדכון!</p>
         `
     };
     let modal = document.getElementById('usageGuideModal');
