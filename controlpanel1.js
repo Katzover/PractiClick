@@ -150,14 +150,17 @@ document.getElementById('updateversion').addEventListener('click', async () => {
 });
 
 async function getOnlineCreatures() {
-  const { data, error } = await 
-    supabase.from('online').select('username, is_on');
+  const { data, error } = await withLoading(() => 
+    supabase.from('online').select('username, is_on')
+  );
 
   if (error) {
     console.error("Fetch error:", error);
     return;
   }
-  updateTable(data);
+  
+  const sortedData = data.sort((a, b) => a.username.localeCompare(b.username));
+  updateTable(sortedData);
 }
 
 function updateTable(creatures) {
@@ -174,7 +177,7 @@ function updateTable(creatures) {
     const statusCell = document.createElement('td');
     statusCell.innerHTML = creature.is_on 
       ? '<span class="online">Online</span>' 
-      : '<span class="offline">Idle</span>';
+      : '<span class="offline">Offline</span>';
     row.appendChild(statusCell);
     
     tbody.appendChild(row);
@@ -183,10 +186,5 @@ function updateTable(creatures) {
 
 document.addEventListener('DOMContentLoaded', () => {
   getOnlineCreatures();
-  
-  const refreshInterval = setInterval(getOnlineCreatures, 1000);
-  
-  window.addEventListener('beforeunload', () => {
-    clearInterval(refreshInterval);
-  });
+  setInterval(getOnlineCreatures, 1000);
 });
