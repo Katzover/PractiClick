@@ -1618,8 +1618,10 @@ async function getversion() {
     if (data[0].why !== localStorage.getItem('version')) {
         if (currentLang === 'he') {
             alert("האפליקציה עודכנה בהצלחה")
+            showUsageGuide();
         } else {
             alert("The app has been updated successfully.");
+            showUsageGuide();
         }
         localStorage.setItem('version', data[0].why);
     }
