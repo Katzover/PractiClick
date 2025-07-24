@@ -1,4 +1,5 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { exit } from "process";
 const version = localStorage.getItem('version');
 
 window.control = function control() {window.location.href = 'https://prac-t.netlify.app/controlpanel1';}
@@ -1049,7 +1050,11 @@ window.addEventListener('click', async () => {
     }
 })
 
-window.addEventListener('beforeunload', async () => {
+window.addEventListener('beforeunload', exitsnitcher);
+window.addEventListener('pagehide', exitsnitcher);
+
+
+function exitsnitcher() {
     if (localStorage.getItem('practiceUserName')) {
         const { data, error} = await withLoading(() => supabase
             .from('online')
@@ -1057,7 +1062,7 @@ window.addEventListener('beforeunload', async () => {
             .eq('username', userName)
         );
     }
-})
+}
 
 startBtn.onclick = startTimer;
 pauseBtn.onclick = pauseTimer;
