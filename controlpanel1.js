@@ -149,22 +149,20 @@ document.getElementById('updateversion').addEventListener('click', async () => {
     } alert(`Version updated to ${document.getElementById('version').value}`);
 });
 
-async function getOnlineCreatures() {
+aasync function getOnlineCreatures() {
   const { data, error } = await withLoading(() => 
-    supabase
-      .from('online')
-      .select('username, is_on')
+    supabase.from('online').select('username, is_on')
   );
 
   if (error) {
     console.error("Fetch error:", error);
     return;
   }
-
   updateTable(data);
 }
+
 function updateTable(creatures) {
-  const tbody = document.querySelector('#creatures-table tbody');
+  const tbody = document.querySelector('.creatures-table tbody');
   tbody.innerHTML = '';
 
   creatures.forEach(creature => {
@@ -175,7 +173,9 @@ function updateTable(creatures) {
     row.appendChild(userCell);
     
     const statusCell = document.createElement('td');
-    statusCell.textContent = creature.is_on ? 'Online 🟢' : 'Offline 🔴';
+    statusCell.innerHTML = creature.is_on 
+      ? '<span class="online">Online</span>' 
+      : '<span class="offline">Offline</span>';
     row.appendChild(statusCell);
     
     tbody.appendChild(row);

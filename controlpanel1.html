@@ -72,6 +72,63 @@
             font-size: 1.5rem;
             z-index: 9999;
         }
+        /* Grid Layout */
+        .creatures-grid {
+        display: grid;
+        gap: 2rem; /* Spacing between grid items */
+        padding: 2rem; /* Outer spacing */
+        max-width: 1200px;
+        margin: 0 auto;
+        }
+
+        .grid-title {
+        margin-bottom: 1.5rem; /* Space below title */
+        font-size: 1.8rem;
+        color: #333;
+        }
+
+        /* Table Styling */
+        .table-container {
+        overflow-x: auto; /* For mobile responsiveness */
+        }
+
+        .creatures-table {
+        width: 100%;
+        border-collapse: separate; /* Allows spacing between cells */
+        border-spacing: 0 1rem; /* Vertical spacing between rows */
+        }
+
+        .header-cell {
+        padding: 1rem 1.5rem; /* Inner spacing */
+        background: #f8f9fa;
+        text-align: left;
+        }
+
+        .creatures-table tbody tr {
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle row separation */
+        }
+
+        .creatures-table td {
+        padding: 1.2rem 1.5rem; /* Cell padding */
+        border-bottom: 1px solid #eee;
+        }
+        .online, .offline {
+        padding: 0.4rem 0.8rem;
+        border-radius: 1rem;
+        font-weight: 500;
+        display: inline-block;
+        }
+
+        .online {
+        background: #e6f7ee;
+        color: #00a05e;
+        }
+
+        .offline {
+        background: #f5e6e8;
+        color: #d32f2f;
+        }
     </style>
 </head>
 <body>
@@ -139,19 +196,22 @@
         </div>
         <button id="updateversion">Update</button>
     </div>
-        <div id="creatures-container">
-    <h2>Online Creatures</h2>
-    <table id="creatures-table">
+        <div class="creatures-grid">
+    <h2 class="grid-title">Online Creatures</h2>
+    <div class="table-container">
+        <table class="creatures-table">
         <thead>
-        <tr>
-            <th>Username</th>
-            <th>Status</th>
-        </tr>
+            <tr>
+            <th class="header-cell">Username</th>
+            <th class="header-cell">Status</th>
+            <!-- Add more headers if needed -->
+            </tr>
         </thead>
         <tbody>
-        <!-- Data will be inserted here by JS -->
+            <!-- Data will be inserted by JavaScript -->
         </tbody>
-    </table>
+        </table>
+    </div>
     </div>
     </div>
     <script type="module" src="controlpanel1.js"></script>
