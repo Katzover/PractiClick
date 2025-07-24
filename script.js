@@ -483,7 +483,7 @@ async function renderLeaderboard() {
 }
 
 
-async function askForNameIfNeeded() {
+function askForNameIfNeeded() {
     let name = localStorage.getItem('practiceUserName');
     if (!name) {
         let msg = currentLang === 'he'
@@ -503,10 +503,6 @@ async function askForNameIfNeeded() {
         location.reload()
         localStorage.removeItem('practiceUserName');
     }
-    const { data, error } = await withLoading(() => supabase
-        .from('online')
-        .insert({ username: name.trim(), is_on: true })
-        );
     return name;
 }
 
