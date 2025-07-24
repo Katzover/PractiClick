@@ -203,7 +203,6 @@ function updateLangUI() {
     document.getElementById('minutesLabel').textContent = t.timerMin;
     document.getElementById('secondsLabel').textContent = t.timerSec;
     document.getElementById('lbName').textContent = t.lbName;
-    document.getElementById('lbWeek').textContent = t.lbWeek;
     document.getElementById('lbTotal').textContent = t.lbTotal;
     document.getElementById('lbtitle').textContent = t.lbtitle;
     renderLeaderboard();
