@@ -182,14 +182,11 @@ function updateTable(creatures) {
   });
 }
 
-// Initial load
 document.addEventListener('DOMContentLoaded', () => {
   getOnlineCreatures();
   
-  // Set up auto-refresh every second
   const refreshInterval = setInterval(getOnlineCreatures, 1000);
   
-  // Optional: Clean up interval when page unloads
   window.addEventListener('beforeunload', () => {
     clearInterval(refreshInterval);
   });
