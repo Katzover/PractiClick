@@ -1049,7 +1049,7 @@ window.addEventListener('beforeunload', exitsnitcher);
 window.addEventListener('pagehide', exitsnitcher);
 function resetIdleTimer() {
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(exitsnitcher, 1000)
+    idleTimer = setTimeout(exitsnitcher, 2000)
 }
 
 window.addEventListener('mousemove', resetIdleTimer);
