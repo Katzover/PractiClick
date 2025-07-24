@@ -669,6 +669,7 @@ async function startCycle() {
 }
 
 function cycleTick() {
+    existancesnitcher()
     if (!cycleMode.running || cycleMode.paused) return;
     if (cycleMode.inBreak) {
         cycleMode.breakElapsed += 200;
@@ -941,6 +942,7 @@ function updateDisplay() {
 }
 
 function tick() {
+    existancesnitcher()
     if (!running) return;
     elapsed = Date.now() - startTime;
     if (mode === 'timer' && elapsed >= timerDuration) {
