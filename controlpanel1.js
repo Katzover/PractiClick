@@ -148,3 +148,38 @@ document.getElementById('updateversion').addEventListener('click', async () => {
         return;
     } alert(`Version updated to ${document.getElementById('version').value}`);
 });
+
+async function getOnlineCreatures() {
+  const { data, error } = await withLoading(() => 
+    supabase
+      .from('online')
+      .select('username, is_on')
+  );
+
+  if (error) {
+    console.error("Fetch error:", error);
+    return;
+  }
+
+  updateTable(data);
+}
+function updateTable(creatures) {
+  const tbody = document.querySelector('#creatures-table tbody');
+  tbody.innerHTML = '';
+
+  creatures.forEach(creature => {
+    const row = document.createElement('tr');
+    
+    const userCell = document.createElement('td');
+    userCell.textContent = creature.username;
+    row.appendChild(userCell);
+    
+    const statusCell = document.createElement('td');
+    statusCell.textContent = creature.is_on ? 'Online 🟢' : 'Offline 🔴';
+    row.appendChild(statusCell);
+    
+    tbody.appendChild(row);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', getOnlineCreatures);
