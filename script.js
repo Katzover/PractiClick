@@ -321,7 +321,7 @@ function showLoading() {
             background:rgba(255,255,255,0.7);z-index:2000;
             display:flex;align-items:center;justify-content:center;
         `;
-        loading.innerHTML = `<div style="font-size:2em;color:#333;">
+        loading.innerHTML = `<div style="font-size:2em;color:#333;background:rgb(17, 18, 23);color:white;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
             <span class="loader" style="display:inline-block;width:2em;height:2em;border:4px solid #ccc;border-top:4px solid #333;border-radius:50%;animation:spin 1s linear infinite;"></span>
         </div>
         <style>
@@ -1578,7 +1578,7 @@ function showUsageGuide() {
         `;
         modal.innerHTML = `
             <div style="background:rgb(17, 18, 23);color:white;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-                <button id="closeGuideBtn" style="position:absolute;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+                <button id="closeGuideBtn" style="position:fixed;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
                 <div id="guideContent"></div>
             </div>
         `;
