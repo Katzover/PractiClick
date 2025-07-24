@@ -1661,7 +1661,7 @@ function devconsole() {
     } else {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
-    if (command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1'}
+    if (command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1';exitsnitcher();}
     try {
         output = eval(command);
     } catch (e) {
