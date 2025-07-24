@@ -266,6 +266,16 @@ async function askForPracticeRoom() {
             ? "בחר חדר תרגול"
             : "Choose a practice room";
         optionsDiv.innerHTML = '';
+        
+        // "Other" option
+        const otherBtn = document.createElement('button');
+        otherBtn.textContent = currentLang === 'he' ? "אחר" : "Other";
+        otherBtn.style.margin = "4px";
+        otherBtn.onclick = () => {
+            modal.style.display = 'none';
+            callback("Other");
+        };
+        optionsDiv.appendChild(otherBtn);
         rooms.forEach((r) => {
             let status = statusMap[currentLang] && statusMap[currentLang][r.status] ? statusMap[currentLang][r.status] : r.status;
             const btn = document.createElement('button');
@@ -278,15 +288,6 @@ async function askForPracticeRoom() {
             };
             optionsDiv.appendChild(btn);
         });
-        // "Other" option
-        const otherBtn = document.createElement('button');
-        otherBtn.textContent = currentLang === 'he' ? "אחר" : "Other";
-        otherBtn.style.margin = "4px";
-        otherBtn.onclick = () => {
-            modal.style.display = 'none';
-            callback("Other");
-        };
-        optionsDiv.appendChild(otherBtn);
 
         cancelBtn.onclick = () => {
             modal.style.display = 'none';
