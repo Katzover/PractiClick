@@ -150,9 +150,8 @@ document.getElementById('updateversion').addEventListener('click', async () => {
 });
 
 async function getOnlineCreatures() {
-  const { data, error } = await withLoading(() => 
-    supabase.from('online').select('username, is_on')
-  );
+  const { data, error } = await
+    supabase.from('online').select('username, is_on');
 
   if (error) {
     console.error("Fetch error:", error);
