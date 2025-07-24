@@ -331,7 +331,7 @@ function showLoading() {
     }
     loading.style.display = 'flex';
     window.addEventListener('click', function(e){   
-    if (!document.getElementById('clickbox').contains(e.target)){
+    if (!document.getElementById('loading').contains(e.target)){
         hideLoading();
     }
 });
