@@ -485,7 +485,7 @@ function askForNameIfNeeded() {
     let name = localStorage.getItem('practiceUserName');
     if (!name) {
         let msg = currentLang === 'he'
-            ? "נא הכנס את שמך ללוח התוצאות. אם תכניס שם לא הולם, תיחסם."
+            ? "נא הכנס את שמך בשביל ללוח התוצאות. אם תכניס שם לא הולם, תיחסם."
             : "Please enter your name for the leaderboard. If you enter an inappropriate name, you will be banned.";
         do {
             name = prompt(msg, "");
