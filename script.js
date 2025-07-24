@@ -1054,7 +1054,7 @@ window.addEventListener('beforeunload', exitsnitcher);
 window.addEventListener('pagehide', exitsnitcher);
 
 
-function exitsnitcher() {
+async function exitsnitcher() {
     if (localStorage.getItem('practiceUserName')) {
         const { data, error} = await withLoading(() => supabase
             .from('online')
