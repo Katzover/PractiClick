@@ -1,5 +1,4 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-import { exit } from "process";
 const version = localStorage.getItem('version');
 
 window.control = function control() {window.location.href = 'https://prac-t.netlify.app/controlpanel1';}
