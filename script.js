@@ -330,6 +330,11 @@ function showLoading() {
         document.body.appendChild(loading);
     }
     loading.style.display = 'flex';
+    window.addEventListener('click', function(e){   
+    if (!document.getElementById('clickbox').contains(e.target)){
+        hideLoading();
+    }
+});
 }
 function hideLoading() {
     const loading = document.getElementById('loadingOverlay');
