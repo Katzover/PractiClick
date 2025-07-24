@@ -519,7 +519,6 @@ async function deleteAllLeaderboardRows() {
 }
 window.deleteAllLeaderboardRows = deleteAllLeaderboardRows;
 
-// --- Utility: Always release room if needed ---
 async function releaseCurrentPracticeRoom() {
     if (currentPracticeRoom && currentPracticeRoom !== "Other") {
         await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", 0));
