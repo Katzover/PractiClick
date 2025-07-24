@@ -150,9 +150,8 @@ document.getElementById('updateversion').addEventListener('click', async () => {
 });
 
 async function getOnlineCreatures() {
-  const { data, error } = await withLoading(() => 
-    supabase.from('online').select('username, is_on')
-  );
+  const { data, error } = await 
+    supabase.from('online').select('username, is_on');
 
   if (error) {
     console.error("Fetch error:", error);
@@ -175,7 +174,7 @@ function updateTable(creatures) {
     const statusCell = document.createElement('td');
     statusCell.innerHTML = creature.is_on 
       ? '<span class="online">Online</span>' 
-      : '<span class="offline">Offline</span>';
+      : '<span class="offline">Idle</span>';
     row.appendChild(statusCell);
     
     tbody.appendChild(row);
