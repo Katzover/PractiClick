@@ -311,32 +311,45 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // --- Loading Animation Helper ---
-function showLoading() {
-    let loading = document.getElementById('loadingOverlay');
+function showLoading(text = 'Processing...') {
+    const loading = document.getElementById('loadingOverlay');
     if (!loading) {
-        loading = document.createElement('div');
-        loading.id = 'loadingOverlay';
-        loading.style = `
-            position:fixed;top:0;left:0;width:100vw;height:100vh;
-            background:rgba(255,255,255,0.7);z-index:2000;
-            display:flex;align-items:center;justify-content:center;
+        const overlay = document.createElement('div');
+        overlay.id = 'loadingOverlay';
+        overlay.innerHTML = `
+            <div class="loader-container">
+                <div class="loader"></div>
+                <div class="progress-text">${text}</div>
+            </div>
         `;
-        loading.innerHTML = `<div style="font-size:2em;color:#333;background:rgb(17, 18, 23);color:white;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-            <span class="loader" style="display:inline-block;width:2em;height:2em;border:4px solid #ccc;border-top:4px solid #333;border-radius:50%;animation:spin 1s linear infinite;"></span>
-        </div>
-        <style>
-        @keyframes spin { 50% { transform: rotate(360deg); } }
-        </style>`;
-        document.body.appendChild(loading);
+        document.body.appendChild(overlay);
+        // Force reflow to enable transitions
+        void overlay.offsetWidth;
+        overlay.classList.add('show');
+        return;
     }
-    loading.style.display = 'flex';
+    
+    if (text) {
+        const textEl = loading.querySelector('.progress-text');
+        if (textEl) textEl.textContent = text;
+    }
+    
+    loading.classList.add('show');
 }
+
 function hideLoading() {
     const loading = document.getElementById('loadingOverlay');
-    if (loading) loading.style.display = 'none';
+    if (loading) {
+        loading.classList.remove('show');
+        // Remove after transition completes
+        setTimeout(() => {
+            loading.style.display = 'none';
+        }, 300);
+    }
 }
-async function withLoading(fn) {
-    showLoading();
+
+async function withLoading(fn, loadingText) {
+    showLoading(loadingText);
     try {
         return await fn();
     } finally {
