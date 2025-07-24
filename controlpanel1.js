@@ -149,7 +149,7 @@ document.getElementById('updateversion').addEventListener('click', async () => {
     } alert(`Version updated to ${document.getElementById('version').value}`);
 });
 
-aasync function getOnlineCreatures() {
+async function getOnlineCreatures() {
   const { data, error } = await withLoading(() => 
     supabase.from('online').select('username, is_on')
   );
