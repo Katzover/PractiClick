@@ -175,11 +175,22 @@ function updateTable(creatures) {
     const statusCell = document.createElement('td');
     statusCell.innerHTML = creature.is_on 
       ? '<span class="online">Online</span>' 
-      : '<span class="offline">Idle</span>';
+      : '<span class="offline">Offline</span>';
     row.appendChild(statusCell);
     
     tbody.appendChild(row);
   });
 }
 
-document.addEventListener('DOMContentLoaded', getOnlineCreatures);
+// Initial load
+document.addEventListener('DOMContentLoaded', () => {
+  getOnlineCreatures();
+  
+  // Set up auto-refresh every second
+  const refreshInterval = setInterval(getOnlineCreatures, 1000);
+  
+  // Optional: Clean up interval when page unloads
+  window.addEventListener('beforeunload', () => {
+    clearInterval(refreshInterval);
+  });
+});
