@@ -1048,7 +1048,7 @@ window.addEventListener('click', async () => {
         );
     }
 })
-
+let idleTimer
 window.addEventListener('beforeunload', exitsnitcher);
 window.addEventListener('pagehide', exitsnitcher);
 function resetIdleTimer() {
