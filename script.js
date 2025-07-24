@@ -454,7 +454,10 @@ async function renderLeaderboard() {
     const rows = await withLoading(() => fetchLeaderboard());
 
     if (!rows || rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="color:#aaa;text-align:center;">No data yet.</td></tr>`;
+        if (currentLang === 'he') {
+            tbody.innerHTML = `<tr><td colspan="2" style="color:#aaa;text-align:center;">אין נתונים עדיין.</td></tr>`;
+        } else {
+        tbody.innerHTML = `<tr><td colspan="2" style="color:#aaa;text-align:center;">No data yet.</td></tr>`;}
         return;
     }
 
@@ -473,7 +476,6 @@ async function renderLeaderboard() {
         tbody.innerHTML += `
             <tr>
                 <td>${row.user_name}</td>
-                <td>${getWeekStart(new Date())}</td>
                 <td>${formatTime(row.total_time)}</td>
             </tr>
         `;
