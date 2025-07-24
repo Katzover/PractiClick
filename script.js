@@ -1051,6 +1051,17 @@ window.addEventListener('click', async () => {
 
 window.addEventListener('beforeunload', exitsnitcher);
 window.addEventListener('pagehide', exitsnitcher);
+function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(exitSnitch, 20000)
+}
+
+window.addEventListener('mousemove', resetIdleTimer);
+window.addEventListener('keydown', resetIdleTimer);
+window.addEventListener('click', resetIdleTimer);
+window.addEventListener('scroll', resetIdleTimer);
+
+resetIdleTimer();
 
 
 async function exitsnitcher() {
