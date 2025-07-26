@@ -187,3 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
   getOnlineCreatures();
   setInterval(getOnlineCreatures, 1000);
 });
+
+function whoisstillonline() {
+    const { datta, error } = supabase
+        .from('online')
+        .update({ is_on: false })
+        .neq('is_on', true);
+    if (error) {
+        console.error('Error:', error.message);
+        return;
+    }
+} setInterval(whoisstillonline, 1000);
