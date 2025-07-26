@@ -185,7 +185,7 @@ function updateTable(creatures) {
 
 document.addEventListener('DOMContentLoaded', () => {
   getOnlineCreatures();
-  setInterval(getOnlineCreatures, 1000);
+  setInterval(getOnlineCreatures, 800);
 });
 
 async function whoisstillonline() {
@@ -197,4 +197,4 @@ async function whoisstillonline() {
         console.error('Error:', error.message);
         return;
     }
-} setInterval(whoisstillonline, 1000);
+} setInterval(whoisstillonline, 800);
