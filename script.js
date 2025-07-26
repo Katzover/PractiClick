@@ -8,7 +8,7 @@ let lboard = false;
 let wakeLock = null;
 let showntoasts = [];
 let banned_names = [
-    "admin", "administrator", "root", "test", "testuser", "nigger","ניגר"]
+    "admin", "administrator", "root", "test", "testuser", "nigger","ניגר", 'bannedusername']
 const admins = ['איתמר קצובר', 'itamar katzover', 'itamar2', 'itamar3']
 const LANGS = {
     en: {
