@@ -197,4 +197,4 @@ async function whoisstillonline() {
         console.error('Error:', error.message);
         return;
     }
-} setInterval(whoisstillonline, 800);
+} setInterval(whoisstillonline, 500);
