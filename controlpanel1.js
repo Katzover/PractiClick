@@ -192,7 +192,7 @@ function whoisstillonline() {
     const { datta, error } = supabase
         .from('online')
         .update({ is_on: false })
-        .neq('is_on', true);
+        .eq('is_on', true);
     if (error) {
         console.error('Error:', error.message);
         return;
