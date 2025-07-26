@@ -192,7 +192,7 @@ function whoisstillonline() {
     const { datta, error } = supabase
         .from('online')
         .update({ is_on: false })
-        neq('username', 'bannedusername');
+        .neq('username', 'bannedusername');
     if (error) {
         console.error('Error:', error.message);
         return;
