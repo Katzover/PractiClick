@@ -188,8 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(getOnlineCreatures, 1000);
 });
 
-function whoisstillonline() {
-    const { datta, error } = supabase
+async function whoisstillonline() {
+    const { datta, error } = await supabase
         .from('online')
         .update({ is_on: false })
         .neq('username', 'bannedusername');
