@@ -163,6 +163,7 @@ async function getOnlineCreatures() {
 }
 
 function updateTable(creatures) {
+  document.getElementById('lastU').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
   const tbody = document.querySelector('.creatures-table tbody');
   tbody.innerHTML = '';
 
