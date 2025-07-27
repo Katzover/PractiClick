@@ -1697,3 +1697,29 @@ async function getversion() {
 
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
+
+// Request notification permission
+function requestNotificationPermission() {
+    if ('Android' in window) {
+        // For Android WebView
+        Notification.requestPermission().then(permission => {
+            console.log('Notification permission:', permission);
+        });
+    }
+}
+
+// Send notification (call this from your website when needed)
+function sendNotification(title, message) {
+    if ('Android' in window) {
+        // Use our native Android interface
+        Android.showNotification(title, message);
+    } else if ('Notification' in window) {
+        // Fallback to web notifications
+        if (Notification.permission === 'granted') {
+            new Notification(title, { body: message });
+        }
+    }
+}
+
+// Example usage:
+sendNotification("Hello", "This is a test notification");
