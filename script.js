@@ -1660,6 +1660,7 @@ async function getversion() {
         }
         showUsageGuide();
     }
+    console.log(data);
     return data[0].why;
 }
 
