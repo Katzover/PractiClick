@@ -180,6 +180,19 @@ button:hover, button:focus {
     box-shadow: none;
     border: 1px solid var(--border);
     transition: background 0.3s, border 0.3s;
+    min-height: 80px; /* Ensures visible area even when empty */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.log-list > div {
+    width: 100%;
+    text-align: center;
+    color: #aaa;
+    font-size: 1.1em;
+    padding: 24px 0 24px 0;
+    /* visually center the message */
 }
 .log-item {
     display: flex;

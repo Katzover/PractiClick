@@ -904,8 +904,8 @@ async function renderRooms() {
     if (roomsTable) {
         const ths = roomsTable.querySelectorAll('thead th');
         if (ths.length >= 2) {
-            ths[0].textContent = t.statusHeader;
-            ths[1].textContent = t.roomHeader;
+            ths[0].textContent = t.roomHeader;   // Room
+            ths[1].textContent = t.statusHeader; // Status
         }
     }
     rooms.forEach(room => {
@@ -916,8 +916,8 @@ async function renderRooms() {
         let statusLabel = statusMap[currentLang] && statusMap[currentLang][room.status] ? statusMap[currentLang][room.status] : room.status;
         tbody.innerHTML += `
             <tr>
-            <td style="color:${color};font-weight:bold;">${statusLabel}</td>
                 <td>${room.name || "Room " + room.id}</td>
+                <td style="color:${color};font-weight:bold;">${statusLabel}</td>
             </tr>
         `;
     });
@@ -1145,7 +1145,8 @@ autoResetLogsIfNewWeek();
 function renderLogs() {
     logList.innerHTML = '';
     if (logs.length === 0) {
-        logList.innerHTML = '<div style="text-align:center;color:#aaa;">No sessions yet.</div>';
+        // Use a div for centering, matches .log-list > div CSS
+        logList.innerHTML = '<div>No sessions yet.</div>';
         return;
     }
     const t = LANGS[currentLang];
