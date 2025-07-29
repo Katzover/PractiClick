@@ -16,7 +16,7 @@ body {
     font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
     margin: 0;
     color: #e0e6f0;
-    transition: background 0.4s;
+    transition: background 0.4s, color 0.3s;
     min-height: 100vh;
 }
 .container {
@@ -26,23 +26,18 @@ body {
     background: none;
     border-radius: 0;
     box-shadow: none;
-    animation: fadeInUp 1s cubic-bezier(.23,1.01,.32,1.2) 0s 1;
+    will-change: opacity, transform;
+    animation: fadeInSoft 0.5s cubic-bezier(.23,1,.32,1) 0s 1;
+    transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s, padding 0.3s, margin 0.3s;
 }
-@keyframes fadeInUp {
-    0% {
+@keyframes fadeInSoft {
+    from {
         opacity: 0;
-        transform: translateY(60px) scale(0.98) skewY(2deg);
-        filter: blur(8px);
+        transform: translateY(24px);
     }
-    60% {
-        opacity: 0.7;
-        transform: translateY(-8px) scale(1.01) skewY(-1deg);
-        filter: blur(2px);
-    }
-    100% {
+    to {
         opacity: 1;
-        transform: translateY(0) scale(1) skewY(0deg);
-        filter: blur(0);
+        transform: translateY(0);
     }
 }
 
@@ -54,6 +49,7 @@ h1 {
     letter-spacing: 0.5px;
     color: var(--primary);
     text-shadow: 0 2px 12px #1e90ff33;
+    transition: color 0.3s, text-shadow 0.3s;
 }
 #metronome-panel,
 .timer-section,
@@ -67,6 +63,7 @@ h1 {
     padding: 22px 22px 14px 22px;
     box-shadow: var(--shadow);
     border: 1px solid var(--border);
+    transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s, padding 0.3s, margin 0.3s, border 0.3s;
 }
 #metronome-panel {
     max-width: 100%;
@@ -83,6 +80,7 @@ label {
     margin-bottom: 8px;
     display: block;
     letter-spacing: 0.1em;
+    transition: color 0.3s;
 }
 input, select {
     background: var(--input-bg);
@@ -93,7 +91,7 @@ input, select {
     font-size: 1rem;
     margin-top: 4px;
     margin-bottom: 10px;
-    transition: border 0.2s, box-shadow 0.2s;
+    transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
     outline: none;
 }
 input:focus, select:focus {
@@ -105,6 +103,7 @@ input[type="number"] {
 }
 input[type="range"] {
     width: 110px;
+    transition: background 0.3s;
 }
 button {
     background: linear-gradient(90deg, var(--accent) 60%, #1560b6 100%);
@@ -117,7 +116,7 @@ button {
     font-weight: 700;
     margin: 4px 0;
     box-shadow: 0 2px 8px #60aaff22;
-    transition: background 0.2s, border-radius 0.2s, box-shadow 0.2s, color 0.2s;
+    transition: background 0.2s, border-radius 0.2s, box-shadow 0.2s, color 0.2s, border 0.2s;
     letter-spacing: 0.04em;
 }
 button:hover, button:focus {
@@ -131,6 +130,7 @@ button:hover, button:focus {
     gap: 12px;
     justify-content: center;
     margin: 14px 0;
+    transition: gap 0.3s, margin 0.3s;
 }
 .timer-display {
     font-size: 2.2rem;
@@ -142,12 +142,14 @@ button:hover, button:focus {
     background: #18243a;
     box-shadow: 0 2px 12px #60aaff22;
     border: 1px solid var(--border);
+    transition: color 0.4s, background 0.3s, box-shadow 0.3s, border 0.3s;
 }
 .timer-display.running {
     color: var(--success);
     animation: pulseGlow 1.2s infinite alternate;
     background: #1e2d2e;
     box-shadow: 0 0 20px #aee9e155;
+    transition: color 0.4s, background 0.3s, box-shadow 0.3s;
 }
 @keyframes pulseGlow {
     from { box-shadow: 0 0 8px #aee9a133; }
@@ -158,6 +160,7 @@ button:hover, button:focus {
     background: #232a1a;
     box-shadow: 0 0 10px #f7e67355;
     animation: none;
+    transition: color 0.4s, background 0.3s, box-shadow 0.3s;
 }
 .log-list {
     max-height: 200px;
@@ -167,6 +170,7 @@ button:hover, button:focus {
     padding: 12px;
     box-shadow: none;
     border: 1px solid var(--border);
+    transition: background 0.3s, border 0.3s;
 }
 .log-item {
     display: flex;
@@ -177,6 +181,7 @@ button:hover, button:focus {
     font-size: 1rem;
     color: #e0e6f0;
     animation: logFadeIn 0.5s;
+    transition: color 0.3s, border-bottom 0.3s;
 }
 @keyframes logFadeIn {
     from { opacity: 0; transform: translateY(10px);}
@@ -197,11 +202,13 @@ button:hover, button:focus {
     border-bottom: 1px solid var(--border);
     background: none;
     color: #e0e6f0;
+    transition: color 0.3s, background 0.3s, border-bottom 0.3s;
 }
 .summary-table th {
     font-weight: 700;
     background: var(--card);
     color: var(--primary);
+    transition: color 0.3s, background 0.3s;
 }
 .week-total-section {
     display: flex;
@@ -214,6 +221,7 @@ button:hover, button:focus {
     border-radius: 18px;
     padding: 14px 18px;
     border: 1px solid var(--border);
+    transition: background 0.3s, border-radius 0.3s, border 0.3s, padding 0.3s;
 }
 #weekTotal {
     color: var(--primary);
@@ -226,9 +234,11 @@ button:hover, button:focus {
 #leaderboardTable td, #leaderboardTable th {
     background: none;
     color: #e0e6f0;
+    transition: color 0.3s, background 0.3s;
 }
 #leaderboardTable tr {
     border-radius: 12px;
+    transition: background 0.3s;
 }
 #leaderboardTable tr:nth-child(even) {
     background: #23243a;
@@ -246,6 +256,7 @@ button:hover, button:focus {
     margin-top: 10px;
     color: var(--primary);
     text-shadow: 0 2px 8px #60aaff33;
+    transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
 }
 #metroIndicator.active {
     animation: metroPulse 0.25s;
@@ -260,6 +271,7 @@ button:hover, button:focus {
     display: flex;
     justify-content: flex-end;
     margin: 0 18px 0 0;
+    transition: margin 0.3s;
 }
 #langSelect {
     background: var(--input-bg);
@@ -268,7 +280,7 @@ button:hover, button:focus {
     border: 1px solid var(--border);
     padding: 7px 10px;
     font-size: 1rem;
-    transition: border 0.2s;
+    transition: border 0.2s, background 0.3s, color 0.3s;
 }
 #langSelect:focus {
     border: 1.5px solid var(--accent);
@@ -283,6 +295,7 @@ button:hover, button:focus {
     overflow: hidden;
     box-shadow: 0 1px 4px #60aaff22;
     padding: 4px;
+    transition: background 0.3s, box-shadow 0.3s, border-radius 0.3s, gap 0.3s, padding 0.3s;
 }
 .timer-modes label {
     flex: 1 1 0;
@@ -294,7 +307,7 @@ button:hover, button:focus {
     color: #b3b3b3;
     background: none;
     border-radius: 10px;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-radius 0.15s;
     user-select: none;
     font-size: 1rem;
     line-height: 2.2;
@@ -309,16 +322,18 @@ button:hover, button:focus {
     font-weight: 700;
     border-radius: 10px;
     box-shadow: 0 2px 8px #60aaff22;
+    transition: background 0.15s, color 0.15s, border-radius 0.15s, box-shadow 0.15s;
 }
 .timer-modes label:hover span {
     background: #2d2e4a;
     color: #fff;
+    transition: background 0.15s, color 0.15s;
 }
 .timer-modes label span {
     display: block;
     padding: 0 18px;
     border-radius: 10px;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-radius 0.15s, padding 0.15s;
 }
 .tab-btn {
     flex: 1 1 0;
@@ -331,7 +346,7 @@ button:hover, button:focus {
     background: none;
     border: none;
     border-radius: 10px;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-radius 0.15s;
     user-select: none;
     font-size: 1rem;
     line-height: 2.2;
@@ -343,10 +358,12 @@ button:hover, button:focus {
     font-weight: 700;
     border-radius: 10px;
     box-shadow: 0 2px 8px #60aaff22;
+    transition: background 0.15s, color 0.15s, border-radius 0.15s, box-shadow 0.15s;
 }
 .tab-btn:hover:not(.active) {
     background: #233a4a;
     color: #fff;
+    transition: background 0.15s, color 0.15s;
 }
 #footerBtns {
     position: fixed;
@@ -361,6 +378,7 @@ button:hover, button:focus {
     box-shadow: none;
     width: auto;
     padding: 0;
+    transition: gap 0.3s, padding 0.3s;
 }
 #footerBtns button {
     color: #fff;
@@ -374,11 +392,12 @@ button:hover, button:focus {
     max-width: 180px;
     box-shadow: 0 1px 4px #60aaff22;
     font-weight: 700;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, border 0.2s, border-radius 0.2s, box-shadow 0.2s;
 }
 #footerBtns button:hover {
     background: linear-gradient(90deg, var(--accent) 60%, var(--primary) 100%);
     color: #162032;
+    transition: background 0.2s, color 0.2s;
 }
 #roomModalOptions {
     overflow-y: scroll !important;
@@ -393,6 +412,7 @@ button:hover, button:focus {
     border: 2px solid var(--primary);
     background: var(--card);
     border-radius: 12px;
+    transition: background 0.3s, border 0.3s;
 }
 /* For Webkit browsers */
 #roomModalOptions::-webkit-scrollbar {
@@ -529,6 +549,7 @@ body[dir="rtl"] {
     border-top: 1px solid var(--border);
     z-index: 100;
     box-shadow: 0 -2px 12px #60aaff22;
+    transition: background 0.3s, box-shadow 0.3s, border-top 0.3s;
 }
 .bottom-nav .nav-item {
     display: flex;
@@ -564,6 +585,7 @@ body[dir="rtl"] {
     z-index: 9999;
     justify-content: center;
     align-items: center;
+    transition: background 0.3s;
 }
 .loading-spinner {
     border: 5px solid #202b3d;
@@ -580,11 +602,13 @@ body[dir="rtl"] {
 
 /* Animate room modal */
 #roomModal {
+    will-change: opacity, transform;
     transition: background 0.3s;
-    animation: fadeIn 0.3s;
+    animation: fadeInSoft 0.4s;
 }
 #roomModal > div {
-    animation: fadeInUp 0.4s;
+    animation: fadeInSoft 0.4s;
+    transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s, padding 0.3s, margin 0.3s;
 }
 .timer-input-row {
     display: flex;
@@ -626,6 +650,7 @@ body[dir="rtl"] {
     max-width: 420px;
     box-shadow: 0 4px 24px #60aaff22;
     border: 1px solid var(--border);
+    transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s, padding 0.3s, margin 0.3s, border 0.3s;
 }
 @media (max-width: 700px) {
     .panel-box {
@@ -651,6 +676,7 @@ body[dir="rtl"] {
     text-align: center;
     font-weight: bold;
     text-shadow: 0 2px 8px #60aaff22;
+    transition: color 0.3s, text-shadow 0.3s;
 }
 
 /* Optional: style for labels and inputs inside panel-box */
@@ -659,6 +685,7 @@ body[dir="rtl"] {
     margin-bottom: 6px;
     font-size: 1rem;
     color: #e0e0e0;
+    transition: color 0.3s;
 }
 .panel-box input[type="text"], .panel-box input[type="number"], .panel-box select {
     width: 100%;
@@ -670,7 +697,7 @@ body[dir="rtl"] {
     color: #e0e0e0;
     font-size: 1rem;
     box-sizing: border-box;
-    transition: border 0.2s, box-shadow 0.2s;
+    transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
 }
 .panel-box input[type="text"]:focus, .panel-box input[type="number"]:focus, .panel-box select:focus {
     border: 1.5px solid var(--accent);
@@ -687,9 +714,10 @@ body[dir="rtl"] {
     margin-right: 8px;
     margin-top: 8px;
     font-weight: 700;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, border-radius 0.2s;
 }
 .panel-box button:hover, .panel-box button:focus {
     background: linear-gradient(90deg, var(--primary) 60%, var(--accent) 100%);
     color: #162032;
+    transition: background 0.2s, color 0.2s;
 }
