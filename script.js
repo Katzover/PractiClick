@@ -1652,12 +1652,12 @@ async function getversion() {
         return;
     }
     if (data[0].why !== localStorage.getItem('version')) {
+        localStorage.setItem('version', data[0].why);
         if (currentLang === 'he') {
             alert("האפליקציה עודכנה בהצלחה\n" + data[0].what);
         } else {
             alert("The app has been updated successfully.\n" +data[0].what);
         }
-        localStorage.setItem('version', data[0].why);
         showUsageGuide();
     }
     return data[0].why;
