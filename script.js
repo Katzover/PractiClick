@@ -1645,7 +1645,7 @@ async function getversion() {
     let { data, error } = await withLoading(() =>
         supabase
             .from('misc')
-            .select('what', 'why')
+            .select('why', 'what')
             .eq('id', 2)
     ); if (error) {
         console.error('Error fetching version:', error.message);
@@ -1654,9 +1654,9 @@ async function getversion() {
     if (data[0].why !== localStorage.getItem('version')) {
         localStorage.setItem('version', data[0].why);
         if (currentLang === 'he') {
-            alert("האפליקציה עודכנה בהצלחה");
+            alert("האפליקציה עודכנה בהצלחה\n" + data[0].what);
         } else {
-            alert("The app has been updated successfully.");
+            alert("The app has been updated successfully.\n" +data[0].what);
         }
         showUsageGuide();
     }
