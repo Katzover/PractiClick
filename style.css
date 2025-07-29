@@ -34,65 +34,123 @@ h1 {
     letter-spacing: 0.5px;
     color: #fff;
 }
+
+/* --- Panel style for main sections (like controlpanel1.html) --- */
 #metronome-panel,
 .timer-section,
 .log-section,
 .summary-section,
 .week-total-section,
 .leaderboard-section {
-    background: #18191d;
-    border-radius: 18px;
-    margin: 18px 18px 0 18px;
-    padding: 18px 18px 12px 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    background: #23272a !important;
+    border-radius: 8px !important;
+    margin: 32px auto !important;
+    padding: 24px 32px !important;
+    max-width: 400px;
+    box-shadow: 0 2px 8px #000a !important;
+    /* Remove old border, box-shadow, etc. */
+    border: none !important;
 }
-#metronome-panel {
-    max-width: 100%;
-    margin-bottom: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    float: none;
-    width: auto;
-    margin-right: 0;
+
+/* Responsive panel width */
+@media (max-width: 700px) {
+    #metronome-panel,
+    .timer-section,
+    .log-section,
+    .summary-section,
+    .week-total-section,
+    .leaderboard-section {
+        max-width: 98vw !important;
+        padding: 16px 6vw !important;
+        margin: 18px 0 !important;
+    }
 }
-label {
-    color: #e6e6e6;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 8px;
+@media (min-width: 701px) {
+    #metronome-panel,
+    .timer-section,
+    .log-section,
+    .summary-section,
+    .week-total-section,
+    .leaderboard-section {
+        max-width: 520px !important;
+        padding: 24px 40px !important;
+        margin: 32px auto !important;
+    }
+}
+
+/* Panel headings */
+#metronome-panel h3,
+.timer-section h2, .timer-section h1,
+.log-section h2,
+.summary-section h2,
+.week-total-section strong,
+.leaderboard-section h2 {
+    color: #e0e0e0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 1.2em !important;
+    font-size: 1.3rem !important;
+    text-align: center !important;
+    font-weight: bold !important;
+}
+
+/* Panel labels and inputs */
+#metronome-panel label,
+.timer-section label,
+.log-section label,
+.summary-section label,
+.week-total-section label,
+.leaderboard-section label {
     display: block;
-}
-input, select {
-    background: #23242a;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 7px 10px;
+    margin-bottom: 6px;
     font-size: 1rem;
-    margin-top: 4px;
-    margin-bottom: 8px;
+    color: #e0e0e0;
+    font-weight: normal;
 }
-input[type="number"] {
-    width: 70px;
+
+#metronome-panel input[type="text"], #metronome-panel input[type="number"], #metronome-panel select,
+.timer-section input[type="text"], .timer-section input[type="number"], .timer-section select,
+.log-section input[type="text"], .log-section input[type="number"], .log-section select,
+.summary-section input[type="text"], .summary-section input[type="number"], .summary-section select,
+.week-total-section input[type="text"], .week-total-section input[type="number"], .week-total-section select,
+.leaderboard-section input[type="text"], .leaderboard-section input[type="number"], .leaderboard-section select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 16px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background: #181a1b;
+    color: #e0e0e0;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
-input[type="range"] {
-    width: 100px;
-}
-button {
-    background: #23242a;
+
+/* Panel buttons */
+#metronome-panel button,
+.timer-section button,
+.log-section button,
+.summary-section button,
+.week-total-section button,
+.leaderboard-section button {
+    background: #5865f2;
     color: #fff;
     border: none;
-    border-radius: 10px;
-    padding: 10px 22px;
+    border-radius: 4px;
+    padding: 10px 18px;
     font-size: 1rem;
     cursor: pointer;
-    font-weight: 600;
-    margin: 4px 0;
-    transition: background 0.2s, border-radius 0.2s;
+    margin-right: 8px;
+    margin-top: 8px;
+    transition: background 0.2s;
 }
-button:hover {
-    background: #31323a;
-    border-radius: 15px;
+#metronome-panel button:hover,
+.timer-section button:hover,
+.log-section button:hover,
+.summary-section button:hover,
+.week-total-section button:hover,
+.leaderboard-section button:hover {
+    background: #4752c4;
 }
+
 .timer-controls {
     display: flex;
     gap: 10px;
@@ -378,8 +436,9 @@ button:hover {
     .summary-section,
     .week-total-section,
     .leaderboard-section {
-        margin: 12px 4px 0 4px;
-        padding: 12px 8px 8px 8px;
+        max-width: 98vw !important;
+        padding: 16px 6vw !important;
+        margin: 18px 0 !important;
     }
     h1 {
         font-size: 1.1rem;
