@@ -460,7 +460,6 @@ button:hover, button:focus {
         max-width: 100vw;
         padding: 0;
         margin: 0 0 80px 0;
-        overflow-x: hidden;
     }
     #metronome-panel,
     .timer-section,
@@ -470,8 +469,6 @@ button:hover, button:focus {
     .leaderboard-section {
         margin: 12px 4px 0 4px;
         padding: 12px 8px 8px 8px;
-        min-width: 0;
-        box-sizing: border-box;
     }
     h1 {
         font-size: 1.1rem;
@@ -487,33 +484,7 @@ button:hover, button:focus {
         flex-direction: column;
         gap: 8px;
     }
-    /* Fix table layout: use overflow-x:auto on a wrapper, not on the table itself */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-    }
-    #roomsTable,
-    #leaderboardTable,
-    #summaryTable,
-    .summary-table {
-        width: 100%;
-        min-width: 320px;
-        box-sizing: border-box;
-        display: table; /* revert to table for proper alignment */
-    }
-    #roomsTable th, #roomsTable td,
-    #leaderboardTable th, #leaderboardTable td,
-    #summaryTable th, #summaryTable td,
-    .summary-table th, .summary-table td {
-        min-width: 80px;
-        font-size: 0.97em;
-        box-sizing: border-box;
-        white-space: nowrap;
-    }
 }
-
 @media (min-width: 701px) {
     .container {
         max-width: 520px;
@@ -582,37 +553,12 @@ button:hover, button:focus {
 @media (max-width: 400px) {
     .container {
         padding: 0;
-        overflow-x: hidden;
     }
     .timer-display {
         font-size: 1.2rem;
     }
     h1 {
         font-size: 1rem;
-    }
-    /* Extra: reduce padding for tables */
-    #roomsTable th, #roomsTable td,
-    #leaderboardTable th, #leaderboardTable td,
-    #summaryTable th, #summaryTable td,
-    .summary-table th, .summary-table td {
-        padding: 8px 2px;
-        font-size: 0.93em;
-    }
-    /* Responsive wrapper for tables */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-    }
-    #roomsTable,
-    #leaderboardTable,
-    #summaryTable,
-    .summary-table {
-        width: 100%;
-        min-width: 320px;
-        box-sizing: border-box;
-        display: table;
     }
 }
 body[dir="rtl"] {
@@ -814,19 +760,17 @@ body[dir="rtl"] {
     overflow: hidden;
     box-shadow: 0 2px 12px #60aaff11;
     margin-top: 10px;
-    margin-bottom: 0;
-    font-size: 1em;
     transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s;
+    border: 1px solid var(--border);
 }
 #roomsTable th, #roomsTable td {
-    padding: 12px 8px;
+    padding: 12px 10px;
     text-align: center;
     border-bottom: 1px solid var(--border);
     background: rgba(32, 43, 61, 0.85);
     color: #e0e6f0;
-    font-size: 1em;
+    font-size: 1.08em;
     transition: color 0.3s, background 0.3s, border-bottom 0.3s;
-    word-break: break-word;
 }
 #roomsTable th {
     font-weight: 700;
@@ -854,44 +798,4 @@ body[dir="rtl"] {
 #roomsTable tr:last-child td {
     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 14px;
-}
-
-/* Responsive: Make table more readable on mobile */
-@media (max-width: 700px) {
-    #roomsTable th, #roomsTable td {
-        padding: 10px 4px;
-        font-size: 0.98em;
-    }
-    #roomsTable {
-        font-size: 0.97em;
-    }
-    .leaderboard-section,
-    .summary-section,
-    .log-section,
-    #metronome-panel,
-    .timer-section,
-    .week-total-section {
-        margin-left: 2px;
-        margin-right: 2px;
-        padding-left: 4px;
-        padding-right: 4px;
-    }
-}
-
-/* Make table scrollable horizontally on very small screens */
-@media (max-width: 400px) {
-    #roomsTable,
-    #leaderboardTable,
-    #summaryTable {
-        display: block;
-        overflow-x: auto;
-        width: 100%;
-        min-width: 240px;
-    }
-    #roomsTable th, #roomsTable td,
-    #leaderboardTable th, #leaderboardTable td,
-    #summaryTable th, #summaryTable td {
-        min-width: 80px;
-        font-size: 0.95em;
-    }
 }
