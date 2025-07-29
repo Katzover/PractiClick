@@ -1645,7 +1645,7 @@ async function getversion() {
     let { data, error } = await withLoading(() =>
         supabase
             .from('misc')
-            .select('why', 'what')
+            .select('what', 'why')
             .eq('id', 2)
     ); if (error) {
         console.error('Error fetching version:', error.message);
