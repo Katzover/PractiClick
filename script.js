@@ -1621,15 +1621,23 @@ function showUsageGuide() {
             <div id="usageGuideCard" style="
                 background: var(--card, #1c253b);
                 color: #e0e6f0;
-                padding: 32px 22px 22px 22px;
-                max-width: 440px;
-                width: 92vw;
+                max-width: 98vw;
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
                 border-radius: 18px;
                 box-shadow: 0 4px 32px #60aaff33, 0 1.5px 0 var(--primary, #60aaff);
                 border: 1.5px solid var(--primary, #60aaff);
                 position: relative;
                 font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
                 animation: fadeInSoft 0.4s;
+                padding: clamp(18px, 5vw, 36px) clamp(10px, 5vw, 36px) clamp(18px, 5vw, 32px) clamp(10px, 5vw, 36px);
+                margin: 2vw;
+                overflow-y: auto;
+                max-height: 90vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
             ">
                 <button id="closeGuideBtn" style="
                     position: absolute;
@@ -1641,6 +1649,7 @@ function showUsageGuide() {
                     color: var(--primary, #60aaff);
                     cursor: pointer;
                     transition: color 0.2s;
+                    z-index: 10;
                 " title="Close">&times;</button>
                 <div id="guideContent"></div>
             </div>
@@ -1654,14 +1663,17 @@ function showUsageGuide() {
         });
     }
 
-    // Style the content area to match the rest of the site
+    // Style the content area to match the rest of the site and be responsive
     const guideContent = modal.querySelector('#guideContent');
     guideContent.innerHTML = guide[currentLang] || guide.en;
     guideContent.style.marginTop = "8px";
-    guideContent.style.fontSize = "1.08em";
+    guideContent.style.fontSize = "clamp(1em, 2vw, 1.12em)";
     guideContent.style.lineHeight = "1.7";
     guideContent.style.letterSpacing = "0.01em";
     guideContent.style.textAlign = "start";
+    guideContent.style.wordBreak = "break-word";
+    guideContent.style.maxWidth = "100%";
+    guideContent.style.boxSizing = "border-box";
     guideContent.querySelectorAll('h2').forEach(h2 => {
         h2.style.color = "var(--primary, #60aaff)";
         h2.style.textAlign = "center";
@@ -1669,17 +1681,30 @@ function showUsageGuide() {
         h2.style.marginTop = "0";
         h2.style.marginBottom = "1.2em";
         h2.style.textShadow = "0 2px 8px #60aaff22";
-        h2.style.fontSize = "1.4rem";
+        h2.style.fontSize = "clamp(1.2rem, 3vw, 1.6rem)";
     });
     guideContent.querySelectorAll('ul').forEach(ul => {
         ul.style.paddingLeft = "1.2em";
         ul.style.marginBottom = "1.2em";
+        ul.style.maxWidth = "100%";
     });
     guideContent.querySelectorAll('li').forEach(li => {
         li.style.marginBottom = "0.5em";
+        li.style.wordBreak = "break-word";
     });
 
+    // Ensure modal is always visible and scrollable on all screens
     modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+
+    // Responsive: allow scrolling if content is too tall
+    const card = modal.querySelector('#usageGuideCard');
+    card.style.overflowY = 'auto';
+    card.style.maxHeight = '90vh';
+    card.style.width = 'min(98vw, 440px)';
+    card.style.minWidth = '0';
+    card.style.margin = '2vw';
 
     modal.querySelector('#closeGuideBtn').onclick = () => {
         modal.style.display = 'none';
