@@ -812,6 +812,8 @@ const secondsInput = document.getElementById('seconds');
 function showMode(mode) {
     wakeLock = null;
     localStorage.setItem('mode', mode);
+
+    // Hide all sections with transition
     document.getElementById('cycle-inputs').style.display = 'none';
     document.getElementById('cycleDisplay').style.display = 'none';
     document.getElementById('cycle-controls').style.display = 'none';
@@ -822,28 +824,43 @@ function showMode(mode) {
     document.getElementById('timer-controls').style.display = 'none';
     document.getElementById('roomsContainer').style.display = 'none';
 
+    // Mode transitions for summary/leaderboard
+    document.querySelector('.summary-section').classList.add('hide');
+    document.querySelector('.leaderboard-section').classList.add('hide');
+
     // Tab active state
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mode === mode);
     });
 
-    if (mode === 'cycle') {
-        document.getElementById('cycle-inputs').style.display = '';
-        document.getElementById('cycleDisplay').style.display = '';
-        document.getElementById('cycle-controls').style.display = '';
-        document.getElementById('cycleStatus').style.display = '';
-    } else if (mode === 'timer') {
-        document.getElementById('timer-inputs').style.display = '';
-        document.getElementById('display').style.display = '';
-        document.getElementById('timer-controls').style.display = '';
-    } else if (mode === 'stopwatch') {
-        document.getElementById('timer-inputs').style.display = 'none';
-        document.getElementById('display').style.display = '';
-        document.getElementById('timer-controls').style.display = '';
-    } else {
-        document.getElementById('roomsContainer').style.display = '';
-        renderRooms();
-    }
+    setTimeout(() => {
+        if (mode === 'cycle') {
+            document.getElementById('cycle-inputs').style.display = '';
+            document.getElementById('cycleDisplay').style.display = '';
+            document.getElementById('cycle-controls').style.display = '';
+            document.getElementById('cycleStatus').style.display = '';
+            document.querySelector('.summary-section').classList.remove('hide');
+            document.querySelector('.leaderboard-section').classList.remove('hide');
+        } else if (mode === 'timer') {
+            document.getElementById('timer-inputs').style.display = '';
+            document.getElementById('display').style.display = '';
+            document.getElementById('timer-controls').style.display = '';
+            document.querySelector('.summary-section').classList.remove('hide');
+            document.querySelector('.leaderboard-section').classList.remove('hide');
+        } else if (mode === 'stopwatch') {
+            document.getElementById('timer-inputs').style.display = 'none';
+            document.getElementById('display').style.display = '';
+            document.getElementById('timer-controls').style.display = '';
+            document.querySelector('.summary-section').classList.remove('hide');
+            document.querySelector('.leaderboard-section').classList.remove('hide');
+        } else {
+            document.getElementById('roomsContainer').style.display = '';
+            renderRooms();
+            // Hide summary/leaderboard when in rooms mode
+            document.querySelector('.summary-section').classList.add('hide');
+            document.querySelector('.leaderboard-section').classList.add('hide');
+        }
+    }, 10); // allow transition to trigger
 }
 
 // --- Tab button event listeners ---
