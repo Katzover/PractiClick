@@ -1615,28 +1615,74 @@ function showUsageGuide() {
         modal.id = 'usageGuideModal';
         modal.style = `
             position:fixed;top:0;left:0;width:100vw;height:100vh;
-            background:rgba(0,0,0,0.7);z-index:3000;display:flex;align-items:center;justify-content:center;
+            background:rgba(24,32,50,0.85);z-index:3000;display:flex;align-items:center;justify-content:center;
         `;
         modal.innerHTML = `
-            <div style=";background:rgb(17, 18, 23);color:white;padding:24px 18px;max-width:420px;width:90vw;border-radius:10px;box-shadow:0 2px 16px #0005;position:relative;">
-                <button id="closeGuideBtn" style="position:fixed;top:8px;right:12px;font-size:1.2em;background:none;border:none;cursor:pointer;">✖</button>
+            <div id="usageGuideCard" style="
+                background: var(--card, #1c253b);
+                color: #e0e6f0;
+                padding: 32px 22px 22px 22px;
+                max-width: 440px;
+                width: 92vw;
+                border-radius: 18px;
+                box-shadow: 0 4px 32px #60aaff33, 0 1.5px 0 var(--primary, #60aaff);
+                border: 1.5px solid var(--primary, #60aaff);
+                position: relative;
+                font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+                animation: fadeInSoft 0.4s;
+            ">
+                <button id="closeGuideBtn" style="
+                    position: absolute;
+                    top: 12px;
+                    right: 16px;
+                    font-size: 1.3em;
+                    background: none;
+                    border: none;
+                    color: var(--primary, #60aaff);
+                    cursor: pointer;
+                    transition: color 0.2s;
+                " title="Close">&times;</button>
                 <div id="guideContent"></div>
             </div>
         `;
         document.body.appendChild(modal);
-        
+
         modal.addEventListener('click', function(event) {
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
         });
     }
-    
-    modal.querySelector('#guideContent').innerHTML = guide[currentLang] || guide.en;
+
+    // Style the content area to match the rest of the site
+    const guideContent = modal.querySelector('#guideContent');
+    guideContent.innerHTML = guide[currentLang] || guide.en;
+    guideContent.style.marginTop = "8px";
+    guideContent.style.fontSize = "1.08em";
+    guideContent.style.lineHeight = "1.7";
+    guideContent.style.letterSpacing = "0.01em";
+    guideContent.style.textAlign = "start";
+    guideContent.querySelectorAll('h2').forEach(h2 => {
+        h2.style.color = "var(--primary, #60aaff)";
+        h2.style.textAlign = "center";
+        h2.style.fontWeight = "bold";
+        h2.style.marginTop = "0";
+        h2.style.marginBottom = "1.2em";
+        h2.style.textShadow = "0 2px 8px #60aaff22";
+        h2.style.fontSize = "1.4rem";
+    });
+    guideContent.querySelectorAll('ul').forEach(ul => {
+        ul.style.paddingLeft = "1.2em";
+        ul.style.marginBottom = "1.2em";
+    });
+    guideContent.querySelectorAll('li').forEach(li => {
+        li.style.marginBottom = "0.5em";
+    });
+
     modal.style.display = 'flex';
-    
-    modal.querySelector('#closeGuideBtn').onclick = () => { 
-        modal.style.display = 'none'; 
+
+    modal.querySelector('#closeGuideBtn').onclick = () => {
+        modal.style.display = 'none';
     };
 }
 
