@@ -372,18 +372,16 @@ setInterval(fetchtoast, 15000);
 fetchtoast();
 
 async function lockapp() {
-    let { data, error } = await withLoading(() =>
-        supabase
-            .from('down')
-            .select('is_down, why')
-            .eq('id', 1)
-    );
+    let { data, error } = await supabase
+            .from('misc')
+            .select('what, why')
+            .eq('id', 1);
     if (error) {
         console.error('Error checking app status:', error.message);
         return;
     }
     data = data[0];
-    if (data.is_down) {
+    if (data.what && data.what === "true") {
         localStorage.removeItem("reason");
         localStorage.setItem('reason', data.why);
         if(admins.includes(userName)) {showtoast("The app is currently down for maintenance. You can still access the app cause you're Sigma 🥶", "orange", 60000, "16px");return;}
@@ -391,7 +389,7 @@ async function lockapp() {
     }
 }
 
-setInterval(lockapp, 15000);
+setInterval(lockapp, 5000);
 lockapp();
 
 async function upsertLeaderboard(ms) {
@@ -1646,8 +1644,8 @@ if (!localStorage.getItem('lang')) {showUsageGuide();}
 async function getversion() {
     let { data, error } = await withLoading(() =>
         supabase
-            .from('down')
-            .select('why')
+            .from('misc')
+            .select('what', 'why')
             .eq('id', 2)
     ); if (error) {
         console.error('Error fetching version:', error.message);
@@ -1655,9 +1653,9 @@ async function getversion() {
     }
     if (data[0].why !== localStorage.getItem('version')) {
         if (currentLang === 'he') {
-            alert("האפליקציה עודכנה בהצלחה")
+            alert("האפליקציה עודכנה בהצלחה", data[0].what);
         } else {
-            alert("The app has been updated successfully.");
+            alert("The app has been updated successfully.", data[0].what);
         }
         showUsageGuide();
         localStorage.setItem('version', data[0].why);

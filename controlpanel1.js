@@ -112,8 +112,8 @@ document.getElementById('deletealltoasts').addEventListener('click', async () =>
 async function shutdown() {
     const { error } = await withLoading(() =>
         supabase
-            .from('down')
-            .update([{ is_down: true, why: document.getElementById('shutmsg').value }])
+            .from('misc')
+            .update([{ what:"true", why: document.getElementById('shutmsg').value }])
             .eq('id', 1)
     ); if (error) {console.error('Error:', error.message); return;}
 
@@ -140,8 +140,8 @@ document.getElementById('reopen').addEventListener('click', async () => {
 document.getElementById('updateversion').addEventListener('click', async () => {
     const { data, error } = await withLoading(() =>
         supabase
-            .from('down')
-            .update([{ why: document.getElementById('version').value }])
+            .from('misc')
+            .update([{ what: document.getElementById('Notes').value, why: document.getElementById('version').value }])
             .eq('id', 2)
     ); if (error) {
         console.error('Error fetching version:', error.message);
