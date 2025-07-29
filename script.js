@@ -332,13 +332,22 @@ async function showtoast(msg, color="white", duration = 10000, size = "16px") {
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = msg;
+    toast.style.fontSize = size;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '80px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.backgroundColor = color;
+    toast.style.color = '#fff';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '5px';
+    toast.style.zIndex = '1000';
     document.body.appendChild(toast);
-
+    
     setTimeout(() => {
-        if (toast.parentNode) toast.parentNode.removeChild(toast);
+        document.body.removeChild(toast);
     }, duration);
-}
-window.showtoast = showtoast;
+} window.showtoast = showtoast;
 let currentPracticeRoom = null;
 
 async function fetchtoast() {
@@ -1736,15 +1745,6 @@ async function getversion() {
         if (currentLang === 'he') {
             alert("האפליקציה עודכנה בהצלחה\n");
         } else {
-            alert("The app has been updated successfully.\n");
-        }
-        showUsageGuide();
-    }
-    return data[0].why;
-}
-
-getversion();
-setInterval(getversion, 1000 * 60 * 60);
             alert("The app has been updated successfully.\n");
         }
         showUsageGuide();
