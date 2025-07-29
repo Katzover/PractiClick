@@ -144,7 +144,7 @@ button:hover, button:focus {
     transition: gap 0.3s, margin 0.3s;
 }
 .timer-display {
-    font-size: 2.2rem;
+    font-size: 2.6rem;
     text-align: center;
     margin: 12px 0;
     letter-spacing: 2px;
@@ -153,7 +153,27 @@ button:hover, button:focus {
     background: #18243a;
     box-shadow: 0 2px 12px #60aaff22;
     border: 1px solid var(--border);
-    transition: color 0.4s, background 0.3s, box-shadow 0.3s, border 0.3s;
+    border-radius: 16px;
+    padding: 18px 0;
+    transition: color 0.4s, background 0.3s, box-shadow 0.3s, border 0.3s, font-size 0.3s, padding 0.3s;
+}
+@media (max-width: 700px) {
+    .timer-display {
+        font-size: 3.2rem;
+        padding: 22px 0;
+    }
+}
+@media (max-width: 400px) {
+    .timer-display {
+        font-size: 2.1rem;
+        padding: 14px 0;
+    }
+}
+@media (min-width: 701px) {
+    .timer-display {
+        font-size: 3.6rem;
+        padding: 24px 0;
+    }
 }
 .timer-display.running {
     color: var(--success);
@@ -489,7 +509,8 @@ button:hover, button:focus {
         font-size: 1.1rem;
     }
     .timer-display {
-        font-size: 2.5rem;
+        font-size: 3.2rem;
+        padding: 22px 0;
     }
     input, select {
         font-size: 1em;
@@ -520,8 +541,8 @@ button:hover, button:focus {
         margin: 36px 0 24px 0;
     }
     .timer-display {
-        font-size: 3.2rem;
-        padding: 20px 0;
+        font-size: 3.6rem;
+        padding: 24px 0;
     }
     .timer-controls {
         flex-direction: row;
@@ -570,7 +591,8 @@ button:hover, button:focus {
         padding: 0;
     }
     .timer-display {
-        font-size: 1.2rem;
+        font-size: 2.1rem;
+        padding: 14px 0;
     }
     h1 {
         font-size: 1rem;
@@ -813,4 +835,37 @@ body[dir="rtl"] {
 #roomsTable tr:last-child td {
     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 14px;
+}
+
+/* Toast styling to match card/blue theme */
+.toast {
+    background: linear-gradient(90deg, var(--primary) 60%, var(--accent) 100%);
+    color: #fff !important;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px #60aaff33, 0 1.5px 0 var(--primary, #60aaff);
+    border: 1.5px solid var(--primary, #60aaff);
+    font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+    font-size: 1.15em !important;
+    padding: 16px 28px !important;
+    min-width: 180px;
+    max-width: 90vw;
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    bottom: 80px;
+    transform: translateX(-50%);
+    z-index: 2000;
+    opacity: 0.98;
+    transition: opacity 0.2s, box-shadow 0.2s;
+    pointer-events: auto;
+    word-break: break-word;
+}
+@media (max-width: 700px) {
+    .toast {
+        font-size: 1em !important;
+        padding: 12px 10vw !important;
+        min-width: 120px;
+        max-width: 96vw;
+        bottom: 70px;
+    }
 }
