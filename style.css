@@ -460,6 +460,8 @@ button:hover, button:focus {
         max-width: 100vw;
         padding: 0;
         margin: 0 0 80px 0;
+        /* Prevent horizontal overflow */
+        overflow-x: hidden;
     }
     #metronome-panel,
     .timer-section,
@@ -469,6 +471,9 @@ button:hover, button:focus {
     .leaderboard-section {
         margin: 12px 4px 0 4px;
         padding: 12px 8px 8px 8px;
+        /* Prevent overflow */
+        min-width: 0;
+        box-sizing: border-box;
     }
     h1 {
         font-size: 1.1rem;
@@ -484,7 +489,29 @@ button:hover, button:focus {
         flex-direction: column;
         gap: 8px;
     }
+    /* Make all tables scrollable horizontally */
+    #roomsTable,
+    #leaderboardTable,
+    #summaryTable,
+    .summary-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        min-width: 240px;
+        box-sizing: border-box;
+    }
+    #roomsTable th, #roomsTable td,
+    #leaderboardTable th, #leaderboardTable td,
+    #summaryTable th, #summaryTable td,
+    .summary-table th, .summary-table td {
+        min-width: 80px;
+        font-size: 0.97em;
+        box-sizing: border-box;
+        white-space: nowrap;
+    }
 }
+
 @media (min-width: 701px) {
     .container {
         max-width: 520px;
@@ -553,12 +580,22 @@ button:hover, button:focus {
 @media (max-width: 400px) {
     .container {
         padding: 0;
+        /* Prevent horizontal scroll */
+        overflow-x: hidden;
     }
     .timer-display {
         font-size: 1.2rem;
     }
     h1 {
         font-size: 1rem;
+    }
+    /* Extra: reduce padding for tables */
+    #roomsTable th, #roomsTable td,
+    #leaderboardTable th, #leaderboardTable td,
+    #summaryTable th, #summaryTable td,
+    .summary-table th, .summary-table td {
+        padding: 8px 2px;
+        font-size: 0.93em;
     }
 }
 body[dir="rtl"] {
