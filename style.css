@@ -572,3 +572,71 @@ body[dir="rtl"] {
     padding: 7px 0;
     margin-bottom: 0;
 }
+
+/* Panel box style inspired by controlpanel1.html */
+.panel-box {
+    background: #23272a;
+    border-radius: 8px;
+    margin: 32px auto;
+    padding: 24px 32px;
+    max-width: 400px;
+    box-shadow: 0 2px 8px #000a;
+}
+@media (max-width: 700px) {
+    .panel-box {
+        max-width: 98vw;
+        padding: 16px 6vw;
+        margin: 18px 0;
+    }
+}
+@media (min-width: 701px) {
+    .panel-box {
+        max-width: 520px;
+        padding: 24px 40px;
+        margin: 32px auto;
+    }
+}
+
+/* Optional: style for panel headings */
+.panel-box h2, .panel-box h3, .panel-box h1 {
+    color: #e0e0e0;
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    font-size: 1.3rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Optional: style for labels and inputs inside panel-box */
+.panel-box label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+.panel-box input[type="text"], .panel-box input[type="number"], .panel-box select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 16px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background: #181a1b;
+    color: #e0e0e0;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+.panel-box button {
+    background: #5865f2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-right: 8px;
+    margin-top: 8px;
+    transition: background 0.2s;
+}
+.panel-box button:hover {
+    background: #4752c4;
+}
