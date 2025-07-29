@@ -66,12 +66,13 @@ h1 {
     transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s, padding 0.3s, margin 0.3s, border 0.3s, opacity 0.3s, transform 0.3s;
     /* For mode transitions */
     opacity: 1;
-    transform: scale(1);
+    /* transform: scale(1); */ /* Remove transform for no popping out effect */
 }
 .summary-section.hide,
 .leaderboard-section.hide {
     opacity: 0;
-    transform: scale(0.97) translateY(20px);
+    /* Remove transform for no popping out effect */
+    /* transform: scale(0.97) translateY(20px); */
     pointer-events: none;
     display: none; /* <-- add this line */
 }
