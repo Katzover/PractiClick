@@ -749,3 +749,95 @@ body[dir="rtl"] {
     color: #162032;
     transition: background 0.2s, color 0.2s;
 }
+
+/* Rooms Table Styling */
+#roomsTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: none;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px #60aaff11;
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-size: 1em;
+    transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s;
+}
+#roomsTable th, #roomsTable td {
+    padding: 12px 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(32, 43, 61, 0.85);
+    color: #e0e6f0;
+    font-size: 1em;
+    transition: color 0.3s, background 0.3s, border-bottom 0.3s;
+    word-break: break-word;
+}
+#roomsTable th {
+    font-weight: 700;
+    background: linear-gradient(90deg, #1e90ff33 0%, #60aaff22 100%);
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    letter-spacing: 0.04em;
+}
+#roomsTable tr:last-child td {
+    border-bottom: none;
+}
+#roomsTable tr {
+    transition: background 0.3s;
+}
+#roomsTable tr:nth-child(even) td {
+    background: #202b3d;
+}
+#roomsTable tr:nth-child(odd) td {
+    background: #1c253b;
+}
+#roomsTable tr:first-child th {
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+}
+#roomsTable tr:last-child td {
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+}
+
+/* Responsive: Make table more readable on mobile */
+@media (max-width: 700px) {
+    #roomsTable th, #roomsTable td {
+        padding: 10px 4px;
+        font-size: 0.98em;
+    }
+    #roomsTable {
+        font-size: 0.97em;
+    }
+    .leaderboard-section,
+    .summary-section,
+    .log-section,
+    #metronome-panel,
+    .timer-section,
+    .week-total-section {
+        margin-left: 2px;
+        margin-right: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+}
+
+/* Make table scrollable horizontally on very small screens */
+@media (max-width: 400px) {
+    #roomsTable,
+    #leaderboardTable,
+    #summaryTable {
+        display: block;
+        overflow-x: auto;
+        width: 100%;
+        min-width: 240px;
+    }
+    #roomsTable th, #roomsTable td,
+    #leaderboardTable th, #leaderboardTable td,
+    #summaryTable th, #summaryTable td {
+        min-width: 80px;
+        font-size: 0.95em;
+    }
+}
