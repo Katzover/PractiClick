@@ -1,15 +1,15 @@
 :root {
-    --primary: #a5b4fc;
-    --accent: #7c3aed;
-    --bg: #181926;
-    --card: #232336;
-    --shadow: 0 6px 32px rgba(60,80,180,0.10);
-    --border: #282a36;
-    --input-bg: #23243a;
-    --input-focus: #7c3aed55;
-    --success: #aee9a1;
-    --warning: #f7c873;
-    --danger: #f87171;
+    --primary: #60aaff;         /* blueish primary */
+    --accent: #1e90ff;          /* blue accent */
+    --bg: #162032;
+    --card: #1c253b;
+    --shadow: 0 6px 32px rgba(60,120,220,0.13);
+    --border: #22304a;
+    --input-bg: #202b3d;
+    --input-focus: #60aaff55;
+    --success: #aee9e1;
+    --warning: #f7e673;
+    --danger: #71b7f8;
 }
 body {
     background: linear-gradient(135deg, #181926 0%, #232336 100%);
@@ -26,11 +26,24 @@ body {
     background: none;
     border-radius: 0;
     box-shadow: none;
-    animation: fadeInUp 0.7s cubic-bezier(.23,1.01,.32,1) 0s 1;
+    animation: fadeInUp 1s cubic-bezier(.23,1.01,.32,1.2) 0s 1;
 }
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(40px);}
-    to { opacity: 1; transform: translateY(0);}
+    0% {
+        opacity: 0;
+        transform: translateY(60px) scale(0.98) skewY(2deg);
+        filter: blur(8px);
+    }
+    60% {
+        opacity: 0.7;
+        transform: translateY(-8px) scale(1.01) skewY(-1deg);
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) skewY(0deg);
+        filter: blur(0);
+    }
 }
 
 h1 {
@@ -40,7 +53,7 @@ h1 {
     margin: 28px 0 20px 0;
     letter-spacing: 0.5px;
     color: var(--primary);
-    text-shadow: 0 2px 8px #0004;
+    text-shadow: 0 2px 12px #1e90ff33;
 }
 #metronome-panel,
 .timer-section,
@@ -58,7 +71,7 @@ h1 {
 #metronome-panel {
     max-width: 100%;
     margin-bottom: 18px;
-    box-shadow: 0 4px 16px #7c3aed22;
+    box-shadow: 0 4px 24px #60aaff22;
     float: none;
     width: auto;
     margin-right: 0;
@@ -94,7 +107,7 @@ input[type="range"] {
     width: 110px;
 }
 button {
-    background: linear-gradient(90deg, var(--accent) 60%, #5b21b6 100%);
+    background: linear-gradient(90deg, var(--accent) 60%, #1560b6 100%);
     color: #fff;
     border: none;
     border-radius: 12px;
@@ -103,15 +116,15 @@ button {
     cursor: pointer;
     font-weight: 700;
     margin: 4px 0;
-    box-shadow: 0 2px 8px #7c3aed22;
+    box-shadow: 0 2px 8px #60aaff22;
     transition: background 0.2s, border-radius 0.2s, box-shadow 0.2s, color 0.2s;
     letter-spacing: 0.04em;
 }
 button:hover, button:focus {
-    background: linear-gradient(90deg, #a5b4fc 60%, var(--accent) 100%);
-    color: #181926;
+    background: linear-gradient(90deg, #60aaff 60%, var(--accent) 100%);
+    color: #162032;
     border-radius: 16px;
-    box-shadow: 0 4px 16px #a5b4fc33;
+    box-shadow: 0 4px 16px #60aaff33;
 }
 .timer-controls {
     display: flex;
@@ -126,17 +139,15 @@ button:hover, button:focus {
     letter-spacing: 2px;
     font-weight: bold;
     color: var(--primary);
-    transition: color 0.4s, background 0.3s, box-shadow 0.3s;
-    background: #1a1b2e;
-    border-radius: 14px;
-    box-shadow: 0 2px 12px #7c3aed22;
+    background: #18243a;
+    box-shadow: 0 2px 12px #60aaff22;
     border: 1px solid var(--border);
 }
 .timer-display.running {
     color: var(--success);
     animation: pulseGlow 1.2s infinite alternate;
-    background: #1e2d1e;
-    box-shadow: 0 0 20px #aee9a155;
+    background: #1e2d2e;
+    box-shadow: 0 0 20px #aee9e155;
 }
 @keyframes pulseGlow {
     from { box-shadow: 0 0 8px #aee9a133; }
@@ -144,8 +155,8 @@ button:hover, button:focus {
 }
 .timer-display.paused {
     color: var(--warning);
-    background: #2a241a;
-    box-shadow: 0 0 10px #f7c87355;
+    background: #232a1a;
+    box-shadow: 0 0 10px #f7e67355;
     animation: none;
 }
 .log-list {
@@ -234,8 +245,7 @@ button:hover, button:focus {
     text-align: center;
     margin-top: 10px;
     color: var(--primary);
-    transition: color 0.2s, transform 0.2s;
-    text-shadow: 0 2px 8px #7c3aed33;
+    text-shadow: 0 2px 8px #60aaff33;
 }
 #metroIndicator.active {
     animation: metroPulse 0.25s;
@@ -271,7 +281,7 @@ button:hover, button:focus {
     background: var(--input-bg);
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 1px 4px #7c3aed22;
+    box-shadow: 0 1px 4px #60aaff22;
     padding: 4px;
 }
 .timer-modes label {
@@ -295,10 +305,10 @@ button:hover, button:focus {
 }
 .timer-modes input[type="radio"]:checked + span {
     background: var(--primary);
-    color: #181926;
+    color: #162032;
     font-weight: 700;
     border-radius: 10px;
-    box-shadow: 0 2px 8px #7c3aed22;
+    box-shadow: 0 2px 8px #60aaff22;
 }
 .timer-modes label:hover span {
     background: #2d2e4a;
@@ -329,13 +339,13 @@ button:hover, button:focus {
 }
 .tab-btn.active {
     background: var(--primary);
-    color: #181926;
+    color: #162032;
     font-weight: 700;
     border-radius: 10px;
-    box-shadow: 0 2px 8px #7c3aed22;
+    box-shadow: 0 2px 8px #60aaff22;
 }
 .tab-btn:hover:not(.active) {
-    background: #2d2e4a;
+    background: #233a4a;
     color: #fff;
 }
 #footerBtns {
@@ -362,13 +372,13 @@ button:hover, button:focus {
     cursor: pointer;
     min-width: 90px;
     max-width: 180px;
-    box-shadow: 0 1px 4px #7c3aed22;
+    box-shadow: 0 1px 4px #60aaff22;
     font-weight: 700;
     transition: background 0.2s, color 0.2s;
 }
 #footerBtns button:hover {
     background: linear-gradient(90deg, var(--accent) 60%, var(--primary) 100%);
-    color: #181926;
+    color: #162032;
 }
 #roomModalOptions {
     overflow-y: scroll !important;
@@ -518,7 +528,7 @@ body[dir="rtl"] {
     align-items: center;
     border-top: 1px solid var(--border);
     z-index: 100;
-    box-shadow: 0 -2px 12px #7c3aed22;
+    box-shadow: 0 -2px 12px #60aaff22;
 }
 .bottom-nav .nav-item {
     display: flex;
@@ -556,7 +566,7 @@ body[dir="rtl"] {
     align-items: center;
 }
 .loading-spinner {
-    border: 5px solid #23243a;
+    border: 5px solid #202b3d;
     border-top: 5px solid var(--accent);
     border-radius: 50%;
     width: 54px;
@@ -614,7 +624,7 @@ body[dir="rtl"] {
     margin: 32px auto;
     padding: 28px 36px;
     max-width: 420px;
-    box-shadow: 0 4px 24px #7c3aed22;
+    box-shadow: 0 4px 24px #60aaff22;
     border: 1px solid var(--border);
 }
 @media (max-width: 700px) {
@@ -640,7 +650,7 @@ body[dir="rtl"] {
     font-size: 1.4rem;
     text-align: center;
     font-weight: bold;
-    text-shadow: 0 2px 8px #7c3aed22;
+    text-shadow: 0 2px 8px #60aaff22;
 }
 
 /* Optional: style for labels and inputs inside panel-box */
@@ -681,5 +691,5 @@ body[dir="rtl"] {
 }
 .panel-box button:hover, .panel-box button:focus {
     background: linear-gradient(90deg, var(--primary) 60%, var(--accent) 100%);
-    color: #181926;
+    color: #162032;
 }
