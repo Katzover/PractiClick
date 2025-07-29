@@ -1657,8 +1657,8 @@ async function getversion() {
         } else {
             alert("The app has been updated successfully.\n" +data[0].what);
         }
-        showUsageGuide();
         localStorage.setItem('version', data[0].why);
+        showUsageGuide();
     }
     return data[0].why;
 }
