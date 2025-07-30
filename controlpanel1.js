@@ -244,7 +244,7 @@ async function setAppColors(primary, card) {
         alert("Failed to update colors");
     }
 }
-
+setAppColors()
 // Setup color panel UI logic
 document.addEventListener('DOMContentLoaded', async function() {
     // Only run if color controls exist
