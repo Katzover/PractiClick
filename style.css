@@ -179,7 +179,7 @@ button:hover, button:focus {
     color: var(--success);
     animation: pulseGlow 1.2s infinite alternate;
     background: #1e2d2e;
-    box-shadow: 0 0 20px #aee9e155;
+    box-shadow: 0 0 20px #aee9a155;
     transition: color 0.4s, background 0.3s, box-shadow 0.3s;
 }
 @keyframes pulseGlow {
@@ -870,20 +870,62 @@ body[dir="rtl"] {
     }
 }
 
-/* Ensure action buttons don't poke outside the box */
-#cycle-controls, .timer-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
+/* PC only: Ensure action buttons don't poke outside the box */
+@media (min-width: 701px) {
+    #cycle-controls, .timer-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    #cycle-controls button, .timer-controls button {
+        min-width: 90px;
+        max-width: 180px;
+        flex: 1 1 120px;
+        box-sizing: border-box;
+    }
 }
 
-/* Make buttons shrink if needed */
-#cycle-controls button, .timer-controls button {
-    min-width: 90px;
-    max-width: 180px;
-    flex: 1 1 120px;
-    box-sizing: border-box;
+/* --- Animated mode transitions --- */
+.mode-section {
+    transition: transform 0.35s cubic-bezier(.23,1,.32,1), opacity 0.35s cubic-bezier(.23,1,.32,1);
+    will-change: transform, opacity;
+    opacity: 1;
+    position: absolute;
+    width: 100%;
+    left: 0; top: 0;
+    z-index: 2;
+}
+.mode-section.hide {
+    pointer-events: none;
+    opacity: 0;
+}
+.mode-slide-in-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
+.mode-slide-in-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.mode-slide-out-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.mode-slide-out-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
+.mode-slide-center {
+    transform: translateX(0%);
+    opacity: 1;
+}
+
+/* Container for stacking mode sections */
+#modeStack {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
 }

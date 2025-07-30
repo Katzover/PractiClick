@@ -1275,12 +1275,196 @@ function renderSummary() {
 
 }
 
-// --- Init ---
-updateDisplay();
-renderLogs();
-renderSummary();
-updateResetBtnLabel();
-updateWeekTotal();
+// --- Animated mode transitions & swipe navigation ---
+const MODES = ['cycle', 'timer', 'stopwatch', 'rooms'];
+let currentModeIndex = MODES.indexOf(mode);
+
+function getModeIndex(m) {
+    return MODES.indexOf(m);
+}
+
+function animateModeTransition(fromMode, toMode) {
+    const stack = document.getElementById('modeStack');
+    if (!stack) return showMode(toMode); // fallback
+
+    const fromIdx = getModeIndex(fromMode);
+    const toIdx = getModeIndex(toMode);
+    if (fromIdx === -1 || toIdx === -1) return showMode(toMode);
+
+    const sections = {};
+    stack.querySelectorAll('.mode-section').forEach(sec => {
+        const m = sec.dataset.mode;
+        sections[m] = sec;
+    });
+
+    // Hide all, then show the two involved
+    Object.values(sections).forEach(sec => {
+        sec.classList.add('hide');
+        sec.classList.remove('mode-slide-in-left', 'mode-slide-in-right', 'mode-slide-out-left', 'mode-slide-out-right', 'mode-slide-center');
+    });
+
+    const fromSec = sections[fromMode];
+    const toSec = sections[toMode];
+    if (!fromSec || !toSec) return showMode(toMode);
+
+    // Prepare target section
+    toSec.classList.remove('hide');
+    toSec.classList.add('mode-section');
+    if (toIdx > fromIdx) {
+        // Slide left (forward)
+        toSec.classList.add('mode-slide-in-right');
+        setTimeout(() => {
+            toSec.classList.remove('mode-slide-in-right');
+            toSec.classList.add('mode-slide-center');
+        }, 10);
+        fromSec.classList.add('mode-slide-out-left');
+    } else {
+        // Slide right (backward)
+        toSec.classList.add('mode-slide-in-left');
+        setTimeout(() => {
+            toSec.classList.remove('mode-slide-in-left');
+            toSec.classList.add('mode-slide-center');
+        }, 10);
+        fromSec.classList.add('mode-slide-out-right');
+    }
+    // After animation, hide the old section
+    setTimeout(() => {
+        fromSec.classList.add('hide');
+        fromSec.classList.remove('mode-slide-out-left', 'mode-slide-out-right', 'mode-slide-center');
+        toSec.classList.remove('mode-slide-center');
+    }, 350);
+}
+
+function switchModeWithAnimation(newMode) {
+    if (mode === newMode) return;
+    animateModeTransition(mode, newMode);
+    mode = newMode;
+    localStorage.setItem('mode', mode);
+    currentModeIndex = getModeIndex(mode);
+    // Also update tab active state
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+    // Any additional logic for mode switch (summary/leaderboard visibility etc)
+    if (mode === 'cycle') {
+        document.getElementById('cycle-inputs').style.display = '';
+        document.getElementById('cycleDisplay').style.display = '';
+        document.getElementById('cycle-controls').style.display = '';
+        document.getElementById('cycleStatus').style.display = '';
+        document.querySelector('.summary-section').classList.remove('hide');
+        document.querySelector('.leaderboard-section').classList.remove('hide');
+    } else if (mode === 'timer') {
+        document.getElementById('timer-inputs').style.display = '';
+        document.getElementById('display').style.display = '';
+        document.getElementById('timer-controls').style.display = '';
+        document.querySelector('.summary-section').classList.remove('hide');
+        document.querySelector('.leaderboard-section').classList.remove('hide');
+    } else if (mode === 'stopwatch') {
+        document.getElementById('timer-inputs').style.display = 'none';
+        document.getElementById('display').style.display = '';
+        document.getElementById('timer-controls').style.display = '';
+        document.querySelector('.summary-section').classList.remove('hide');
+        document.querySelector('.leaderboard-section').classList.remove('hide');
+    } else {
+        document.getElementById('roomsContainer').style.display = '';
+        renderRooms();
+        // Hide summary/leaderboard when in rooms mode
+        document.querySelector('.summary-section').classList.add('hide');
+        document.querySelector('.leaderboard-section').classList.add('hide');
+    }
+}
+
+// --- Swipe gesture support for mode switching ---
+let touchStartX = null;
+let touchStartY = null;
+let touchMoved = false;
+
+function handleSwipeStart(e) {
+    if (e.touches && e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchMoved = false;
+    }
+}
+function handleSwipeMove(e) {
+    if (!touchStartX || !touchStartY) return;
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
+        touchMoved = true;
+        e.preventDefault();
+    }
+}
+function handleSwipeEnd(e) {
+    if (!touchStartX || !touchMoved) return;
+    const endX = (e.changedTouches && e.changedTouches[0].clientX) || 0;
+    const dx = endX - touchStartX;
+    if (Math.abs(dx) > 50) {
+        let nextIdx = currentModeIndex;
+        if (dx < 0 && currentModeIndex < MODES.length - 1) {
+            nextIdx++;
+        } else if (dx > 0 && currentModeIndex > 0) {
+            nextIdx--;
+        }
+        if (nextIdx !== currentModeIndex) {
+            switchModeWithAnimation(MODES[nextIdx]);
+        }
+    }
+    touchStartX = null;
+    touchStartY = null;
+    touchMoved = false;
+}
+
+// Attach swipe listeners to the main mode stack container
+const modeStack = document.getElementById('modeStack');
+if (modeStack) {
+    modeStack.addEventListener('touchstart', handleSwipeStart, { passive: false });
+    modeStack.addEventListener('touchmove', handleSwipeMove, { passive: false });
+    modeStack.addEventListener('touchend', handleSwipeEnd, { passive: false });
+}
+
+// Optionally, support mouse drag for PC
+let mouseDownX = null;
+let mouseMoved = false;
+if (window.matchMedia('(pointer: fine)').matches && modeStack) {
+    modeStack.addEventListener('mousedown', e => { mouseDownX = e.clientX; mouseMoved = false; });
+    modeStack.addEventListener('mousemove', e => {
+        if (mouseDownX !== null && Math.abs(e.clientX - mouseDownX) > 30) mouseMoved = true;
+    });
+    modeStack.addEventListener('mouseup', e => {
+        if (mouseDownX !== null && mouseMoved) {
+            const dx = e.clientX - mouseDownX;
+            let nextIdx = currentModeIndex;
+            if (dx < -50 && currentModeIndex < MODES.length - 1) {
+                nextIdx++;
+            } else if (dx > 50 && currentModeIndex > 0) {
+                nextIdx--;
+            }
+            if (nextIdx !== currentModeIndex) {
+                switchModeWithAnimation(MODES[nextIdx]);
+            }
+        }
+        mouseDownX = null;
+        mouseMoved = false;
+    });
+}
+
+// --- Initial mode setup with animation ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Hide all mode sections except current
+    const stack = document.getElementById('modeStack');
+    if (stack) {
+        stack.querySelectorAll('.mode-section').forEach(sec => {
+            if (sec.dataset.mode === mode) {
+                sec.classList.remove('hide');
+                sec.classList.add('mode-slide-center');
+            } else {
+                sec.classList.add('hide');
+                sec.classList.remove('mode-slide-center');
+            }
+        });
+    }
+});
 
 // --- Metronome Logic ---
 let metroAudioCtx = null;
