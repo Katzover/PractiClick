@@ -199,3 +199,81 @@ async function whoisstillonline() {
         return;
     }
 } setInterval(whoisstillonline, 500);
+
+// --- App Color/Gradient Setting Logic ---
+
+const DEFAULT_PRIMARY = "#60aaff";
+const DEFAULT_CARD = "#1c253b";
+
+// Apply colors to document root (for preview)
+function applyAppColors(primary, card) {
+    document.documentElement.style.setProperty('--primary', primary || DEFAULT_PRIMARY);
+    document.documentElement.style.setProperty('--card', card || DEFAULT_CARD);
+}
+
+// Fetch colors from Supabase misc table (id: 3)
+async function fetchAppColors() {
+    try {
+        const { data, error } = await supabase
+            .from('misc')
+            .select('what, why')
+            .eq('id', 3);
+        if (error || !data || !data[0]) {
+            applyAppColors(DEFAULT_PRIMARY, DEFAULT_CARD);
+            return { primary: DEFAULT_PRIMARY, card: DEFAULT_CARD };
+        }
+        const primary = data[0].what || DEFAULT_PRIMARY;
+        const card = data[0].why || DEFAULT_CARD;
+        applyAppColors(primary, card);
+        return { primary, card };
+    } catch (e) {
+        applyAppColors(DEFAULT_PRIMARY, DEFAULT_CARD);
+        return { primary: DEFAULT_PRIMARY, card: DEFAULT_CARD };
+    }
+}
+
+// Update colors in Supabase misc table (id: 3)
+async function setAppColors(primary, card) {
+    const { error } = await supabase
+        .from('misc')
+        .upsert([{ id: 3, what: primary, why: card }]);
+    if (!error) {
+        applyAppColors(primary, card);
+        alert("Colors updated!");
+    } else {
+        alert("Failed to update colors");
+    }
+}
+
+// Setup color panel UI logic
+document.addEventListener('DOMContentLoaded', async function() {
+    // Only run if color controls exist
+    const primaryPicker = document.getElementById('primaryColorPicker');
+    const primaryText = document.getElementById('primaryColorText');
+    const cardPicker = document.getElementById('cardColorPicker');
+    const cardText = document.getElementById('cardColorText');
+    const saveBtn = document.getElementById('saveColorsBtn');
+    if (primaryPicker && primaryText && cardPicker && cardText && saveBtn) {
+        // Load current colors
+        const { primary, card } = await fetchAppColors();
+        primaryPicker.value = primary;
+        primaryText.value = primary;
+        cardPicker.value = card;
+        cardText.value = card;
+
+        // Sync color pickers and text inputs
+        function syncColorInputs(picker, text) {
+            picker.addEventListener('input', () => { text.value = picker.value; applyAppColors(primaryPicker.value, cardPicker.value); });
+            text.addEventListener('input', () => { picker.value = text.value; applyAppColors(primaryPicker.value, cardPicker.value); });
+        }
+        syncColorInputs(primaryPicker, primaryText);
+        syncColorInputs(cardPicker, cardText);
+
+        // Save button
+        saveBtn.onclick = async function() {
+            const p = primaryText.value;
+            const c = cardText.value;
+            await setAppColors(p, c);
+        };
+    }
+});
