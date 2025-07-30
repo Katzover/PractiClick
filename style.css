@@ -179,7 +179,7 @@ button:hover, button:focus {
     color: var(--success);
     animation: pulseGlow 1.2s infinite alternate;
     background: #1e2d2e;
-    box-shadow: 0 0 20px #aee9e155;
+    box-shadow: 0 0 20px #aee9a155;
     transition: color 0.4s, background 0.3s, box-shadow 0.3s;
 }
 @keyframes pulseGlow {
@@ -874,16 +874,31 @@ body[dir="rtl"] {
 @media (min-width: 701px) {
     #cycle-controls, .timer-controls {
         display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 18px;
         justify-content: center;
-        align-items: center;
+        align-items: stretch;
         box-sizing: border-box;
+        margin-top: 18px;
+        margin-bottom: 18px;
+        width: 100%;
     }
     #cycle-controls button, .timer-controls button {
-        min-width: 90px;
-        max-width: 180px;
-        flex: 1 1 120px;
-        box-sizing: border-box;
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: none;
+        padding: 18px 0;
+        font-size: 1.18rem;
+        border-radius: 16px;
+        margin: 0;
+        box-shadow: 0 2px 8px #60aaff22;
+        background: linear-gradient(90deg, var(--primary) 60%, var(--accent) 100%);
+        font-weight: 700;
+        transition: background 0.2s, color 0.2s, border-radius 0.2s;
+    }
+    #cycle-controls button:disabled, .timer-controls button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
 }
