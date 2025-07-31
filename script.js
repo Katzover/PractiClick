@@ -1102,6 +1102,10 @@ logBtn.onclick = logSession;
 const logList = document.getElementById('logList');
 let logs = JSON.parse(localStorage.getItem('practiceLogs') || '[]');
 
+// Always render logs and summary on load, even if empty
+renderLogs();
+renderSummary();
+
 async function logSession() {
     let ms;
     if (mode === 'timer') {
