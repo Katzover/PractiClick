@@ -907,14 +907,14 @@ body[dir="rtl"] {
 body::before {
     content: "";
     position: fixed;
-    top: -15%;
-    left: -15%;
-    width: 130vw;
-    height: 130vh;
+    top: -20%;
+    left: -20%;
+    width: 140vw;
+    height: 140vh;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.5;
-    filter: blur(54px);
+    opacity: 0.55;
+    filter: blur(60px);
     background:
         radial-gradient(circle at 20% 30%, #60aaff 0%, transparent 60%),
         radial-gradient(circle at 80% 70%, #1e90ff 0%, transparent 60%),
@@ -924,55 +924,88 @@ body::before {
         radial-gradient(circle at 10% 80%, #f7e673 0%, transparent 60%),
         radial-gradient(circle at 90% 10%, #1560b6 0%, transparent 60%),
         radial-gradient(circle at 70% 40%, #1c253b 0%, transparent 60%),
-        radial-gradient(circle at 30% 60%, #e0e6f0 0%, transparent 60%);
-    animation: rgbBlurMove 20s linear infinite;
+        radial-gradient(circle at 30% 60%, #e0e6f0 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, #ff7eb9 0%, transparent 60%),
+        radial-gradient(circle at 25% 75%, #ffb86c 0%, transparent 60%),
+        radial-gradient(circle at 60% 80%, #aaffc3 0%, transparent 60%),
+        radial-gradient(circle at 15% 15%, #ff4e50 0%, transparent 60%),
+        radial-gradient(circle at 85% 85%, #43e97b 0%, transparent 60%);
+    animation: rgbBlurMove 24s linear infinite;
     transition: opacity 0.4s;
+}
+
+/* Add a subtle dark overlay for depth */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(18,25,38,0.55) 0%, rgba(32,35,54,0.45) 100%);
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+}
+
+/* Foreground container depth: stronger shadow, slight border */
+.container,
+#metronome-panel,
+.timer-section,
+.log-section,
+.summary-section,
+.week-total-section,
+.leaderboard-section {
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 8px 32px 0 rgba(60,120,220,0.18), 0 1.5px 0 #22304a;
+    border: 1.5px solid #22304a;
+    background: linear-gradient(120deg, rgba(28,37,59,0.98) 80%, rgba(32,43,61,0.98) 100%);
+    backdrop-filter: blur(2px);
 }
 
 @keyframes rgbBlurMove {
     0% {
         transform: translate(0px, 0px) scale(1.05) rotate(0deg);
-        opacity: 0.5;
+        opacity: 0.55;
     }
     10% {
-        transform: translate(40px, -30px) scale(1.08) rotate(10deg);
-        opacity: 0.52;
+        transform: translate(60px, -40px) scale(1.10) rotate(12deg);
+        opacity: 0.57;
     }
     20% {
-        transform: translate(-30px, 40px) scale(1.04) rotate(-8deg);
-        opacity: 0.48;
-    }
-    30% {
-        transform: translate(60px, 20px) scale(1.09) rotate(16deg);
-        opacity: 0.54;
-    }
-    40% {
-        transform: translate(-20px, 60px) scale(1.03) rotate(-12deg);
-        opacity: 0.46;
-    }
-    50% {
-        transform: translate(30px, -50px) scale(1.07) rotate(8deg);
-        opacity: 0.51;
-    }
-    60% {
-        transform: translate(-50px, 30px) scale(1.06) rotate(-14deg);
-        opacity: 0.49;
-    }
-    70% {
-        transform: translate(20px, 60px) scale(1.11) rotate(18deg);
+        transform: translate(-40px, 60px) scale(1.04) rotate(-10deg);
         opacity: 0.53;
     }
+    30% {
+        transform: translate(80px, 30px) scale(1.13) rotate(20deg);
+        opacity: 0.59;
+    }
+    40% {
+        transform: translate(-30px, 80px) scale(1.03) rotate(-16deg);
+        opacity: 0.51;
+    }
+    50% {
+        transform: translate(50px, -70px) scale(1.09) rotate(10deg);
+        opacity: 0.56;
+    }
+    60% {
+        transform: translate(-70px, 50px) scale(1.08) rotate(-18deg);
+        opacity: 0.54;
+    }
+    70% {
+        transform: translate(30px, 90px) scale(1.15) rotate(24deg);
+        opacity: 0.60;
+    }
     80% {
-        transform: translate(-60px, -20px) scale(1.04) rotate(-16deg);
-        opacity: 0.47;
+        transform: translate(-90px, -30px) scale(1.04) rotate(-22deg);
+        opacity: 0.52;
     }
     90% {
-        transform: translate(50px, 30px) scale(1.08) rotate(12deg);
-        opacity: 0.52;
+        transform: translate(70px, 50px) scale(1.12) rotate(16deg);
+        opacity: 0.58;
     }
     100% {
         transform: translate(0px, 0px) scale(1.05) rotate(0deg);
-        opacity: 0.5;
+        opacity: 0.55;
     }
 }
 
