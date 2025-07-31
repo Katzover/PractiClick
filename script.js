@@ -1276,8 +1276,144 @@ function renderSummary() {
 }
 
 // --- Animated mode transitions & swipe navigation ---
-// MODES, currentModeIndex, getModeIndex, animateModeTransition, switchModeWithAnimation, swipe logic
-// These already use #modeStack and .mode-section, so no code changes needed here
+const MODES = ['cycle', 'timer', 'stopwatch', 'rooms'];
+let currentModeIndex = MODES.indexOf(mode);
+
+function getModeIndex(m) {
+    return MODES.indexOf(m);
+}
+
+function animateModeTransition(fromMode, toMode) {
+    const stack = document.getElementById('modeStack');
+    if (!stack) return showMode(toMode); // fallback
+
+    const fromIdx = getModeIndex(fromMode);
+    const toIdx = getModeIndex(toMode);
+    if (fromIdx === -1 || toIdx === -1) return showMode(toMode);
+
+    const sections = {};
+    stack.querySelectorAll('.mode-section').forEach(sec => {
+        const m = sec.dataset.mode;
+        sections[m] = sec;
+    });
+
+    // Hide all, then show the two involved
+    Object.values(sections).forEach(sec => {
+        sec.classList.add('hide');
+        sec.classList.remove('mode-slide-in-left', 'mode-slide-in-right', 'mode-slide-out-left', 'mode-slide-out-right', 'mode-slide-center');
+    });
+
+    const fromSec = sections[fromMode];
+    const toSec = sections[toMode];
+    if (!fromSec || !toSec) return showMode(toMode);
+
+    // Prepare target section
+    toSec.classList.remove('hide');
+    toSec.classList.add('mode-section');
+    if (toIdx > fromIdx) {
+        // Slide left (forward)
+        toSec.classList.add('mode-slide-in-right');
+        setTimeout(() => {
+            toSec.classList.remove('mode-slide-in-right');
+            toSec.classList.add('mode-slide-center');
+        }, 10);
+        fromSec.classList.add('mode-slide-out-left');
+    } else {
+        // Slide right (backward)
+        toSec.classList.add('mode-slide-in-left');
+        setTimeout(() => {
+            toSec.classList.remove('mode-slide-in-left');
+            toSec.classList.add('mode-slide-center');
+        }, 10);
+        fromSec.classList.add('mode-slide-out-right');
+    }
+    // After animation, hide the old section
+    setTimeout(() => {
+        fromSec.classList.add('hide');
+        fromSec.classList.remove('mode-slide-out-left', 'mode-slide-out-right', 'mode-slide-center');
+        toSec.classList.remove('mode-slide-center');
+    }, 350);
+}
+
+function switchModeWithAnimation(newMode) {
+    if (mode === newMode) return;
+    animateModeTransition(mode, newMode);
+    mode = newMode;
+    localStorage.setItem('mode', mode);
+    currentModeIndex = getModeIndex(mode);
+    // Also update tab active state
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+    // Any additional logic for mode switch (summary/leaderboard visibility etc)
+    if (mode === 'cycle') {
+        document.getElementById('cycle-inputs').style.display = '';
+        document.getElementById('cycleDisplay').style.display = '';
+        document.getElementById('cycle-controls').style.display = '';
+        document.getElementById('cycleStatus').style.display = '';
+        document.querySelector('.summary-section').classList.remove('hide');
+        document.querySelector('.leaderboard-section').classList.remove('hide');
+    } else if (mode === 'timer') {
+        document.getElementById('timer-inputs').style.display = '';
+        document.getElementById('display').style.display = '';
+        document.getElementById('timer-controls').style.display = '';
+        document.querySelector('.summary-section').classList.remove('hide');
+        document.querySelector('.leaderboard-section').classList.remove('hide');
+    } else if (mode === 'stopwatch') {
+        document.getElementById('timer-inputs').style.display = 'none';
+        document.getElementById('display').style.display = '';
+        document.getElementById('timer-controls').style.display = '';
+        document.querySelector('.summary-section').classList.remove('hide');
+        document.querySelector('.leaderboard-section').classList.remove('hide');
+    } else {
+        document.getElementById('roomsContainer').style.display = '';
+        renderRooms();
+        // Hide summary/leaderboard when in rooms mode
+        document.querySelector('.summary-section').classList.add('hide');
+        document.querySelector('.leaderboard-section').classList.add('hide');
+    }
+}
+
+// --- Swipe gesture support for mode switching ---
+let touchStartX = null;
+let touchStartY = null;
+let touchMoved = false;
+
+function handleSwipeStart(e) {
+    if (e.touches && e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchMoved = false;
+    }
+}
+function handleSwipeMove(e) {
+    if (!touchStartX || !touchStartY) return;
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
+        touchMoved = true;
+        e.preventDefault();
+    }
+}
+function handleSwipeEnd(e) {
+    if (!touchStartX || !touchMoved) return;
+    const endX = (e.changedTouches && e.changedTouches[0].clientX) || 0;
+    const dx = endX - touchStartX;
+    if (Math.abs(dx) > 50) {
+        let nextIdx = currentModeIndex;
+        if (dx < 0 && currentModeIndex < MODES.length - 1) {
+            nextIdx++;
+        } else if (dx > 0 && currentModeIndex > 0) {
+            nextIdx--;
+        }
+        if (nextIdx !== currentModeIndex) {
+            switchModeWithAnimation(MODES[nextIdx]);
+        }
+    }
+    touchStartX = null;
+    touchStartY = null;
+    touchMoved = false;
+}
 
 // Attach swipe listeners to the main mode stack container
 const modeStack = document.getElementById('modeStack');
@@ -1682,142 +1818,6 @@ function showUsageGuide() {
             background:rgba(24,32,50,0.85);z-index:3000;display:flex;align-items:center;justify-content:center;
         `;
         modal.innerHTML = `
-            <div id="usageGuideCard" style="
-                background: var(--card, #1c253b);
-                color: #e0e6f0;
-                max-width: 98vw;
-                width: 100%;
-                min-width: 0;
-                box-sizing: border-box;
-                border-radius: 18px;
-                box-shadow: 0 4px 32px #60aaff33, 0 1.5px 0 var(--primary, #60aaff);
-                border: 1.5px solid var(--primary, #60aaff);
-                position: relative;
-                font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
-                animation: fadeInSoft 0.4s;
-                padding: clamp(18px, 5vw, 36px) clamp(10px, 5vw, 36px) clamp(18px, 5vw, 32px) clamp(10px, 5vw, 36px);
-                margin: 2vw;
-                overflow-y: auto;
-                max-height: 90vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-            ">
-                <button id="closeGuideBtn" style="
-                    position: absolute;
-                    top: 12px;
-                    right: 16px;
-                    font-size: 1.3em;
-                    background: none;
-                    border: none;
-                    color: var(--primary, #60aaff);
-                    cursor: pointer;
-                    transition: color 0.2s;
-                    z-index: 10;
-                " title="Close">&times;</button>
-                <div id="guideContent"></div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-
-        modal.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    }
-
-    // Style the content area to match the rest of the site and be responsive
-    const guideContent = modal.querySelector('#guideContent');
-    guideContent.innerHTML = guide[currentLang] || guide.en;
-    guideContent.style.marginTop = "8px";
-    guideContent.style.fontSize = "clamp(1em, 2vw, 1.12em)";
-    guideContent.style.lineHeight = "1.7";
-    guideContent.style.letterSpacing = "0.01em";
-    guideContent.style.textAlign = "start";
-    guideContent.style.wordBreak = "break-word";
-    guideContent.style.maxWidth = "100%";
-    guideContent.style.boxSizing = "border-box";
-    guideContent.querySelectorAll('h2').forEach(h2 => {
-        h2.style.color = "var(--primary, #60aaff)";
-        h2.style.textAlign = "center";
-        h2.style.fontWeight = "bold";
-        h2.style.marginTop = "0";
-        h2.style.marginBottom = "1.2em";
-        h2.style.textShadow = "0 2px 8px #60aaff22";
-        h2.style.fontSize = "clamp(1.2rem, 3vw, 1.6rem)";
-    });
-    guideContent.querySelectorAll('ul').forEach(ul => {
-        ul.style.paddingLeft = "1.2em";
-        ul.style.marginBottom = "1.2em";
-        ul.style.maxWidth = "100%";
-    });
-    guideContent.querySelectorAll('li').forEach(li => {
-        li.style.marginBottom = "0.5em";
-        li.style.wordBreak = "break-word";
-    });
-
-    // Ensure modal is always visible and scrollable on all screens
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
-
-    // Responsive: allow scrolling if content is too tall
-    const card = modal.querySelector('#usageGuideCard');
-    card.style.overflowY = 'auto';
-    card.style.maxHeight = '90vh';
-    card.style.width = 'min(98vw, 440px)';
-    card.style.minWidth = '0';
-    card.style.margin = '2vw';
-
-    modal.querySelector('#closeGuideBtn').onclick = () => {
-        modal.style.display = 'none';
-    };
-}
-
-function devconsole() {
-    let msg, command, output;
-    if (currentLang === 'he') {
-        msg = 'אם אין לך מושג מה זה פשוט תתעלם'
-    } else {
-        msg = 'If you have no idea what this is, just ignore it'}
-    command = prompt(msg, "");
-    if (command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1';exitsnitcher();}
-    try {
-        output = eval(command);
-    } catch (e) {
-        output = e.message;
-    }
-    if (command) {return;}
-    alert(output);
-}
-
-if (!localStorage.getItem('lang')) {showUsageGuide();}
-
-async function getversion() {
-    let { data, error } = await withLoading(() =>
-        supabase
-            .from('misc')
-            .select('why')
-            .eq('id', 2)
-    ); if (error) {
-        console.error('Error fetching version:', error.message);
-        return;
-    }
-    if (data[0].why !== localStorage.getItem('version')) {
-        localStorage.setItem('version', data[0].why);
-        if (currentLang === 'he') {
-            alert("האפליקציה עודכנה בהצלחה\n");
-        } else {
-            alert("The app has been updated successfully.\n");
-        }
-        showUsageGuide();
-    }
-    return data[0].why;
-}
-
-getversion();
-setInterval(getversion, 1000 * 60 * 60);
             <div id="usageGuideCard" style="
                 background: var(--card, #1c253b);
                 color: #e0e6f0;
