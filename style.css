@@ -934,6 +934,17 @@ body::before {
     transition: opacity 0.4s;
 }
 
+/* Add a subtle dark overlay for depth */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(18,25,38,0.55) 0%, rgba(32,35,54,0.45) 100%);
+    mix-blend-mode: multiply;
+    opacity: 0.15%;
+}
 
 /* Foreground container depth: stronger shadow, slight border */
 .container,
@@ -949,7 +960,6 @@ body::before {
     border: 1.5px solid #22304a;
     background: linear-gradient(120deg, rgba(28,37,59,0.98) 80%, rgba(32,43,61,0.98) 100%);
     backdrop-filter: blur(2px);
-    opacity: 0.1;
 }
 
 @keyframes rgbBlurMove {
