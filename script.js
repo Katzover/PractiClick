@@ -1823,7 +1823,7 @@ function shareLeaderboard() {
 
 // Attach to existing shareleaderboard button
 document.addEventListener('DOMContentLoaded', function() {
-    const btn = document.getElementById('shareleaderboard');
+    const btn = document.getElementById('ShareLeaderboard');
     if (btn) {
         btn.onclick = shareLeaderboard;
     }
