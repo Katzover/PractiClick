@@ -934,17 +934,6 @@ body::before {
     transition: opacity 0.4s;
 }
 
-/* Add a subtle dark overlay for depth */
-body::after {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    z-index: 0;
-    pointer-events: none;
-    background: linear-gradient(135deg, rgba(18,25,38,0.55) 0%, rgba(32,35,54,0.45) 100%);
-    mix-blend-mode: multiply;
-    opacity: 0.15;
-}
 
 /* Foreground container depth: stronger shadow, slight border */
 .container,
