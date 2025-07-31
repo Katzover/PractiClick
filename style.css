@@ -949,6 +949,7 @@ body::before {
     border: 1.5px solid #22304a;
     background: linear-gradient(120deg, rgba(28,37,59,0.98) 80%, rgba(32,43,61,0.98) 100%);
     backdrop-filter: blur(2px);
+    opacity: 0.1;
 }
 
 @keyframes rgbBlurMove {
