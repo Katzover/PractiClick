@@ -943,7 +943,7 @@ body::after {
     pointer-events: none;
     background: linear-gradient(135deg, rgba(18,25,38,0.55) 0%, rgba(32,35,54,0.45) 100%);
     mix-blend-mode: multiply;
-    opacity: 0.45;
+    opacity: 0.15;
 }
 
 /* Foreground container depth: stronger shadow, slight border */
