@@ -1770,3 +1770,61 @@ async function getversion() {
 
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
+
+// Add share functionality for leaderboard
+function shareLeaderboard() {
+    const table = document.getElementById('leaderboardTable');
+    if (!table) return;
+
+    // Get rows
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+    if (rows.length === 0) return;
+
+    // Prepare text and CSV
+    let text = '';
+    let csv = 'Name,Total\n';
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 2) {
+            const name = cells[0].textContent.trim();
+            const total = cells[1].textContent.trim();
+            text += `${name}: ${total}\n`;
+            csv += `"${name}","${total}"\n`;
+        }
+    });
+
+    // Share API
+    const shareData = {
+        title: 'PractiClick Leaderboard',
+        text: text.trim()
+    };
+
+    // Try to share CSV as file if supported
+    if (navigator.canShare && window.Blob) {
+        const csvBlob = new Blob([csv], { type: 'text/csv' });
+        const file = new File([csvBlob], 'leaderboard.csv', { type: 'text/csv' });
+        if (navigator.canShare({ files: [file] })) {
+            shareData.files = [file];
+        }
+    }
+
+    if (navigator.share) {
+        navigator.share(shareData).catch(() => {
+            // fallback: copy to clipboard
+            navigator.clipboard.writeText(text.trim());
+            alert('Leaderboard copied to clipboard!');
+        });
+    } else {
+        // fallback: copy to clipboard
+        navigator.clipboard.writeText(text.trim());
+        alert('Leaderboard copied to clipboard!');
+    }
+}
+
+// Attach to existing shareleaderboard button
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('shareleaderboard');
+    if (btn) {
+        btn.onclick = shareLeaderboard;
+    }
+});
