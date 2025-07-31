@@ -126,8 +126,8 @@ document.getElementById('shutdown').addEventListener('click', async () => {
 document.getElementById('reopen').addEventListener('click', async () => {
     const { error } = await withLoading(() =>
         supabase
-            .from('down')
-            .update([{ is_down: false, why: '' }])
+            .from('misc')
+            .update([{ what: false, why: '' }])
             .eq('id', 1)
     ); if (error) {console.error('Error:', error.message); return;}
 
