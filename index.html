@@ -15,7 +15,10 @@
     </select>
     </div>
             <h1>🎵 PractiClick - Practice tracker 🎵</h1>
-    <div class="timer-section">
+
+<!-- Animated mode stack wrapper -->
+<div id="modeStack">
+    <div class="timer-section mode-section" data-mode="cycle">
     <div class="timer-modes" id="timerModes">
         <button id="tabCycle" class="tab-btn active" data-mode="cycle">Cycle</button>
         <button id="tabStopwatch" class="tab-btn" data-mode="stopwatch">Stopwatch</button>
@@ -71,8 +74,8 @@
     <button id="resetBtn" disabled>Reset</button>
     <button id="logBtn" disabled>Log</button>
 </div>
-</div>
-<div id="metronome-panel">
+    </div>
+    <div id="metronome-panel" class="mode-section" data-mode="metronome">
     <h3 style="margin-top:0;" id="metroTitle">Metronome</h3>
     <div>
         <label id="metroBpmLabel" style="font-size:0.95em;">BPM:
@@ -104,11 +107,11 @@
     </div>
     <div id="metroIndicator" style="height:18px; text-align:center; font-size:1.2em;"></div>
 </div>
-        <div class="log-section">
+        <div class="log-section mode-section" data-mode="log">
             <h2 id="practiceLogTitle">Practice Log</h2>
             <div class="log-list" id="logList"></div>
         </div>
-        <div class="summary-section">
+        <div class="summary-section mode-section" data-mode="summary">
             <h2 id="weeklySummaryTitle">Weekly Summary</h2>
             <table class="summary-table" id="summaryTable">
                 <thead>
@@ -123,12 +126,12 @@
                 </tbody>
             </table>
         </div>
-         <div class="week-total-section" style="margin-top:24px; text-align:center;">
+         <div class="week-total-section mode-section" data-mode="week-total" style="margin-top:24px; text-align:center;">
             <strong id="weekTotalLabel">Total Time Practiced This Week:</strong>
             <span id="weekTotal" style="font-size:1.2em; margin-left:8px;">00:00:00</span>
         </div>
         <!-- Leaderboard Section -->
-<div class="leaderboard-section" style="margin-top:32px;">
+<div class="leaderboard-section mode-section" data-mode="leaderboard" style="margin-top:32px;">
     <h2 id="lbtitle">Leaderboard (Top 10 this week)</h2>
     <table class="summary-table" id="leaderboardTable">
         <thead>
@@ -142,7 +145,7 @@
         </tbody>
     </table>
 </div>
-    </div>
+</div>
     <div id="loading-overlay">
         <div class="loading-spinner"></div>
     </div>
