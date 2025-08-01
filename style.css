@@ -924,7 +924,7 @@ body::before {
         radial-gradient(circle at 10% 80%, #f7e673 0%, transparent 60%),
         radial-gradient(circle at 90% 10%, #1560b6 0%, transparent 60%);
     /* Remove extra gradients for perf */
-    animation: rgbBlurMove 48s linear infinite; /* Slower animation */
+    animation: rgbBlurMove 48s linear infinite;
     transition: opacity 0.4s;
 }
 
