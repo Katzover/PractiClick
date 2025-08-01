@@ -1142,55 +1142,126 @@ function getCurrentWeekNumber() {
     return Math.ceil((days + jan1.getDay() + 1) / 7);
 }
 
-function autoResetLogsIfNewWeek() {
+// --- Weekly Summary ---
+// Save weekly report before reset and show after reset
+function saveWeeklyReport() {
     const now = new Date();
-    const currentWeek = getCurrentWeekNumber();
-    const currentYear = now.getFullYear();
-    const lastWeekData = JSON.parse(localStorage.getItem('practiceLogsWeekInfo') || '{}');
-    if (lastWeekData.year !== currentYear || lastWeekData.week !== currentWeek) {
-        // New week, clear logs
-        logs = [];
-        localStorage.setItem('practiceLogs', JSON.stringify(logs));
-        localStorage.setItem('practiceLogsWeekInfo', JSON.stringify({ year: currentYear, week: currentWeek }));
-        renderLogs();
-        renderSummary();
-        updateWeekTotal();
-        deleteAllLeaderboardRows();
-    }
+    const weekStart = getWeekStart(now);
+    const weekStartDate = new Date(weekStart + "T00:00:00");
+    const weekEndDate = new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+    let daily = Array(7).fill().map(() => ({time:0, count:0}));
+    logs.forEach(log => {
+        const d = new Date(log.date);
+        if (d >= weekStartDate && d < weekEndDate) {
+            let day = d.getDay();
+            if (day < 7) {
+                daily[day].time += log.time;
+                daily[day].count += 1;
+            }
+        }
+    });
+    const report = {
+        weekStart,
+        daily,
+        total: getWeekTotal(),
+        logs: logs.slice(),
+        timestamp: now.toISOString()
+    };
+    localStorage.setItem('practiceWeeklyReport', JSON.stringify(report));
+    localStorage.setItem('practiceWeeklyReportPending', 'true');
 }
 
-autoResetLogsIfNewWeek();
-
-function renderLogs() {
-    logList.innerHTML = '';
-    if (logs.length === 0) {
-        // Use a div for centering, matches .log-list > div CSS
-        logList.innerHTML = '<div>No sessions yet.</div>';
-        return;
-    }
-    const t = LANGS[currentLang];
-    const modeMap = {
-        en: { cycle: "Cycle", timer: "Timer", stopwatch: "Stopwatch" },
-        he: { cycle: "סבב", timer: "טיימר", stopwatch: "סטופר" }
-    };
-    logs.slice().reverse().forEach(log => {
-        const d = new Date(log.date);
-        const item = document.createElement('div');
-        item.className = 'log-item';
-        let roomLabel;
-        if (log.room && log.room !== "Other" && log.room !== "אחר") {
-            roomLabel = `${t.logRoom}: ${log.room}`;
-        } else {
-            const modeName = (modeMap[currentLang] && modeMap[currentLang][log.mode]) ? modeMap[currentLang][log.mode] : log.mode;
-            roomLabel = `${t.logOther} (${modeName})`;
-        }
-        item.innerHTML = `
-            <span>${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false })}</span>
-            <span>${formatTime(log.time)}</span>
-            <span style="color:#888;">${roomLabel}</span>
+function showWeeklyReport() {
+    const reportStr = localStorage.getItem('practiceWeeklyReport');
+    if (!reportStr) return;
+    const report = JSON.parse(reportStr);
+    let days = currentLang === 'he' ? ['א','ב','ג','ד','ה','ו','ש'] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let html = `
+        <h2 style="color:#60aaff;text-align:center;">${currentLang === 'he' ? 'סיכום שבועי' : 'Weekly Report'}</h2>
+        <div style="margin-bottom:1em;">
+            <b>${currentLang === 'he' ? 'שבוע שהתחיל ב-' : 'Week starting'} ${report.weekStart}</b>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>${currentLang === 'he' ? 'יום' : 'Day'}</th>
+                    <th>${currentLang === 'he' ? 'סה"כ זמן' : 'Total Time'}</th>
+                    <th>${currentLang === 'he' ? 'סשנים' : 'Sessions'}</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    for (let i = 0; i < 7; ++i) {
+        html += `
+            <tr>
+                <td>${days[i]}</td>
+                <td>${report.daily[i].time ? formatTime(report.daily[i].time) : '-'}</td>
+                <td>${report.daily[i].count || '-'}</td>
+            </tr>
         `;
-        logList.appendChild(item);
-    });
+    }
+    html += `
+            </tbody>
+        </table>
+        <div style="margin-top:1em;">
+            <b>${currentLang === 'he' ? 'סה"כ שבוע:' : 'Total for week:'} ${formatTime(report.total)}</b>
+        </div>
+        <div style="margin-top:1em;color:gray;font-size:0.95em;">
+            ${currentLang === 'he' ? 'הסיכום נשמר אוטומטית לפני איפוס שבועי.' : 'This summary was saved automatically before weekly reset.'}
+        </div>
+        <button id="closeWeeklyReportBtn" style="margin-top:18px;padding:8px 18px;font-size:1em;border-radius:8px;background:#60aaff;color:#fff;border:none;cursor:pointer;">
+            ${currentLang === 'he' ? 'סגור' : 'Close'}
+        </button>
+    `;
+    let modal = document.getElementById('weeklyReportModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'weeklyReportModal';
+        modal.style = `
+            position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(24,32,50,0.85);z-index:4000;display:flex;align-items:center;justify-content:center;
+        `;
+        modal.innerHTML = `
+            <div id="weeklyReportCard" style="
+                background: #1c253b;
+                color: #e0e6f0;
+                max-width: 98vw;
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+                border-radius: 18px;
+                box-shadow: 0 4px 32px #60aaff33, 0 1.5px 0 #60aaff;
+                border: 1.5px solid #60aaff;
+                position: relative;
+                font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+                animation: fadeInSoft 0.4s;
+                padding: clamp(18px, 5vw, 36px) clamp(10px, 5vw, 36px) clamp(18px, 5vw, 32px) clamp(10px, 5vw, 36px);
+                margin: 2vw;
+                overflow-y: auto;
+                max-height: 90vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+            ">
+                <div id="weeklyReportContent"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+    const content = modal.querySelector('#weeklyReportContent');
+    content.innerHTML = html;
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.querySelector('#closeWeeklyReportBtn').onclick = () => {
+        modal.style.display = 'none';
+        localStorage.removeItem('practiceWeeklyReportPending');
+    };
 }
 
 // --- Weekly Summary ---
@@ -1782,6 +1853,10 @@ function showUsageGuide() {
     const guide = {
         en: `
         <h2>🎵 PractiClick - Quick Guide 🎵</h2>
+        <p style="font-size:1.08em;color:#60aaff;margin-bottom:1em;">
+           
+            PractiClick helps you track, organize, and motivate your music practice. Log sessions, structure routines, compete with friends, and see your progress week by week!
+        </p>
         <ul>
             <li><b>Cycle:</b> Structure your practice into focused cycles. Set the number of cycles, their length, and break times. Great for routines like "15 min scales, 2 min break, repeat". Try using cycles to alternate between technique and repertoire.</li>
             <li><b>Stopwatch:</b> Just hit start and play! Use this mode for free-form practice or to challenge yourself to keep going as long as possible. Good for tracking total time spent without worrying about breaks.</li>
@@ -1797,6 +1872,9 @@ function showUsageGuide() {
         `,
         he: `
         <h2>🎵 מדריך זריז לפרקטיקליק 🎵</h2>
+        <p style="font-size:1.08em;color:#60aaff;margin-bottom:1em;">
+            פרקטיקליק נועדה לעזור לך לעקוב, לארגן ולהתמיד באימוני נגינה. תעד סשנים, בנה שגרות, התחרה עם חברים, וראה את ההתקדמות שלך שבוע אחרי שבוע!
+        </p>
         <ul>
             <li><b>סבב:</b> חלקו את האימון לסבבים ממוקדים. הגדירו מספר סבבים, אורך כל סבב והפסקות. מתאים לשגרות כמו "15 דקות סולמות, 2 דקות הפסקה, וחוזר".</li>
             <li><b>סטופר:</b> התחילו ונגנו כמה שתרצו! מצב חופשי למדידת זמן כולל או אתגר אישי להחזיק כמה שיותר. טוב למעקב אחרי זמן תרגול כללי.</li>
