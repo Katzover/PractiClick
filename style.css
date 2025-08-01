@@ -913,8 +913,8 @@ body::before {
     height: 130vh;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.5;
-    filter: blur(54px);
+    opacity: 0.45;
+    filter: blur(38px); /* Lower blur for better perf */
     background:
         radial-gradient(circle at 20% 30%, #60aaff 0%, transparent 60%),
         radial-gradient(circle at 80% 70%, #1e90ff 0%, transparent 60%),
@@ -922,57 +922,36 @@ body::before {
         radial-gradient(circle at 40% 80%, #71b7f8 0%, transparent 60%),
         radial-gradient(circle at 50% 50%, #22304a 0%, transparent 60%),
         radial-gradient(circle at 10% 80%, #f7e673 0%, transparent 60%),
-        radial-gradient(circle at 90% 10%, #1560b6 0%, transparent 60%),
-        radial-gradient(circle at 70% 40%, #1c253b 0%, transparent 60%),
-        radial-gradient(circle at 30% 60%, #e0e6f0 0%, transparent 60%);
-    animation: rgbBlurMove 24s linear infinite;
+        radial-gradient(circle at 90% 10%, #1560b6 0%, transparent 60%);
+    /* Remove extra gradients for perf */
+    animation: rgbBlurMove 48s linear infinite; /* Slower animation */
     transition: opacity 0.4s;
 }
 
 @keyframes rgbBlurMove {
     0% {
-        transform: translate(0px, 0px) scale(1.05) rotate(0deg);
-        opacity: 0.5;
-    }
-    10% {
-        transform: translate(40px, -30px) scale(1.08) rotate(10deg);
-        opacity: 0.52;
+        transform: translate(0px, 0px) scale(1.03) rotate(0deg);
+        opacity: 0.45;
     }
     20% {
-        transform: translate(-30px, 40px) scale(1.04) rotate(-8deg);
-        opacity: 0.48;
-    }
-    30% {
-        transform: translate(60px, 20px) scale(1.09) rotate(16deg);
-        opacity: 0.54;
-    }
-    40% {
-        transform: translate(-20px, 60px) scale(1.03) rotate(-12deg);
-        opacity: 0.46;
-    }
-    50% {
-        transform: translate(30px, -50px) scale(1.07) rotate(8deg);
-        opacity: 0.51;
-    }
-    60% {
-        transform: translate(-50px, 30px) scale(1.06) rotate(-14deg);
-        opacity: 0.49;
-    }
-    70% {
-        transform: translate(20px, 60px) scale(1.11) rotate(18deg);
-        opacity: 0.53;
-    }
-    80% {
-        transform: translate(-60px, -20px) scale(1.04) rotate(-16deg);
+        transform: translate(20px, -15px) scale(1.05) rotate(5deg);
         opacity: 0.47;
     }
-    90% {
-        transform: translate(50px, 30px) scale(1.08) rotate(12deg);
-        opacity: 0.52;
+    40% {
+        transform: translate(-15px, 20px) scale(1.02) rotate(-4deg);
+        opacity: 0.43;
+    }
+    60% {
+        transform: translate(15px, 25px) scale(1.06) rotate(8deg);
+        opacity: 0.46;
+    }
+    80% {
+        transform: translate(-25px, -10px) scale(1.01) rotate(-6deg);
+        opacity: 0.44;
     }
     100% {
-        transform: translate(0px, 0px) scale(1.05) rotate(0deg);
-        opacity: 0.5;
+        transform: translate(0px, 0px) scale(1.03) rotate(0deg);
+        opacity: 0.45;
     }
 }
 
