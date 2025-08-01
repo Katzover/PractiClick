@@ -1791,7 +1791,6 @@ function showUsageGuide() {
             <li><b>Metronome:</b> Stay in time with adjustable BPM, accent, and sound. Use it for scales, exercises, or even full pieces. Try increasing BPM gradually as you improve.</li>
             <li><b>Logs & Summary:</b> Review your practice history and weekly summary. See which days you practiced most, and what modes you used. Use logs to reflect and set new goals.</li>
         </ul>
-        <p style="color:gray;font-size:0.95em;">Tip: Switch modes to keep practice fresh. For example, start with Timer for warm-up, Cycle for focused work, and Stopwatch for free play.</p>
         <p style="color:gray;font-size:0.95em;">Click the language selector to switch languages.</p>
         <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the '🐞' button or contact me on WhatsApp.</p>
         <p style="color:gray;font-size:0.95em;">This guide will pop up every time the app is updated.</p>
@@ -1807,7 +1806,6 @@ function showUsageGuide() {
             <li><b>מטרונום:</b> שמרו על קצב עם BPM, הדגשות וצלילים משתנים. מתאים לסולמות, תרגילים או יצירות שלמות. נסו להעלות BPM בהדרגה ככל שמשתפרים.</li>
             <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול ובסיכום שבועי. ראו באילו ימים תרגלתם הכי הרבה ובאילו מצבים. השתמשו ביומן להצבת מטרות חדשות.</li>
         </ul>
-        <p style="color:gray;font-size:0.95em;">טיפ: שלבו מצבים שונים לשיפור הגיוון – למשל, התחילו בטיימר לחימום, עברו לסבב לעבודה ממוקדת, וסיימו בסטופר לנגינה חופשית.</p>
         <p style="color:gray;font-size:0.95em;">אפשר להחליף שפה מהתפריט למעלה.</p>
         <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתור "🐞" או פנו אלי בוואצאפ.</p>
         <p style="color:gray;font-size:0.95em;">העמוד הזה יופיע בכל עדכון לאפליקציה.</p>
