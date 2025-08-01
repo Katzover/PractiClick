@@ -1783,32 +1783,34 @@ function showUsageGuide() {
         en: `
         <h2>🎵 PractiClick - Quick Guide 🎵</h2>
         <ul>
-            <li><b>Cycle:</b> Set your cycles, lengths, and breaks.</li>
-            <li><b>Stopwatch:</b> Hit start, and play for as long you can.</li>
-            <li><b>Timer:</b> Set a time, hit start, and race against the clock. No pressur.</li>
-            <li><b>Rooms:</b> Know what room is taken from your bed.</li>
-            <li><b>Leaderboard:</b> Practice more, climb higher. Bragging rights included, trophies not (yet).</li>
-            <li><b>Metronome:</b> Stay in time. Or at least try.</li>
-            <li><b>Logs & Summary:</b> See your practice history. Yes, it counts even if you "practiced" random stuff.</li>
+            <li><b>Cycle:</b> Structure your practice into focused cycles. Set the number of cycles, their length, and break times. Great for routines like "15 min scales, 2 min break, repeat". Try using cycles to alternate between technique and repertoire.</li>
+            <li><b>Stopwatch:</b> Just hit start and play! Use this mode for free-form practice or to challenge yourself to keep going as long as possible. Good for tracking total time spent without worrying about breaks.</li>
+            <li><b>Timer:</b> Set a target time and race against the clock. Perfect for short, focused bursts (e.g., "10 min sight-reading"). Try setting different times for warm-ups, drills, or pieces.</li>
+            <li><b>Rooms:</b> See which practice rooms are available or taken in real-time!</li>
+            <li><b>Leaderboard:</b> Practice more to climb the weekly leaderboard. Compete with friends or classmates for motivation. Every logged session counts!</li>
+            <li><b>Metronome:</b> Stay in time with adjustable BPM, accent, and sound. Use it for scales, exercises, or even full pieces. Try increasing BPM gradually as you improve.</li>
+            <li><b>Logs & Summary:</b> Review your practice history and weekly summary. See which days you practiced most, and what modes you used. Use logs to reflect and set new goals.</li>
         </ul>
-        <p style="color:gray;font-size:0.95em;">Tip: Click the language selector to switch languages.</p>
-        <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the '🐞' button. Or just contact me on whatsapp.</p>
-        <p style="color:gray;font-size:0.95em;">Side note: This page will pop up everytime the app is updated</p>
+        <p style="color:gray;font-size:0.95em;">Tip: Switch modes to keep practice fresh. For example, start with Timer for warm-up, Cycle for focused work, and Stopwatch for free play.</p>
+        <p style="color:gray;font-size:0.95em;">Click the language selector to switch languages.</p>
+        <p style="color:gray;font-size:0.95em;">Questions? Bugs? Use the '🐞' button or contact me on WhatsApp.</p>
+        <p style="color:gray;font-size:0.95em;">This guide will pop up every time the app is updated.</p>
         `,
         he: `
         <h2>🎵 מדריך זריז לפרקטיקליק 🎵</h2>
         <ul>
-            <li><b>סבב:</b> קבעו סבבים, אורכים והפסקות.</li>
-            <li><b>סטופר:</b> התחילו, נגנו, לכמה זמן שאתם יכולים.</li>
-            <li><b>טיימר:</b> קבעו זמן, התחילו, ותנסו להספיק לפני שהשעון מצלצל. בהצלחה!</li>
-            <li><b>חדרים:</b> ראו איזה חדרים תפוסים בלי לצאת מהפנימיה</li>
-            <li><b>לוח תוצאות:</b> מתרגלים יותר? עולים למעלה!.</li>
-            <li><b>מטרונום:</b> שמרו על קצב. או לפחות תנסו.</li>
-            <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול שלכם.</li>
+            <li><b>סבב:</b> חלקו את האימון לסבבים ממוקדים. הגדירו מספר סבבים, אורך כל סבב והפסקות. מתאים לשגרות כמו "15 דקות סולמות, 2 דקות הפסקה, וחוזר".</li>
+            <li><b>סטופר:</b> התחילו ונגנו כמה שתרצו! מצב חופשי למדידת זמן כולל או אתגר אישי להחזיק כמה שיותר. טוב למעקב אחרי זמן תרגול כללי.</li>
+            <li><b>טיימר:</b> הגדירו זמן יעד ונסו להספיק לפני שהשעון נגמר. מתאים לאימונים קצרים וממוקדים. נסו להגדיר זמנים שונים לחימום, תרגילים או יצירות.</li>
+            <li><b>חדרים:</b> בדקו אילו חדרי תרגול פנויים או תפוסים בזמן אמת!</li>
+            <li><b>לוח תוצאות:</b> תרגלו יותר כדי לעלות בדירוג השבועי. התחרו עם חברים או כיתה – כל סשן נספר!</li>
+            <li><b>מטרונום:</b> שמרו על קצב עם BPM, הדגשות וצלילים משתנים. מתאים לסולמות, תרגילים או יצירות שלמות. נסו להעלות BPM בהדרגה ככל שמשתפרים.</li>
+            <li><b>יומן & סיכום:</b> צפו בהיסטוריית התרגול ובסיכום שבועי. ראו באילו ימים תרגלתם הכי הרבה ובאילו מצבים. השתמשו ביומן להצבת מטרות חדשות.</li>
         </ul>
-        <p style="color:gray;font-size:0.95em;">טיפ: אפשר להחליף שפה מהתפריט למעלה.</p>
-        <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתור ה"🐞". או תפנו אלי בוואצאפ.</p>
-        <p style="color:gray;font-size:0.95em;">העמוד הזה יופיע כל פעם שהאפליקציה מקבלת עדכון!</p>
+        <p style="color:gray;font-size:0.95em;">טיפ: שלבו מצבים שונים לשיפור הגיוון – למשל, התחילו בטיימר לחימום, עברו לסבב לעבודה ממוקדת, וסיימו בסטופר לנגינה חופשית.</p>
+        <p style="color:gray;font-size:0.95em;">אפשר להחליף שפה מהתפריט למעלה.</p>
+        <p style="color:gray;font-size:0.95em;">שאלות? תקלות? השתמשו בכפתור "🐞" או פנו אלי בוואצאפ.</p>
+        <p style="color:gray;font-size:0.95em;">העמוד הזה יופיע בכל עדכון לאפליקציה.</p>
         `
     };
     
