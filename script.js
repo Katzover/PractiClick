@@ -1170,7 +1170,6 @@ function saveWeeklyReport() {
     localStorage.setItem('practiceWeeklyReport', JSON.stringify(report));
     localStorage.setItem('practiceWeeklyReportPending', 'true');
 }
-window.saveWeeklyReport = saveWeeklyReport; // <-- allow triggering from console
 
 function showWeeklyReport() {
     const reportStr = localStorage.getItem('practiceWeeklyReport');
@@ -1854,7 +1853,8 @@ function showUsageGuide() {
     const guide = {
         en: `
         <h2>🎵 PractiClick - Quick Guide 🎵</h2>
-        <p style="font-size:
+        <p style="font-size:1.08em;color:#60aaff;margin-bottom:1em;">
+           
             PractiClick helps you track, organize, and motivate your music practice. Log sessions, structure routines, compete with friends, and see your progress week by week!
         </p>
         <ul>
