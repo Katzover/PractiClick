@@ -1712,7 +1712,7 @@ function createOrUpdateFooterButtons() {
     bugBtn.innerHTML = '🐞';
     bugBtn.style = buttonStyle;
     bugBtn.onclick = function() {
-        window.open('https://forms.gle/1b3GkAFXpf7WXGt1A', '_blank');
+        alert('לא זמין כרגע');
     };
 
     // Reload button (emoji: 🔄)
@@ -1746,7 +1746,8 @@ function createOrUpdateFooterButtons() {
     consoleBtn.style = buttonStyle;
     consoleBtn.onclick = devconsole;
 
-    footer.appendChild(reload);
+    footer.appendChild(reload);
+    footer.appendChild(bugBtn);
     footer.appendChild(guideBtn);
     footer.appendChild(consoleBtn);
 }
