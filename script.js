@@ -1746,8 +1746,7 @@ function createOrUpdateFooterButtons() {
     consoleBtn.style = buttonStyle;
     consoleBtn.onclick = devconsole;
 
-    footer.appendChild(reload);
-    footer.appendChild(bugBtn);
+    footer.appendChild(reload);
     footer.appendChild(guideBtn);
     footer.appendChild(consoleBtn);
 }
