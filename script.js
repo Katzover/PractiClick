@@ -1338,7 +1338,7 @@ async function exportWeeklySummary() {
     await withLoading(() => {
         supabase
             .from('summaries')
-            .upsert({ name: userName, json: getWeeklySummaryJson })
+            .upsert({ name: userName, json: getWeeklySummaryJson() })
     });
     console.log("Weekly summary exported.");
 }
