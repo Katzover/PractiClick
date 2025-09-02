@@ -109,6 +109,8 @@ async function whatsnew() {
     const msg = document.getElementById('wnew-text').innerText;
 
     const { error } = await withLoading (() => supabase.from('misc').update('new', msg).eq('id', 3))
+    if (error) {console.error('erorr:', error.message); return}
+    alert('whats new updated!')
 }
 
 async function shutdown() {
