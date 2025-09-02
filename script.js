@@ -514,7 +514,6 @@ async function isUserActive(user) {
             .eq('is_on', true);
 
     if (error) {console.error('Error checking user activity:', error.message);}
-    console.log(data)
     if (data[0]) {return true;} else {return false;}
 }
 
@@ -530,7 +529,7 @@ async function autoReleaseStaleRooms() {
         supabase.from('rooms').select('name, username').eq('status', 'taken');
 
     if (!isUserActive(data[0].username)) {
-        alert(1)
+        console.log("Releasing room " + data[0].name + " due to inactivity of user " + data[0].username);
         await updateRoomStatus(data[0].name, "available", 0);
     } else {console.log(await isUserActive(data[0].username))};
 }
