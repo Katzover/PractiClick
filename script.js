@@ -531,7 +531,7 @@ async function autoReleaseStaleRooms() {
 
     for (const room of rooms) {
         if (room.status === "taken" && !isUserActive(room.username)) {
-            await withLoading(() => supabase.from('rooms').update({ status: "available", username: null, updated_at: 0 }).eq('name', room.name));
+            await supabase.from('rooms').update({ status: "available", username: null, updated_at: 0 }).eq('name', room.name);
         }
     }
 }
