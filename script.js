@@ -1144,6 +1144,7 @@ async function logSession() {
     await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", 0)); // Mark as available
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
+    exportWeeklySummary();
     if (currentLang === 'he') {
         showtoast("הסשן נשמר ביומן התרגול", "green");
     } else {
@@ -1292,6 +1293,52 @@ function renderSummary() {
     updateResetBtnLabel();
 
 
+}
+
+function getWeeklySummaryJson() {
+    let daysEn = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let daysHe = ['א','ב','ג','ד','ה','ו','ש'];
+    const now = new Date();
+    const weekStart = getWeekStart(now);
+    const weekStartDate = new Date(weekStart + "T00:00:00");
+    let daily = Array(7).fill().map(() => ({time:0, count:0}));
+    logs.forEach(log => {
+        const d = new Date(log.date);
+        if (d >= weekStartDate && d < new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000)) {
+            let day = d.getDay();
+            if (day < 7) {
+                daily[day].time += log.time;
+                daily[day].count += 1;
+            }
+        }
+    });
+    let summary = [];
+    for (let i = 0; i < 7; ++i) {
+        summary.push({
+            dayIndex: i,
+            dayName: currentLang === 'he' ? daysHe[i] : daysEn[i],
+            date: new Date(weekStartDate.getTime() + i * 24 * 60 * 60 * 1000).toISOString().slice(0,10),
+            totalTimeMs: daily[i].time,
+            totalTimeFormatted: daily[i].time ? formatTime(daily[i].time) : '-',
+            sessionCount: daily[i].count
+        });
+    }
+    return {
+        weekStart: weekStart,
+        weekStartDate: weekStartDate.toISOString().slice(0,10),
+        userName: userName,
+        summary: summary,
+        totalWeekMs: getWeekTotal(),
+        totalWeekFormatted: formatTime(getWeekTotal())
+    };
+}
+
+async function exportWeeklySummary() {
+    withLoading(() => {
+        supabase
+            .from('summaries')
+            .upsert({ name: userName, json: getWeeklySummaryJson })
+    });
 }
 
 // --- Animated mode transitions & swipe navigation ---
@@ -1591,61 +1638,6 @@ function getTodayPracticeMs() {
         }
     });
     return total;
-}
-
-async function sendPracticeNotification() {
-    const practicedMs = getTodayPracticeMs();
-    const practicedMin = Math.floor(practicedMs / 60000);
-
-    let title, body;
-
-    if (currentLang === 'he') {
-        if (practicedMin === 0) {
-            title = "⏰ זמן לתרגל!";
-            body = "עדיין לא תרגלת היום. התחל סשן כדי לשמור על הרצף!";
-        } else if (practicedMin < 120) {
-            title = "🎶 לתרגל עוד קצת?";
-            body = `תרגלת ${practicedMin} דקות היום. תוכל להגיע לשעתיים?`;
-        }
-    } else {
-        if (practicedMin === 0) {
-            title = "⏰ Time to practice!";
-            body = "You haven't practiced yet today. Start a session to keep your streak going!";
-        } else if (practicedMin < 120) {
-            title = "🎶 Practice a bit more?";
-            body = `You've practiced ${practicedMin} min today. Can you reach 2 hours?`;
-        }
-    }
-
-    // Push via OneSignal REST API (TEST ONLY)
-    try {
-        const response = await fetch("https://onesignal.com/api/v1/notifications", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "os_v2_app_2etnx6e5xbcddf4go6eapp2b5seluslvt4uewreo3c2bqplomvs7pt7425blvhceqbvtompnrzk4vdvkzxt6tysumrqsvneerscuq2y"
-            },
-            body: JSON.stringify({
-                app_id: "d126dbf8-9db8-4431-9786-778807bf41ec",
-                included_segments: ["Subscribed Users"],
-                headings: { en: title },
-                contents: { en: body },
-                url: "https://prac-t.netlify.app/"
-            })
-        });
-
-        const result = await response.json();
-        console.log("Push response:", result);
-
-        if (response.ok) {
-            alert("✅ Push sent!");
-        } else {
-            alert("❌ Push failed: " + JSON.stringify(result));
-        }
-    } catch (error) {
-        console.error("Push error:", error);
-        alert("❌ Error sending push");
-    }
 }
 
 function createOrUpdateFooterButtons() {

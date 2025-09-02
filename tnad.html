@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practiclick</title>
+    <link rel="stylesheet" href="controlpanel1.css">
+</head>
+<body>
+    <div style="max-width:600px;margin:32px auto;padding:24px;">
+        <h2 style="text-align:center;">ניהול יומני תרגול</h2>
+        <label for="userSelect">בחר משתמש:</label>
+        <select id="userSelect" style="width:100%;margin-bottom:18px;"></select>
+        <div id="summaryContainer"></div>
+    </div>
+    <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+        const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZGt6cXlvampmc2hzZHlya3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDc0MDIsImV4cCI6MjA2NTM4MzQwMn0.-NcMckWGJ_Dz5YzzAXRl1VAIcUL8E2XBilicEEX3CVQ';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const userSelect = document.getElementById('userSelect');
+        const summaryContainer = document.getElementById('summaryContainer');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        function showLoading(show) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+
+        async function fetchSummaries() {
+            showLoading(true);
+            const { data, error } = await supabase
+                .from('summaries')
+                .select('name, json');
+            showLoading(false);
+            if (error) {
+                summaryContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת נתונים</div>`;
+                return [];
+            }
+            return data || [];
+        }
+
+        function renderSummary(summary) {
+            if (!summary) {
+                summaryContainer.innerHTML = '<div>אין נתונים להצגה.</div>';
+                return;
+            }
+            let json = typeof summary.json === 'string' ? JSON.parse(summary.json) : summary.json;
+            let html = `
+                <div>
+                    <p><b>משתמש:</b> ${json.userName || summary.name}</p>
+                    <p><b>שבוע שמתחיל ב:</b> ${json.weekStartDate}</p>
+                    <p><b>סה"כ זמן שבועי:</b> ${json.totalWeekFormatted}</p>
+                    <table style="width:100%;margin-top:16px;border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">יום</th>
+                                <th style="text-align:left;">תאריך</th>
+                                <th style="text-align:left;">סה"כ זמן</th>
+                                <th style="text-align:left;">מספר סשנים</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            for (const day of json.summary) {
+                html += `
+                    <tr>
+                        <td>${day.dayName}</td>
+                        <td>${day.date}</td>
+                        <td>${day.totalTimeFormatted}</td>
+                        <td>${day.sessionCount}</td>
+                    </tr>
+                `;
+            }
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            summaryContainer.innerHTML = html;
+        }
+
+        async function setup() {
+            const summaries = await fetchSummaries();
+            // Get unique users
+            const users = Array.from(new Set(summaries.map(s => s.name))).sort();
+            userSelect.innerHTML = '';
+            users.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                userSelect.appendChild(option);
+            });
+            if (users.length === 0) {
+                summaryContainer.innerHTML = '<div>אין משתמשים עם יומן תרגול.</div>';
+                return;
+            }
+            function showSelectedUserSummary() {
+                const selected = userSelect.value;
+                const summary = summaries.find(s => s.name === selected);
+                renderSummary(summary);
+            }
+            userSelect.onchange = showSelectedUserSummary;
+            showSelectedUserSummary();
+        }
+
+        setup();
+    </script>
+</body>
+</html>
