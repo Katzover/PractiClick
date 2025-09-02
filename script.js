@@ -536,7 +536,7 @@ async function autoReleaseStaleRooms() {
     }
 }
 
-setInterval(autoReleaseStaleRooms, 1000 * 60); // Check every minute
+setInterval(autoReleaseStaleRooms, 3000);
 autoReleaseStaleRooms();
 
 async function update_stamp() {
