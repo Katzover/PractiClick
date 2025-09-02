@@ -1334,11 +1334,13 @@ function getWeeklySummaryJson() {
 }
 
 async function exportWeeklySummary() {
+    console.log("Exporting weekly summary to Supabase...");
     await withLoading(() => {
         supabase
             .from('summaries')
             .upsert({ name: userName, json: getWeeklySummaryJson })
     });
+    console.log("Weekly summary exported.");
 }
 
 // --- Animated mode transitions & swipe navigation ---
