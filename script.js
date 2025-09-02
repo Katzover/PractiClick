@@ -532,7 +532,7 @@ async function autoReleaseStaleRooms() {
     if (!isUserActive(data[0].username)) {
         alert(1)
         await updateRoomStatus(data[0].name, "available", 0);
-    } else {console.log(2)};
+    } else {console.log(isUserActive(data[0].username))};
 }
 
 setInterval(autoReleaseStaleRooms, 3000);
