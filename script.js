@@ -527,9 +527,9 @@ async function releaseCurrentPracticeRoom() {
 async function autoReleaseStaleRooms() {
     const { data, error } = await
         supabase.from('rooms').select('name, username').eq('status', 'taken');
+        console.log(data)
 
     if (!isUserActive(data.username)) {
-        console.log(data)
         alert(1)
         await updateRoomStatus(data.name, "available", 0);
     }
