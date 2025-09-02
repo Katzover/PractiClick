@@ -505,13 +505,13 @@ async function deleteAllLeaderboardRows() {
 }
 window.deleteAllLeaderboardRows = deleteAllLeaderboardRows;
 
-async function isUserActive(username) {
+async function isUserActive(user) {
     const { data, error } = await withLoading(() =>
         supabase
             .from('online')
             .select('is_on')
-            .eq('username', username)
-    ); console.log(data)
+            .eq('username', user)
+    );
     if (!data[0]) {return;}
     else {return data[0].is_on}
 }
@@ -527,7 +527,6 @@ async function autoReleaseStaleRooms() {
     const { data, error } = await
         supabase.from('rooms').select('name, username').eq('status', 'taken');
 
-    console.log(data)
     if (!isUserActive(data.username)) {
         await updateRoomStatus(data.name, "available", 0);
     }
