@@ -1944,13 +1944,6 @@ function devconsole() {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
     if (command == 'gimmie control ' || command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1';exitsnitcher();}
-    try {
-        output = eval(command);
-    } catch (e) {
-        output = e.message;
-    }
-    if (command) {return;}
-    alert(output);
 }
 
 if (!localStorage.getItem('lang')) {showUsageGuide();}
@@ -1986,7 +1979,7 @@ async function getversion() {
         } else {
             alert("The app has been updated successfully.\n");
         }
-        showWhatsNew();
+        await showWhatsNew();
     }
     return data[0].why;
 }
