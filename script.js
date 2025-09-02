@@ -511,7 +511,7 @@ async function isUserActive(username) {
             .from('online')
             .select('is_on')
             .eq('username', username)
-    ); console.log(data)
+    ); console.log(data[0].is_on)
     if (error) {console.error("Error checking user activity:", error); return;}
     else {return data[0].is_on}
 }
