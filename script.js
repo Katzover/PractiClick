@@ -524,11 +524,11 @@ async function releaseCurrentPracticeRoom() {
 }
 
 async function autoReleaseStaleRooms() {
-    const { username, error } = await
+    const { data, error } = await
         supabase.from('rooms').select('username, name').eq('status', 'taken');
 
-    if (!isUserActive(username)) {
-        await updateRoomStatus(name, "available", 0);
+    if (!isUserActive(data[0].username)) {
+        await updateRoomStatus(data[0].name, "available", 0);
     }
 }
 
@@ -536,7 +536,7 @@ setInterval(autoReleaseStaleRooms, 3000);
 autoReleaseStaleRooms();
 
 async function whoisstillonline() {
-    const { datta, error } = await supabase
+    const { data, error } = await supabase
         .from('online')
         .update({ is_on: false })
         .neq('username', '___impossible_value___')
