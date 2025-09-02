@@ -197,6 +197,7 @@ async function whoisstillonline() {
     const { datta, error } = await supabase
         .from('online')
         .update({ is_on: false })
+        .eq('is_on', true)
     if (error) {
         console.error('Error:', error.message);
         return;
