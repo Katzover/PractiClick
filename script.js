@@ -1335,11 +1335,9 @@ function getWeeklySummaryJson() {
 
 async function exportWeeklySummary() {
     console.log("Exporting weekly summary to Supabase...");
-    const { data, error } = await withLoading(() => {
-        supabase
-            .from('summaries')
-            .upsert({ name: userName, json: getWeeklySummaryJson() })
-    });
+    const { error } = await supabase
+        .from('summaries')
+        .upsert({ name: userName, json: getWeeklySummaryJson() });
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
@@ -1982,5 +1980,7 @@ async function getversion() {
     return data[0].why;
 }
 
+getversion();
+setInterval(getversion, 1000 * 60 * 60);
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
