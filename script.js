@@ -528,7 +528,7 @@ async function autoReleaseStaleRooms() {
     const { room, error } = await
         supabase
             .from('rooms')
-            .select('name, username')
+            .select('name', 'username')
             .eq('status', 'available')
 
     console.log(room)
