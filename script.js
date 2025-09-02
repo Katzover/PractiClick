@@ -511,7 +511,7 @@ async function isUserActive(username) {
             .from('online')
             .select('is_on')
             .eq('username', username)
-    ); console.log(data[0].is_on, username)
+    );
     if (error) {console.error("Error checking user activity:", error); return;}
     else {return data[0].is_on}
 }
@@ -531,7 +531,7 @@ async function autoReleaseStaleRooms() {
 
     for (const room of rooms) {
         if (room.status === "taken" && !isUserActive(room.username)) {
-            await withLoading(() => updateRoomStatus(room.name, "available", 0));
+            await withLoading(() => supabase.from('rooms').update({ status: "available", username: null, updated_at: 0 }).eq('name', room.name));
         }
     }
 }
