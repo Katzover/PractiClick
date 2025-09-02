@@ -532,7 +532,6 @@ async function autoReleaseStaleRooms() {
     for (const room of rooms) {
         if (room.status === "taken" && !isUserActive(room.username)) {
             await withLoading(() => updateRoomStatus(room.name, "available", 0));
-            alert("The room " + room.name + " has been automatically released due to inactivity.");
         }
     }
 }
@@ -641,13 +640,7 @@ async function updateRoomStatus(roomName, status, updated_at) {
     await withLoading(() =>
         supabase
             .from('rooms')
-            .update({ status })
-            .eq('name', roomName)
-    );
-    await withLoading(() =>
-        supabase
-            .from('rooms')
-            .update({ updated_at })
+            .update({ status: status, username: userName, updated_at: updated_at })
             .eq('name', roomName)
     );
 } // make updateroomstatus accessable from the console
@@ -924,7 +917,7 @@ async function renderRooms() {
     }
     // Status translation map
     let statusMap = {
-        en: { available: "available", taken: "taken", unavailable: "unavailable" },
+        en: { available: "available", taken: "taken", unavailable: "Locked" },
         he: { available: "פנוי", taken: "תפוס", unavailable: "נעול" }
     };
     const t = LANGS[currentLang];
