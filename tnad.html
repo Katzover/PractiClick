@@ -48,28 +48,37 @@
             }
             let json = typeof summary.json === 'string' ? JSON.parse(summary.json) : summary.json;
             let html = `
-                <div>
-                    <p><b>משתמש:</b> ${json.userName || summary.name}</p>
-                    <p><b>שבוע שמתחיל ב:</b> ${json.weekStartDate}</p>
-                    <p><b>סה"כ זמן שבועי:</b> ${json.totalWeekFormatted}</p>
-                    <table style="width:100%;margin-top:16px;border-collapse:collapse;">
+                <div style="background:#23272a;border-radius:10px;padding:24px 18px;box-shadow:0 2px 8px #0006;">
+                    <div style="margin-bottom:18px;">
+                        <span style="font-size:1.15em;font-weight:bold;color:#60aaff;">משתמש:</span>
+                        <span style="font-size:1.15em;">${json.userName || summary.name}</span>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <span style="color:#aaa;">שבוע שמתחיל ב:</span>
+                        <span>${json.weekStartDate}</span>
+                    </div>
+                    <div style="margin-bottom:18px;">
+                        <span style="color:#aaa;">סה"כ זמן שבועי:</span>
+                        <span style="font-weight:bold;color:#00a05e;">${json.totalWeekFormatted}</span>
+                    </div>
+                    <table style="width:100%;margin-top:8px;border-collapse:collapse;font-size:1.05em;">
                         <thead>
-                            <tr>
-                                <th style="text-align:left;">יום</th>
-                                <th style="text-align:left;">תאריך</th>
-                                <th style="text-align:left;">סה"כ זמן</th>
-                                <th style="text-align:left;">מספר סשנים</th>
+                            <tr style="background:#2f3136;">
+                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">יום</th>
+                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">תאריך</th>
+                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">סה"כ זמן</th>
+                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">מספר סשנים</th>
                             </tr>
                         </thead>
                         <tbody>
             `;
-            for (const day of json.summary) {
+            for (const [i, day] of json.summary.entries()) {
                 html += `
-                    <tr>
-                        <td>${day.dayName}</td>
-                        <td>${day.date}</td>
-                        <td>${day.totalTimeFormatted}</td>
-                        <td>${day.sessionCount}</td>
+                    <tr style="background:${i%2===0 ? '#23272a' : '#282c34'};">
+                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.dayName}</td>
+                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.date}</td>
+                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.totalTimeFormatted}</td>
+                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.sessionCount}</td>
                     </tr>
                 `;
             }
