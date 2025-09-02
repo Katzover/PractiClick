@@ -508,7 +508,7 @@ window.deleteAllLeaderboardRows = deleteAllLeaderboardRows;
 async function isUserActive(username) {
     const { data, error } = await withLoading(() =>
         supabase
-            .form('online')
+            .from('online')
             .select('is_on')
             .eq('username', username)
     ); if (error) {console.error("Error checking user activity:", error); return;}
