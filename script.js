@@ -529,7 +529,7 @@ async function autoReleaseStaleRooms() {
         supabase.from('rooms').select('name, username').eq('status', 'taken');
 
     try {
-        if (! await isUserActive(data[0].username)) {
+        if (!await isUserActive(data[0].username) && data[0].name !== currentPracticeRoom) {
         showtoast(currentLang === 'he' ? `החדר ${data[0].name} שוחרר כי המשתמש יצא מהאפליקציה` : `Room ${data[0].name} was released because the user left the app`, "orange", 3000, "26px");
         await supabase.from('rooms').update({ status: 'available' ,username: null }).eq('name', data[0].name);}} catch {}
 }
