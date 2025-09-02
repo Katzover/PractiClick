@@ -510,11 +510,11 @@ async function isUserActive(user) {
         supabase
             .from('online')
             .select('username')
-            .eq('is_on', false);
+            .eq('is_on', true);
 
     if (error) {console.error('Error checking user activity:', error.message);}
     console.log(data)
-    if (data) {return false;} else {return true;}
+    if (data) {return true;} else {return false;}
 }
 
 async function releaseCurrentPracticeRoom() {
