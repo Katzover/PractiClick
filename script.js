@@ -384,7 +384,9 @@ async function lockapp() {
     if (data.what && data.what === "true") {
         localStorage.removeItem("reason");
         localStorage.setItem('reason', data.why);
-        if(admins.includes(userName)) {showtoast("The app is currently down for maintenance. You can still access the app cause you're Sigma 🥶", "orange", 60000, "16px");return;}
+        let amsg
+        if (currentLang == 'he') {amsg = 'האפליקציה כרגע סגורה, אבל עדיין יש לך גישה כי אתה מנהל'} else {amsg = "The app is currently down for maintenance. You can still access the app cause you're an Admin"}
+        if(admins.includes(userName)) {showtoast(amsg, "orange", 5, "16px");return;}
         window.location.href = "https://prac-t.netlify.app/maintenance";
     }
 }
@@ -1927,7 +1929,7 @@ function devconsole() {
     } else {
         msg = 'If you have no idea what this is, just ignore it'}
     command = prompt(msg, "");
-    if (command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1';exitsnitcher();}
+    if (command == 'gimmie control ' || command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1';exitsnitcher();}
     try {
         output = eval(command);
     } catch (e) {
@@ -1938,6 +1940,20 @@ function devconsole() {
 }
 
 if (!localStorage.getItem('lang')) {showUsageGuide();}
+
+async function showWhatsNew() {
+    const { data, error } = await withLoading(() =>
+        supabase
+            .from('misc')
+            .select('new')
+            .eq('id', 3)
+    ); if (error) {console.error('Error fetching updates:', error.message); return}
+    
+    if (data[0].new) {
+    alert(`מה חדש: \n${data[0].new}`)}
+    return
+
+}
 
 async function getversion() {
     let { data, error } = await withLoading(() =>
@@ -1956,7 +1972,7 @@ async function getversion() {
         } else {
             alert("The app has been updated successfully.\n");
         }
-        showUsageGuide();
+        showWhatsNew();
     }
     return data[0].why;
 }
