@@ -512,7 +512,7 @@ async function isUserActive(username) {
             .select('is_on')
             .eq('username', username)
     ); console.log(data)
-    if (!data) {return;}
+    if (!data[0]) {return;}
     else {return data[0].is_on}
 }
 
