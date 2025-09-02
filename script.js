@@ -1956,7 +1956,7 @@ async function showWhatsNew() {
             .eq('id', 3)
     ); if (error) {console.error('Error fetching updates:', error.message); return}
     
-    if (data[0].new) {
+    if (data[0].why) {
     alert(`מה חדש: \n${data[0].why}`)}
     return
 
