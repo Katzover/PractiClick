@@ -106,7 +106,7 @@ document.getElementById('deletealltoasts').addEventListener('click', async () =>
 });
 
 async function whatsnew() {
-    const msg = document.getElementById('wnew-text');
+    const msg = document.getElementById('wnew-text').value;
 
     const { error } = await withLoading (() => supabase.from('misc').update({ 'why': msg }).eq('id', 3))
     if (error) {console.error('erorr:', error.message); return}
