@@ -509,7 +509,8 @@ async function isUserActive(user) {
     const { data, error } = await
         supabase
             .from('online')
-            .select('username')
+            .select('is_on')
+            .eq('username', user)
             .eq('is_on', true);
 
     if (error) {console.error('Error checking user activity:', error.message);}
