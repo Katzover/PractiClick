@@ -513,7 +513,7 @@ async function isUserActive(username) {
             .eq('username', username)
     ); console.log(data)
     if (error) {console.error("Error checking user activity:", error); return;}
-    else {return data.is_on}
+    else {return data[0].is_on}
 }
 
 async function releaseCurrentPracticeRoom() {
