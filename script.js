@@ -526,8 +526,9 @@ async function releaseCurrentPracticeRoom() {
 async function autoReleaseStaleRooms() {
     const { data: rooms, error } = await
         supabase.from('rooms').select('name, status, username');
-        console.log(rooms)
+        
     if (error || !rooms) return;
+    console.log(rooms)
 
     for (const room of rooms) {
         if (room.status === "taken" && !isUserActive(room.username)) {
