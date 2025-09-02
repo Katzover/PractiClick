@@ -506,16 +506,15 @@ async function deleteAllLeaderboardRows() {
 window.deleteAllLeaderboardRows = deleteAllLeaderboardRows;
 
 async function isUserActive(user) {
-    const { data, error } = await withLoading(() =>
+    const { data, error } = await
         supabase
             .from('online')
-            .select('is_on')
-            .eq('username', user)
-    );
-    console.log(data, data[0]);
+            .select('username')
+            .eq('is_on', 'false');
+
     if (error) {console.error('Error checking user activity:', error.message);}
-    if (!data[0]) {return;}
-    else {return data[0].is_on}
+    
+    if (data) {return false;} else {return true;}
 }
 
 async function releaseCurrentPracticeRoom() {
