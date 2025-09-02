@@ -531,6 +531,7 @@ async function autoReleaseStaleRooms() {
     console.log(room)
 
     if (!isUserActive(room.username)) {
+        console.log(1)
         await updateRoomStatus(room.name, "available", 0);
     }
 }
