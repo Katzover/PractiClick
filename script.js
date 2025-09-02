@@ -539,6 +539,16 @@ async function autoReleaseStaleRooms() {
 setInterval(autoReleaseStaleRooms, 3000);
 autoReleaseStaleRooms();
 
+async function whoisstillonline() {
+    const { datta, error } = await supabase
+        .from('online')
+        .update({ is_on: false })
+    if (error) {
+        console.error('Error:', error.message);
+        return;
+    }
+} setInterval(whoisstillonline, 500);
+
 async function update_stamp() {
     const { data: rooms, error } = await withLoading(() =>
         supabase.from('rooms').select('id, name, status, updated_at')
