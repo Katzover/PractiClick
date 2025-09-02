@@ -1959,12 +1959,12 @@ async function showWhatsNew() {
     const { data, error } = await withLoading(() =>
         supabase
             .from('misc')
-            .select('new')
+            .select('why')
             .eq('id', 3)
     ); if (error) {console.error('Error fetching updates:', error.message); return}
     
     if (data[0].new) {
-    alert(`מה חדש: \n${data[0].new}`)}
+    alert(`מה חדש: \n${data[0].why}`)}
     return
 
 }
