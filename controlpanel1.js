@@ -113,6 +113,8 @@ async function whatsnew() {
     alert('whats new updated!')
 }
 
+document.getElementById('whatsnew-btn').addEventListener('click', async () => {whatsnew()});
+
 async function shutdown() {
     const { error } = await withLoading(() =>
         supabase
