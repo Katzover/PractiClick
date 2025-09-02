@@ -505,6 +505,17 @@ async function deleteAllLeaderboardRows() {
 }
 window.deleteAllLeaderboardRows = deleteAllLeaderboardRows;
 
+async function isUserActive(username) {
+    const { data, error } = await withLoading(() =>
+        supabase
+            .form(online)
+            .select('is_on')
+            .eq('username', username)
+    ); if (error) {console.error("Error checking user activity:", error); return;}
+    
+    else {return data[0].is_on}
+}
+
 async function releaseCurrentPracticeRoom() {
     if (currentPracticeRoom && currentPracticeRoom !== "Other") {
         await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", 0));
@@ -514,12 +525,12 @@ async function releaseCurrentPracticeRoom() {
 
 async function autoReleaseStaleRooms() {
     const { data: rooms, error } = await withLoading(() =>
-        supabase.from('rooms').select('id, name, status, updated_at')
+        supabase.from('rooms').select('id, name, status, updated_at, username')
     );
     if (error || !rooms) return;
 
     for (const room of rooms) {
-        if (room.status === "taken" && room.updated_at > 5) {
+        if (room.status === "taken" && !isUserActive(room.username)) {
             await withLoading(() => updateRoomStatus(room.name, "available", 0));
             alert("The room " + room.name + " has been automatically released due to inactivity.");
         }
