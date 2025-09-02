@@ -529,6 +529,7 @@ async function autoReleaseStaleRooms() {
         supabase.from('rooms').select('name, username').eq('status', 'taken');
 
     if (!isUserActive(data.username)) {
+        console.log(data)
         alert(1)
         await updateRoomStatus(data.name, "available", 0);
     }
