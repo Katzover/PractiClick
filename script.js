@@ -527,7 +527,7 @@ async function autoReleaseStaleRooms() {
     const { rooms, error } = await
         supabase.from('rooms').select('name, status, username');
         
-    if (error || !rooms) {console.error("Error fetching rooms:", error); return;};
+    if (error || !rooms) {console.error("Error fetching rooms:", error.message); return;};
     console.log(rooms)
 
     for (const room of rooms) {
