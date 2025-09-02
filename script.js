@@ -525,7 +525,7 @@ async function releaseCurrentPracticeRoom() {
 
 async function autoReleaseStaleRooms() {
     const { data: rooms, error } = await withLoading(() =>
-        supabase.from('rooms').select('id, name, status, updated_at, username')
+        supabase.from('rooms').select('name, status, username')
     );
     if (error || !rooms) return;
 
@@ -543,6 +543,7 @@ async function whoisstillonline() {
     const { datta, error } = await supabase
         .from('online')
         .update({ is_on: false })
+        .neq('username', '___impossible_value___')
     if (error) {
         console.error('Error:', error.message);
         return;
