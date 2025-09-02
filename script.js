@@ -530,7 +530,6 @@ async function autoReleaseStaleRooms() {
     if (error || !rooms) return;
 
     for (const room of rooms) {
-        console.log(isUserActive(room.username), rooms.username)
         if (room.status === "taken" && !isUserActive(room.username)) {
             await withLoading(() => updateRoomStatus(room.name, "available", 0));
         }
