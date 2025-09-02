@@ -1724,7 +1724,7 @@ function createOrUpdateFooterButtons() {
     bugBtn.innerHTML = '🐞';
     bugBtn.style = buttonStyle;
     bugBtn.onclick = function() {
-        alert('לא זמין כרגע');
+        alert('לא זמין כרגע אנא התקשרו או שלחו הודעה בוואטסאפ');
     };
 
     // Reload button (emoji: 🔄)
