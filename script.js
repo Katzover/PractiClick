@@ -529,7 +529,7 @@ async function autoReleaseStaleRooms() {
         supabase
             .from('rooms')
             .select('name, username')
-            .eq('status', 'taken')
+            .eq('status', 'available')
 
     console.log(room)
     if (error) {console.error("Error fetching rooms:", error.message); return;}
