@@ -527,8 +527,9 @@ async function autoReleaseStaleRooms() {
     const { data, error } = await
         supabase.from('rooms').select('name, username').eq('status', 'taken');
 
-    if (!isUserActive(data[0].username)) {
-        await updateRoomStatus(data[0].name, "available", 0);
+    console.log(data)
+    if (!isUserActive(data.username)) {
+        await updateRoomStatus(data.name, "available", 0);
     }
 }
 
