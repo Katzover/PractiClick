@@ -531,7 +531,7 @@ async function autoReleaseStaleRooms() {
     console.log(room)
 
     if (!isUserActive(room.username)) {
-        await supabase.from('rooms').update({ status: "available", username: '', updated_at: 0 }).eq('name', room.name);
+        await updateRoomStatus(room.name, "available", 0);
     }
 }
 
@@ -647,13 +647,14 @@ function updateCycleStatus() {
 // Update room status in Supabase
 async function updateRoomStatus(roomName, status, updated_at) {
     if (!roomName || roomName === "Other") return;
-    await withLoading(() =>
+    const { d, error } = await withLoading(() =>
         supabase
             .from('rooms')
-            .update({ status: status, username: userName, updated_at: updated_at })
+            .update({ status: status, username: userName })
             .eq('name', roomName)
-    );
-} // make updateroomstatus accessable from the console
+    ); if (error) {
+        console.error('Error updating room status:', error.message);}
+}
 window.updateRoomStatus = updateRoomStatus;
 
 // --- Cycle Mode Logic ---
