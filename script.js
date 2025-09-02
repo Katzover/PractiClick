@@ -528,10 +528,10 @@ async function autoReleaseStaleRooms() {
     const { data, error } = await
         supabase.from('rooms').select('name, username').eq('status', 'taken');
 
-    if (! await isUserActive(data[0].username)) {
-        console.log("Releasing room " + data[0].name + " due to inactivity of user " + data[0].username);
-        await supabase.from('rooms').update({ status: 'available' ,username: null }).eq('name', data[0].name);
-    } else {console.log(await isUserActive(data[0].username))};
+    try {
+        if (! await isUserActive(data[0].username)) {
+        showtoast(currentLang === 'he' ? `החדר ${data[0].name} שוחרר כי המשתמש יצא מהאפליקציה` : `Room ${data[0].name} was released because the user left the app`, "orange", 3000, "26px");
+        await supabase.from('rooms').update({ status: 'available' ,username: null }).eq('name', data[0].name);}} catch {}
 }
 
 setInterval(autoReleaseStaleRooms, 3000);
