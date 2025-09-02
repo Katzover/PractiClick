@@ -525,19 +525,12 @@ async function releaseCurrentPracticeRoom() {
 }
 
 async function autoReleaseStaleRooms() {
-    const { room, error } = await
-        supabase
-            .from('rooms')
-            .select('name', 'username')
-            .eq('status', 'available')
+    const { username, error } = await
+        supabase.from('rooms').select('username').eq('status', 'taken')
 
-    console.log(room)
-    if (error) {console.error("Error fetching rooms:", error.message); return;}
-    else if (!room) {console.log("no rooms"); return;};
-
-    if (!isUserActive(room.username)) {
-        console.log(1)
-        await updateRoomStatus(room.name, "available", 0);
+    if (!isUserActive(username)) {
+        const name = await supabase.select('name').eq('username', username).eq('status', 'taken')
+        await updateRoomStatus(name, "available", 0);
     }
 }
 
