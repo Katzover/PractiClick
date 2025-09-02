@@ -514,7 +514,6 @@ async function isUserActive(user) {
             .eq('is_on', true);
 
     if (error) {console.error('Error checking user activity:', error.message);}
-    console.log(data)
     if (data) {return true;} else {return false;}
 }
 
