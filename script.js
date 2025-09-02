@@ -1144,7 +1144,7 @@ async function logSession() {
     await withLoading(() => updateRoomStatus(currentPracticeRoom, "available", 0)); // Mark as available
     await withLoading(() => upsertLeaderboard(getWeekTotal()));
     renderLeaderboard();
-    exportWeeklySummary();
+    exportWeeklySummary()
     if (currentLang === 'he') {
         showtoast("הסשן נשמר ביומן התרגול", "green");
     } else {
@@ -1334,7 +1334,7 @@ function getWeeklySummaryJson() {
 }
 
 async function exportWeeklySummary() {
-    withLoading(() => {
+    await withLoading(() => {
         supabase
             .from('summaries')
             .upsert({ name: userName, json: getWeeklySummaryJson })
