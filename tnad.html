@@ -117,16 +117,22 @@
 
         async function fetchLogs() {
             showLoading(true);
-            const { data, error } = await supabase
-                .from('logs')
-                .select('*');
-            showLoading(false);
-            if (error) {
-                console.error('Error fetching logs:', error.message);
+            try {
+                const { data, error } = await supabase
+                    .from('logs')
+                    .select('*');
+                showLoading(false);
+                if (error) {
+                    console.error('Error fetching logs:', error.message);
+                    logContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת יומנים</div>`;
+                    return [];
+                }
+                return data || [];
+            } catch (err) {
+                console.error('Error fetching logs:', err.message);
                 logContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת יומנים</div>`;
                 return [];
             }
-            return data || [];
         }
 
         function formatTime(minutes) {
@@ -156,14 +162,23 @@
         }
 
         function renderPracticeLogs(logs) {
-            const practiceLogsTable = document.getElementById('practiceLogsTable').querySelector('tbody');
-            practiceLogsTable.innerHTML = '';
+            const practiceLogsTable = document.getElementById('practiceLogsTable');
+            if (!practiceLogsTable) {
+                console.error('Practice logs table not found.');
+                return;
+            }
+            const tbody = practiceLogsTable.querySelector('tbody');
+            if (!tbody) {
+                console.error('Table body for practice logs not found.');
+                return;
+            }
+            tbody.innerHTML = '';
             if (!logs || logs.length === 0) {
-                practiceLogsTable.innerHTML = '<tr><td colspan="5" style="color:#aaa;">אין יומנים להצגה.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="color:#aaa;">אין יומנים להצגה.</td></tr>';
                 return;
             }
             logs.forEach(log => {
-                practiceLogsTable.innerHTML += `
+                tbody.innerHTML += `
                     <tr>
                         <td>${new Date(log.date).toLocaleDateString()}</td>
                         <td>${formatTime(log.time)}</td>
