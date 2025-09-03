@@ -155,11 +155,18 @@
             }
         }
 
-        function formatTime(minutes) {
-            if (typeof minutes !== 'number') return '';
-            const hrs = Math.floor(minutes / 60);
-            const mins = minutes % 60;
-            return `${hrs > 0 ? `${hrs}ש` : ''}${mins}ד`;
+        function formatTime(ms) {
+            if (typeof ms !== 'number' || ms <= 0) return '-';
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${hours > 0 ? `${hours}ש` : ''}${minutes}ד${seconds > 0 ? `${seconds}ש` : ''}`;
+        }
+
+        function formatDate(date) {
+            if (!(date instanceof Date) || isNaN(date)) return 'תאריך לא חוקי';
+            return date.toLocaleDateString('he-IL', { year: 'numeric', month: '2-digit', day: '2-digit' });
         }
 
         function renderWeeklySummary(summary) {
@@ -199,13 +206,12 @@
                 return;
             }
             logs.forEach(log => {
-                const formattedDate = log.date instanceof Date && !isNaN(log.date)
-                    ? log.date.toLocaleDateString()
-                    : 'תאריך לא חוקי'; // Handle invalid dates
+                const formattedDate = formatDate(log.date);
+                const formattedTime = formatTime(log.time);
                 tbody.innerHTML += `
                     <tr>
                         <td>${formattedDate}</td>
-                        <td>${formatTime(log.time)}</td>
+                        <td>${formattedTime}</td>
                         <td>${log.mode}</td>
                         <td>${log.room || 'אחר'}</td>
                         <td>${log.note || ''}</td>
