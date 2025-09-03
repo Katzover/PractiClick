@@ -84,6 +84,11 @@
                 <tbody></tbody>
             </table>
         </div>
+        <div>
+            <p>עריכת מצב חדרים</p>
+            <label for="editr">בחר חדר</label>
+            <select id="selectr" style="width:100%;margin-bottom:18px;"></select>
+        </div>
     </div>
     <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
     <script type="module">
@@ -262,6 +267,26 @@
         }
 
         setup();
+
+        async function fetchRooms() {
+            const { rooms, error } = await supabase
+                .from('rooms')
+                .select('name');
+        } if (error) {console.error('something went wrong ' + error.message); return}
+        return rooms
+
+        async function renderRooms() {
+            const selectr = document.getElementById('selectr')
+            const rooms = await fetchRooms();
+            const room = Array.from(new Set(rooms.map(s => s.name))).sort();
+            selectr.innerHTML = '';
+            room.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                selectr.appendChild(option);
+            });
+        }
     </script>
 </body>
 </html>
