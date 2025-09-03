@@ -2,8 +2,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const version = localStorage.getItem('version');
 
 window.control = function control() {window.location.href = 'https://prac-t.netlify.app/controlpanel1';}
-if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
-window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
+if (!localStorage.getItem('UserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
+window.resetname =  function resetname() {return localStorage.removeItem('UserName');}
 let lboard = false;
 let wakeLock = null;
 let showntoasts = [];
@@ -224,7 +224,7 @@ function updateLangUI() {
     currentLang = this.value;
     updateLangUI();
 
-    if (!localStorage.getItem('practiceUserName')) {
+    if (!localStorage.getItem('UserName')) {
         userName = askForNameIfNeeded();
     }
     });
@@ -467,24 +467,24 @@ async function renderLeaderboard() {
 
 async function askForNameIfNeeded() {
 
-    let name = localStorage.getItem('practiceUserName');
+    let name = localStorage.getItem('UserName');
     if (!name) {
         let msg = currentLang === 'he'
-            ? "נא הכנס את שמך בשביל ללוח התוצאות. אם תכניס שם לא הולם, תיחסם."
-            : "Please enter your name for the leaderboard. If you enter an inappropriate name, you will be banned.";
+            ? ".נא הכנס את שמך המלא כדי להמשיך"
+            : "Please enter your full name to continue.";
         do {
             name = prompt(msg, "");
         } while (!name || !name.trim());
         if (banned_names.includes(name.toLowerCase())) {
             currentLang === 'he' ? alert("השם הזה חסום") : alert("The name " + name + " is banned.");
             location.reload()
-            localStorage.removeItem('practiceUserName');
+            localStorage.removeItem('UserName');
         }
-        localStorage.setItem('practiceUserName', name.trim());
+        localStorage.setItem('UserName', name.trim());
     } else if (banned_names.includes(name.toLowerCase())) {
         currentLang === 'he' ? alert("השם הזה חסום") : alert("The name " + name + " is banned.");
         location.reload()
-        localStorage.removeItem('practiceUserName');
+        localStorage.removeItem('UserName');
     }
     return name;
 }
@@ -1090,16 +1090,16 @@ window.addEventListener('scroll', resetIdleTimer);
 resetIdleTimer();
 
 async function existancesnitcher() {
-    if (localStorage.getItem('practiceUserName')) {
+    if (localStorage.getItem('UserName')) {
         const { data, error } = await supabase
             .from('online')
-            .upsert({ username: localStorage.getItem('practiceUserName'), is_on: true })
+            .upsert({ username: localStorage.getItem('UserName'), is_on: true })
             .eq('username', userName);
     }
 }
 
 async function exitsnitcher() {
-    if (localStorage.getItem('practiceUserName')) {
+    if (localStorage.getItem('UserName')) {
         const { data, error} = await withLoading(() => supabase
             .from('online')
             .update({ is_on: false })
@@ -1458,7 +1458,7 @@ async function exportWeeklySummary() {
     const { error } = await supabase
         .from('summaries')
         .update({ json: getWeeklySummaryJson() })
-        .eq('name', localStorage.getItem('practiceUserName'))
+        .eq('name', localStorage.getItem('UserName'))
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
@@ -2068,7 +2068,7 @@ function showUsageGuide() {
 async function establishUserdata() {
     const { error } = await supabase
         .from('summaries')
-        .insert({ username: localStorage.getItem('practiceUserName'), json: getWeeklySummaryJson() });
+        .insert({ username: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
