@@ -165,8 +165,7 @@
         }
 
         function formatDate(date) {
-            if (!(date instanceof Date) || isNaN(date)) return 'תאריך לא חוקי';
-            return date.toLocaleDateString('he-IL', { year: 'numeric', month: '2-digit', day: '2-digit' });
+           date.toLocaleDateString('he-IL', { year: 'numeric', month: '2-digit', day: '2-digit' });
         }
 
         function renderWeeklySummary(summary) {
