@@ -284,10 +284,10 @@
             selectr.innerHTML = '';
             rooms.forEach(name => {
                 const option = document.createElement('option');
-                option.value = name[id];
+                option.value = name;
                 option.textContent = name[id];
                 selectr.appendChild(option);
-                id = id + 1
+                id++;
             });
         } renderRooms();
     </script>
