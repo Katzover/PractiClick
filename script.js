@@ -305,8 +305,8 @@ async function askForPracticeRoom() {
 
 // yes, ik its not secure to expose these keys, but it doesnt really matter in this case
 // and im really lazy to use an actual secure method
-const SUPABASE_URL = proccess.env.SUPABASE_URL;
-const SUPABASE_ANON_KEY = proccess.env.SUPABASE_ANON_KEY;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function showLoading() {
