@@ -1454,7 +1454,6 @@ function getWeeklySummaryJson() {
 }
 
 async function exportWeeklySummary() {
-    console.log("Exporting weekly summary to Supabase...");
     const { error } = await supabase
         .from('summaries')
         .update({ json: getWeeklySummaryJson() })
@@ -1463,7 +1462,6 @@ async function exportWeeklySummary() {
         console.error('Failed to export weekly summary:', error.message);
         return;
     }
-    console.log("Weekly summary exported.");
 }
 
 setInterval(exportWeeklySummary, 5000);
