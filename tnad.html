@@ -282,6 +282,7 @@
 
             selectr.innerHTML = '';
             for (name in rooms) {
+                console.log(name, name[id])
                 const option = document.createElement('option');
                 option.value = name[id];
                 option.textContent = name[id];
