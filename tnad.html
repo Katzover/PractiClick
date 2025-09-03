@@ -205,6 +205,7 @@
                 tbody.innerHTML = '<tr><td colspan="5" style="color:#aaa;">אין יומנים להצגה.</td></tr>';
                 return;
             }
+            console.log(logs)
             logs.forEach(log => {
                 const formattedDate = formatDate(day.date);
                 const formattedTime = formatTime(log.totalTimeFormatted);
