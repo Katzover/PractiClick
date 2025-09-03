@@ -1458,8 +1458,8 @@ async function exportWeeklySummary() {
     console.log("Exporting weekly summary to Supabase...");
     const { error } = await supabase
         .from('summaries')
-        .update({ json: getWeeklySummaryJson()})
-        .eq('name', userName)
+        .update({ json: getWeeklySummaryJson() })
+        .eq('name', localStorage.getItem('practiceUserName'))
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
