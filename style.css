@@ -202,7 +202,7 @@ button:hover, button:focus {
     box-shadow: none;
     border: 1px solid var(--border);
     transition: background 0.3s, border 0.3s;
-    min-height: 80px; /* Ensures visible area even when empty */
+    min-height: 120px; /* Ensures visible area even when empty */
     display: flex;
     flex-direction: column;
     justify-content: center;
