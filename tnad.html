@@ -81,6 +81,7 @@
                         <tbody>
             `;
             for (const [i, day] of json.summary.entries()) {
+                const logs = day.logs || []; // Default to an empty array if logs is undefined
                 html += `
                     <tr style="background:${i%2===0 ? '#23272a' : '#282c34'};">
                         <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.dayName}</td>
@@ -88,7 +89,7 @@
                         <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.totalTimeFormatted}</td>
                         <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.sessionCount}</td>
                         <td style="padding:8px 10px;border-bottom:1px solid #333;">
-                            ${day.logs.map(log => `
+                            ${logs.map(log => `
                                 <div style="margin-bottom:8px;">
                                     <span style="color:#60aaff;">${formatTime(log.time)}</span>
                                     <span style="color:#aaa;">(${log.mode}, ${log.room || 'Other'})</span>
