@@ -1217,12 +1217,68 @@ function createNoteModal() {
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'noteModal';
-        modal.className = 'modal-overlay'; // Use CSS class for styling
+        modal.style = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        `;
         modal.innerHTML = `
-            <div class="modal-content">
-                <h3 id="noteModalTitle">Add/Edit Note</h3>
-                <textarea id="noteInput" class="modal-textarea"></textarea>
-                <div class="modal-buttons">
+            <div id="noteCard" style="
+                background: var(--card, #1c253b);
+                color: #e0e6f0;
+                max-width: 98vw;
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+                border-radius: 18px;
+                box-shadow: 0 4px 32px #60aaff33, 0 1.5px 0 var(--primary, #60aaff);
+                border: 1.5px solid var(--primary, #60aaff);
+                padding: clamp(18px, 5vw, 36px) clamp(10px, 5vw, 36px);
+                margin: 2vw;
+                overflow-y: auto;
+                max-height: 90vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+            ">
+                <button id="closeNoteBtn" style="
+                    position: absolute;
+                    top: 12px;
+                    right: 16px;
+                    font-size: 1.3em;
+                    background: none;
+                    border: none;
+                    color: var(--primary, #60aaff);
+                    cursor: pointer;
+                    transition: color 0.2s;
+                " title="Close">&times;</button>
+                <h3 id="noteModalTitle" style="
+                    color: var(--primary, #60aaff);
+                    text-align: center;
+                    font-weight: bold;
+                    margin-bottom: 1.2em;
+                    text-shadow: 0 2px 8px #60aaff22;
+                "></h3>
+                <textarea id="noteInput" style="
+                    width: 100%;
+                    height: 120px;
+                    margin-bottom: 16px;
+                    padding: 8px;
+                    border-radius: 8px;
+                    border: 1px solid var(--border);
+                    background: var(--input-bg);
+                    color: #e0e6f0;
+                    resize: none;
+                    font-size: 1rem;
+                "></textarea>
+                <div style="display: flex; justify-content: center; gap: 12px;">
                     <button id="saveNoteBtn" class="modal-button">Save</button>
                     <button id="cancelNoteBtn" class="modal-button cancel">Cancel</button>
                 </div>
@@ -1230,29 +1286,34 @@ function createNoteModal() {
         `;
         document.body.appendChild(modal);
 
-        // Add event listeners for modal buttons
         document.getElementById('saveNoteBtn').onclick = saveNote;
         document.getElementById('cancelNoteBtn').onclick = () => {
             modal.style.display = 'none';
         };
+        document.getElementById('closeNoteBtn').onclick = () => {
+            modal.style.display = 'none';
+        };
     }
 }
-createNoteModal();
 
 let currentLogIndex = null;
 
 function openNoteModal(index) {
+    if (index < 0 || index >= logs.length) return; // Prevent invalid indices
     currentLogIndex = index;
     const log = logs[index];
     const modal = document.getElementById('noteModal');
     const noteInput = document.getElementById('noteInput');
+    const title = document.getElementById('noteModalTitle');
+    title.textContent = currentLang === 'he' ? "הוסף/ערוך הערה" : "Add/Edit Note";
     noteInput.value = log.note || '';
     modal.style.display = 'flex';
+    modal.style.direction = currentLang === 'he' ? 'rtl' : 'ltr'; // Adjust for Hebrew
 }
 
 function saveNote() {
     const noteInput = document.getElementById('noteInput');
-    if (currentLogIndex !== null) {
+    if (currentLogIndex !== null && currentLogIndex >= 0 && currentLogIndex < logs.length) {
         logs[currentLogIndex].note = noteInput.value.trim();
         localStorage.setItem('practiceLogs', JSON.stringify(logs));
         renderLogs();

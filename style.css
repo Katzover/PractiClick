@@ -1023,3 +1023,54 @@ body[dir="rtl"] .modal-textarea {
     background: #666;
     color: #fff;
 }
+
+/* Notes modal styling */
+#noteModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+}
+#noteCard {
+    background: var(--card, #1c253b);
+    color: #e0e6f0;
+    max-width: 98vw;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    border-radius: 18px;
+    box-shadow: 0 4px 32px #60aaff33, 0 1.5px 0 var(--primary, #60aaff);
+    border: 1.5px solid var(--primary, #60aaff);
+    padding: clamp(18px, 5vw, 36px) clamp(10px, 5vw, 36px);
+    margin: 2vw;
+    overflow-y: auto;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+#noteModalTitle {
+    color: var(--primary, #60aaff);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1.2em;
+    text-shadow: 0 2px 8px #60aaff22;
+}
+#noteInput {
+    width: 100%;
+    height: 120px;
+    margin-bottom: 16px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    color: #e0e6f0;
+    resize: none;
+    font-size: 1rem;
+}
