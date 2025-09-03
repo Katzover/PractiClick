@@ -1181,7 +1181,6 @@ autoResetLogsIfNewWeek();
 function renderLogs() {
     logList.innerHTML = '';
     if (logs.length === 0) {
-        // Use a div for centering, matches .log-list > div CSS
         logList.innerHTML = '<div>No sessions yet.</div>';
         return;
     }
@@ -1190,7 +1189,7 @@ function renderLogs() {
         en: { cycle: "Cycle", timer: "Timer", stopwatch: "Stopwatch" },
         he: { cycle: "סבב", timer: "טיימר", stopwatch: "סטופר" }
     };
-    logs.slice().reverse().forEach(log => {
+    logs.slice().reverse().forEach((log, idx) => {
         const d = new Date(log.date);
         const item = document.createElement('div');
         item.className = 'log-item';
@@ -1205,336 +1204,102 @@ function renderLogs() {
             <span>${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false })}</span>
             <span>${formatTime(log.time)}</span>
             <span style="color:#888;">${roomLabel}</span>
+            ${log.note ? `<span style="color:#60aaff;font-size:0.95em;display:block;margin-top:2px;">📝 ${log.note}</span>` : ''}
         `;
+        item.style.cursor = "pointer";
+        // Pass the correct index in the original logs array
+        item.onclick = () => showLogNoteModal(log, logs.length - 1 - idx);
         logList.appendChild(item);
     });
 }
 
-// --- Weekly Summary ---
-function getWeekStart(date) {
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() - d.getDay());
-    return d.toISOString().slice(0, 10);
-}
-
-
-function getWeekTotal() {
-    const now = new Date();
-    const weekStart = getWeekStart(now);
-    const weekStartDate = new Date(weekStart + "T00:00:00");
-    const weekEndDate = new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-    let total = 0;
-    logs.forEach(log => {
-        const d = new Date(log.date);
-        if (d >= weekStartDate && d < weekEndDate) {
-            let day = d.getDay();
-            if (day < 7) { // Sun-Sat
-                total += log.time;
-            }
-        }
-    });
-    return total;
-}
-
-function updateWeekTotal() {
-    const total = getWeekTotal();
-    document.getElementById('weekTotal').textContent = formatTime(total);
-}
-
-function updateResetBtnLabel() {
+// Modal for editing/adding a note to a log session
+function showLogNoteModal(log, logIdx) {
+    let modal = document.getElementById('logNoteModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'logNoteModal';
+        modal.style = `
+            position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(24,26,27,0.85);z-index:3002;display:flex;align-items:center;justify-content:center;
+        `;
+        modal.innerHTML = `
+            <div id="logNoteCard" style="
+                background: #23272a;
+                color: #e0e0e0;
+                max-width: 98vw;
+                width: min(98vw, 400px);
+                border-radius: 12px;
+                box-shadow: 0 4px 24px #000a;
+                border: 1.5px solid #60aaff;
+                position: relative;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                padding: 28px 18px 22px 18px;
+                margin: 2vw;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            ">
+                <button id="closeLogNoteBtn" style="
+                    position: absolute;
+                    top: 10px;
+                    right: 14px;
+                    font-size: 1.2em;
+                    background: none;
+                    border: none;
+                    color: #60aaff;
+                    cursor: pointer;
+                    z-index: 10;
+                " title="Close">&times;</button>
+                <div id="logNoteTitle" style="font-size:1.18em;font-weight:bold;margin-bottom:10px;text-align:center;color:#60aaff;"></div>
+                <div id="logNoteDetails" style="font-size:1em;color:#aaa;margin-bottom:10px;text-align:center;"></div>
+                <textarea id="logNoteInput" rows="4" style="
+                    width:100%;border-radius:6px;border:1px solid #444;
+                    background:#181a1b;color:#e0e0e0;font-size:1em;padding:8px;resize:vertical;
+                    margin-bottom:12px;box-sizing:border-box;
+                " placeholder=""></textarea>
+                <button id="saveLogNoteBtn" style="
+                    background: #60aaff;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    padding: 10px 18px;
+                    font-size: 1em;
+                    cursor: pointer;
+                    margin-top: 2px;
+                    transition: background 0.2s;
+                "></button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    // Set content
     const t = LANGS[currentLang];
-    resetBtn.textContent = t.reset;
-    updateWeekTotal();
-}
+    modal.querySelector('#logNoteTitle').textContent = (currentLang === 'he' ? 'הערה לסשן תרגול' : 'Practice Session Note');
+    const d = new Date(log.date);
+    modal.querySelector('#logNoteDetails').textContent =
+        `${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false })} • ${formatTime(log.time)}`;
+    const textarea = modal.querySelector('#logNoteInput');
+    textarea.value = log.note || '';
+    textarea.placeholder = currentLang === 'he' ? 'הוסף הערה (לא חובה)...' : 'Add a note (optional)...';
+    const saveBtn = modal.querySelector('#saveLogNoteBtn');
+    saveBtn.textContent = currentLang === 'he' ? 'שמור הערה' : 'Save Note';
 
-
-function renderSummary() {
-    let days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    const tbody = document.getElementById('summaryTable').querySelector('tbody');
-    tbody.innerHTML = '';
-    const now = new Date();
-    const weekStart = getWeekStart(now);
-    const weekStartDate = new Date(weekStart + "T00:00:00");
-    const weekEndDate = new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-    let daily = Array(7).fill().map(() => ({time:0, count:0})); // 7 days: Sun-Sat
-    logs.forEach(log => {
-        const d = new Date(log.date);
-        if (d >= weekStartDate && d < weekEndDate) {
-            let day = d.getDay(); // Sunday=0
-            if (day < 7) { // Sun-Sat
-                daily[day].time += log.time;
-                daily[day].count += 1;
-            }
-        }
-    });
-    if (currentLang === 'he') {
-        days = ['א','ב','ג','ד','ה','ו','ש'];
-        for (let i=0; i<7; ++i) {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${days[i]}</td>
-                    <td>${daily[i].time ? formatTime(daily[i].time) : '-'}</td>
-                    <td>${daily[i].count || '-'}</td>
-                </tr>
-            `;
-        }
-    } else {
-        for (let i=0; i<7; ++i) {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${days[i]}</td>
-                    <td>${daily[i].time ? formatTime(daily[i].time) : '-'}</td>
-                    <td>${daily[i].count || '-'}</td>
-                </tr>
-            `;
-        }
-    }
-    updateResetBtnLabel();
-
-
-}
-
-function getWeeklySummaryJson() {
-    let daysEn = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    let daysHe = ['א','ב','ג','ד','ה','ו','ש'];
-    const now = new Date();
-    const weekStart = getWeekStart(now);
-    const weekStartDate = new Date(weekStart + "T00:00:00");
-    let daily = Array(7).fill().map(() => ({time:0, count:0}));
-    logs.forEach(log => {
-        const d = new Date(log.date);
-        if (d >= weekStartDate && d < new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000)) {
-            let day = d.getDay();
-            if (day < 7) {
-                daily[day].time += log.time;
-                daily[day].count += 1;
-            }
-        }
-    });
-    let summary = [];
-    for (let i = 0; i < 7; ++i) {
-        summary.push({
-            dayIndex: i,
-            dayName: currentLang === 'he' ? daysHe[i] : daysEn[i],
-            date: new Date(weekStartDate.getTime() + i * 24 * 60 * 60 * 1000).toISOString().slice(0,10),
-            totalTimeMs: daily[i].time,
-            totalTimeFormatted: daily[i].time ? formatTime(daily[i].time) : '-',
-            sessionCount: daily[i].count
-        });
-    }
-    return {
-        weekStart: weekStart,
-        weekStartDate: weekStartDate.toISOString().slice(0,10),
-        userName: userName,
-        summary: summary,
-        totalWeekMs: getWeekTotal(),
-        totalWeekFormatted: formatTime(getWeekTotal())
+    saveBtn.onclick = () => {
+        logs[logIdx].note = textarea.value.trim();
+        localStorage.setItem('practiceLogs', JSON.stringify(logs));
+        modal.style.display = 'none';
+        renderLogs();
     };
+    modal.querySelector('#closeLogNoteBtn').onclick = () => {
+        modal.style.display = 'none';
+    };
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    };
+    modal.style.display = 'flex';
+    textarea.focus();
 }
-
-async function exportWeeklySummary() {
-    console.log("Exporting weekly summary to Supabase...");
-    const { error } = await supabase
-        .from('summaries')
-        .upsert({ name: userName, json: getWeeklySummaryJson() });
-    if (error) {
-        console.error('Failed to export weekly summary:', error.message);
-        return;
-    }
-    console.log("Weekly summary exported.");
-}
-
-// --- Animated mode transitions & swipe navigation ---
-const MODES = ['cycle', 'timer', 'stopwatch', 'rooms'];
-let currentModeIndex = MODES.indexOf(mode);
-
-function getModeIndex(m) {
-    return MODES.indexOf(m);
-}
-
-function animateModeTransition(fromMode, toMode) {
-    const stack = document.getElementById('modeStack');
-    if (!stack) return showMode(toMode); // fallback
-
-    const fromIdx = getModeIndex(fromMode);
-    const toIdx = getModeIndex(toMode);
-    if (fromIdx === -1 || toIdx === -1) return showMode(toMode);
-
-    const sections = {};
-    stack.querySelectorAll('.mode-section').forEach(sec => {
-        const m = sec.dataset.mode;
-        sections[m] = sec;
-    });
-
-    // Hide all, then show the two involved
-    Object.values(sections).forEach(sec => {
-        sec.classList.add('hide');
-        sec.classList.remove('mode-slide-in-left', 'mode-slide-in-right', 'mode-slide-out-left', 'mode-slide-out-right', 'mode-slide-center');
-    });
-
-    const fromSec = sections[fromMode];
-    const toSec = sections[toMode];
-    if (!fromSec || !toSec) return showMode(toMode);
-
-    // Prepare target section
-    toSec.classList.remove('hide');
-    toSec.classList.add('mode-section');
-    if (toIdx > fromIdx) {
-        // Slide left (forward)
-        toSec.classList.add('mode-slide-in-right');
-        setTimeout(() => {
-            toSec.classList.remove('mode-slide-in-right');
-            toSec.classList.add('mode-slide-center');
-        }, 10);
-        fromSec.classList.add('mode-slide-out-left');
-    } else {
-        // Slide right (backward)
-        toSec.classList.add('mode-slide-in-left');
-        setTimeout(() => {
-            toSec.classList.remove('mode-slide-in-left');
-            toSec.classList.add('mode-slide-center');
-        }, 10);
-        fromSec.classList.add('mode-slide-out-right');
-    }
-    // After animation, hide the old section
-    setTimeout(() => {
-        fromSec.classList.add('hide');
-        fromSec.classList.remove('mode-slide-out-left', 'mode-slide-out-right', 'mode-slide-center');
-        toSec.classList.remove('mode-slide-center');
-    }, 350);
-}
-
-function switchModeWithAnimation(newMode) {
-    if (mode === newMode) return;
-    animateModeTransition(mode, newMode);
-    mode = newMode;
-    localStorage.setItem('mode', mode);
-    currentModeIndex = getModeIndex(mode);
-    // Also update tab active state
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mode === mode);
-    });
-    // Any additional logic for mode switch (summary/leaderboard visibility etc)
-    if (mode === 'cycle') {
-        document.getElementById('cycle-inputs').style.display = '';
-        document.getElementById('cycleDisplay').style.display = '';
-        document.getElementById('cycle-controls').style.display = '';
-        document.getElementById('cycleStatus').style.display = '';
-        document.querySelector('.summary-section').classList.remove('hide');
-        document.querySelector('.leaderboard-section').classList.remove('hide');
-    } else if (mode === 'timer') {
-        document.getElementById('timer-inputs').style.display = '';
-        document.getElementById('display').style.display = '';
-        document.getElementById('timer-controls').style.display = '';
-        document.querySelector('.summary-section').classList.remove('hide');
-        document.querySelector('.leaderboard-section').classList.remove('hide');
-    } else if (mode === 'stopwatch') {
-        document.getElementById('timer-inputs').style.display = 'none';
-        document.getElementById('display').style.display = '';
-        document.getElementById('timer-controls').style.display = '';
-        document.querySelector('.summary-section').classList.remove('hide');
-        document.querySelector('.leaderboard-section').classList.remove('hide');
-    } else {
-        document.getElementById('roomsContainer').style.display = '';
-        renderRooms();
-        // Hide summary/leaderboard when in rooms mode
-        document.querySelector('.summary-section').classList.add('hide');
-        document.querySelector('.leaderboard-section').classList.add('hide');
-    }
-}
-
-// --- Swipe gesture support for mode switching ---
-let touchStartX = null;
-let touchStartY = null;
-let touchMoved = false;
-
-function handleSwipeStart(e) {
-    if (e.touches && e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        touchMoved = false;
-    }
-}
-function handleSwipeMove(e) {
-    if (!touchStartX || !touchStartY) return;
-    const dx = e.touches[0].clientX - touchStartX;
-    const dy = e.touches[0].clientY - touchStartY;
-    if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
-        touchMoved = true;
-        e.preventDefault();
-    }
-}
-function handleSwipeEnd(e) {
-    if (!touchStartX || !touchMoved) return;
-    const endX = (e.changedTouches && e.changedTouches[0].clientX) || 0;
-    const dx = endX - touchStartX;
-    if (Math.abs(dx) > 50) {
-        let nextIdx = currentModeIndex;
-        if (dx < 0 && currentModeIndex < MODES.length - 1) {
-            nextIdx++;
-        } else if (dx > 0 && currentModeIndex > 0) {
-            nextIdx--;
-        }
-        if (nextIdx !== currentModeIndex) {
-            switchModeWithAnimation(MODES[nextIdx]);
-        }
-    }
-    touchStartX = null;
-    touchStartY = null;
-    touchMoved = false;
-}
-
-// Attach swipe listeners to the main mode stack container
-const modeStack = document.getElementById('modeStack');
-if (modeStack) {
-    modeStack.addEventListener('touchstart', handleSwipeStart, { passive: false });
-    modeStack.addEventListener('touchmove', handleSwipeMove, { passive: false });
-    modeStack.addEventListener('touchend', handleSwipeEnd, { passive: false });
-}
-
-// Optionally, support mouse drag for PC
-let mouseDownX = null;
-let mouseMoved = false;
-if (window.matchMedia('(pointer: fine)').matches && modeStack) {
-    modeStack.addEventListener('mousedown', e => { mouseDownX = e.clientX; mouseMoved = false; });
-    modeStack.addEventListener('mousemove', e => {
-        if (mouseDownX !== null && Math.abs(e.clientX - mouseDownX) > 30) mouseMoved = true;
-    });
-    modeStack.addEventListener('mouseup', e => {
-        if (mouseDownX !== null && mouseMoved) {
-            const dx = e.clientX - mouseDownX;
-            let nextIdx = currentModeIndex;
-            if (dx < -50 && currentModeIndex < MODES.length - 1) {
-                nextIdx++;
-            } else if (dx > 50 && currentModeIndex > 0) {
-                nextIdx--;
-            }
-            if (nextIdx !== currentModeIndex) {
-                switchModeWithAnimation(MODES[nextIdx]);
-            }
-        }
-        mouseDownX = null;
-        mouseMoved = false;
-    });
-}
-
-// --- Initial mode setup with animation ---
-document.addEventListener('DOMContentLoaded', function() {
-    // Hide all mode sections except current
-    const stack = document.getElementById('modeStack');
-    if (stack) {
-        stack.querySelectorAll('.mode-section').forEach(sec => {
-            if (sec.dataset.mode === mode) {
-                sec.classList.remove('hide');
-                sec.classList.add('mode-slide-center');
-            } else {
-                sec.classList.add('hide');
-                sec.classList.remove('mode-slide-center');
-            }
-        });
-    }
-});
 
 // --- Metronome Logic ---
 let metroAudioCtx = null;
