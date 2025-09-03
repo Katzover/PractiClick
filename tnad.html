@@ -277,10 +277,9 @@
 
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
-            const rooms = await fetchRooms();
-            const room = Array.from(new Set(rooms.map(s => s.name))).sort();
+            const rooms = await fetchRooms();[0]
             selectr.innerHTML = '';
-            room.forEach(name => {
+            rooms.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name;
                 option.textContent = name;
