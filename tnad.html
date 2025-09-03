@@ -175,6 +175,7 @@
                 weeklySummaryTable.innerHTML = '<tr><td colspan="4" style="color:#aaa;">אין נתונים להצגה.</td></tr>';
                 return;
             }
+            console.log(summary)
             summary.summary.forEach(day => {
                 weeklySummaryTable.innerHTML += `
                     <tr>
