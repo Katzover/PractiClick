@@ -103,16 +103,26 @@
 
         async function fetchSummaries() {
             showLoading(true);
-            const { data, error } = await supabase
-                .from('summaries')
-                .select('name, json');
-            showLoading(false);
-            if (error) {
-                console.error('Error fetching summaries:', error.message);
+            try {
+                const { data, error } = await supabase
+                    .from('summaries')
+                    .select('name, json');
+                showLoading(false);
+                if (error) {
+                    console.error('Error fetching summaries:', error.message);
+                    summaryContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת נתונים</div>`;
+                    return [];
+                }
+                // Parse JSON and return summaries
+                return data.map(item => ({
+                    name: item.name,
+                    json: typeof item.json === 'string' ? JSON.parse(item.json) : item.json
+                }));
+            } catch (err) {
+                console.error('Error fetching summaries:', err.message);
                 summaryContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת נתונים</div>`;
                 return [];
             }
-            return data || [];
         }
 
         async function fetchLogs() {
@@ -214,7 +224,7 @@
             }
             function showSelectedUserSummary() {
                 const selected = userSelect.value;
-                const summary = summaries.find(s => s.name === selected);
+                const summary = summaries.find(s => s.name === selected)?.json;
                 renderWeeklySummary(summary);
             }
             userSelect.onchange = showSelectedUserSummary;
