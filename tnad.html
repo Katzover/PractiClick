@@ -108,7 +108,22 @@
                 .select('name, json');
             showLoading(false);
             if (error) {
+                console.error('Error fetching summaries:', error.message);
                 summaryContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת נתונים</div>`;
+                return [];
+            }
+            return data || [];
+        }
+
+        async function fetchLogs() {
+            showLoading(true);
+            const { data, error } = await supabase
+                .from('logs')
+                .select('*');
+            showLoading(false);
+            if (error) {
+                console.error('Error fetching logs:', error.message);
+                logContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת יומנים</div>`;
                 return [];
             }
             return data || [];
@@ -160,26 +175,10 @@
             });
         }
 
-        async function fetchLogs() {
-            const { data, error } = await supabase
-                .from('summaries')
-                .select('*');
-            if (error) {
-                console.error('Error fetching logs:', error.message);
-                return [];
-            }
-            return data || [];
-        }
-
-        async function fetchAndRenderLogs() {
-            const logs = await fetchLogs();
-            renderPracticeLogs(logs);
-        }
-
         async function setup() {
             const summaries = await fetchSummaries();
             const logs = await fetchLogs();
-            // Get unique users
+            // Populate user dropdown
             const users = Array.from(new Set(summaries.map(s => s.name))).sort();
             userSelect.innerHTML = '';
             users.forEach(name => {
