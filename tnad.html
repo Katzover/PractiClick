@@ -15,17 +15,7 @@
             color: #e0e6f0;
             font-family: 'Segoe UI', Arial, sans-serif;
             font-size: 1rem;
-            overflow-y: auto;
-        }
-        #summaryContainer::-webkit-scrollbar {
-            width: 8px;
-        }
-        #summaryContainer::-webkit-scrollbar-thumb {
-            background: var(--primary, #60aaff);
-            border-radius: 4px;
-        }
-        #summaryContainer::-webkit-scrollbar-track {
-            background: var(--input-bg, #202b3d);
+            margin-bottom: 24px;
         }
         #logContainer {
             background: var(--card, #1c253b);
@@ -36,19 +26,27 @@
             color: #e0e6f0;
             font-family: 'Segoe UI', Arial, sans-serif;
             font-size: 1rem;
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 24px;
         }
-        #logContainer::-webkit-scrollbar {
-            width: 8px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
         }
-        #logContainer::-webkit-scrollbar-thumb {
+        th, td {
+            padding: 8px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border, #22304a);
+        }
+        th {
             background: var(--primary, #60aaff);
-            border-radius: 4px;
+            color: #162032;
+            font-weight: bold;
         }
-        #logContainer::-webkit-scrollbar-track {
+        tr:nth-child(even) {
             background: var(--input-bg, #202b3d);
+        }
+        tr:nth-child(odd) {
+            background: var(--card, #1c253b);
         }
     </style>
 </head>
@@ -57,8 +55,35 @@
         <h2 style="text-align:center;">ניהול יומני תרגול</h2>
         <label for="userSelect">בחר משתמש:</label>
         <select id="userSelect" style="width:100%;margin-bottom:18px;"></select>
-        <div id="summaryContainer"></div>
-        <div id="logContainer"></div>
+        <div id="summaryContainer">
+            <h3 style="text-align:center;">סיכום שבועי</h3>
+            <table id="weeklySummaryTable">
+                <thead>
+                    <tr>
+                        <th>יום</th>
+                        <th>תאריך</th>
+                        <th>סה"כ זמן</th>
+                        <th>מספר סשנים</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="logContainer">
+            <h3 style="text-align:center;">יומני תרגול</h3>
+            <table id="practiceLogsTable">
+                <thead>
+                    <tr>
+                        <th>תאריך</th>
+                        <th>זמן</th>
+                        <th>מצב</th>
+                        <th>חדר</th>
+                        <th>הערה</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
     <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
     <script type="module">
@@ -96,80 +121,43 @@
             return `${hrs > 0 ? `${hrs}ש` : ''}${mins}ד`;
         }
 
-        function renderSummary(summary) {
-            if (!summary) {
-                summaryContainer.innerHTML = '<div>אין נתונים להצגה.</div>';
+        function renderWeeklySummary(summary) {
+            const weeklySummaryTable = document.getElementById('weeklySummaryTable').querySelector('tbody');
+            weeklySummaryTable.innerHTML = '';
+            if (!summary || !summary.summary) {
+                weeklySummaryTable.innerHTML = '<tr><td colspan="4" style="color:#aaa;">אין נתונים להצגה.</td></tr>';
                 return;
             }
-            let json = typeof summary.json === 'string' ? JSON.parse(summary.json) : summary.json;
-            let html = `
-                <div style="background:#23272a;border-radius:10px;padding:24px 18px;box-shadow:0 2px 8px #0006;">
-                    <div style="margin-bottom:18px;">
-                        <span style="font-size:1.15em;font-weight:bold;color:#60aaff;">משתמש:</span>
-                        <span style="font-size:1.15em;">${json.userName || summary.name}</span>
-                    </div>
-                    <div style="margin-bottom:10px;">
-                        <span style="color:#aaa;">שבוע שמתחיל ב:</span>
-                        <span>${json.weekStartDate}</span>
-                    </div>
-                    <div style="margin-bottom:18px;">
-                        <span style="color:#aaa;">סה"כ זמן שבועי:</span>
-                        <span style="font-weight:bold;color:#00a05e;">${json.totalWeekFormatted}</span>
-                    </div>
-                    <table style="width:100%;margin-top:8px;border-collapse:collapse;font-size:1.05em;">
-                        <thead>
-                            <tr style="background:#2f3136;">
-                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">יום</th>
-                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">תאריך</th>
-                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">סה"כ זמן</th>
-                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">מספר סשנים</th>
-                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">יומן</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            for (const [i, day] of json.summary.entries()) {
-                const logs = day.logs || []; // Default to an empty array if logs is undefined
-                html += `
-                    <tr style="background:${i%2===0 ? '#23272a' : '#282c34'};">
-                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.dayName}</td>
-                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.date}</td>
-                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.totalTimeFormatted}</td>
-                        <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.sessionCount}</td>
-                        <td style="padding:8px 10px;border-bottom:1px solid #333;">
-                            ${logs.length > 0 ? logs.map(log => `
-                                <div style="margin-bottom:8px;">
-                                    <span style="color:#60aaff;">${formatTime(log.time)}</span>
-                                    <span style="color:#aaa;">(${log.mode}, ${log.room || 'Other'})</span>
-                                    ${log.note ? `<div style="color:#ffa500;">הערה: ${log.note}</div>` : ''}
-                                </div>
-                            `).join('') : '<span style="color:#aaa;">אין יומן</span>'}
-                        </td>
+            summary.summary.forEach(day => {
+                weeklySummaryTable.innerHTML += `
+                    <tr>
+                        <td>${day.dayName}</td>
+                        <td>${day.date}</td>
+                        <td>${day.totalTimeFormatted}</td>
+                        <td>${day.sessionCount}</td>
                     </tr>
                 `;
-            }
-            html += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            summaryContainer.innerHTML = html;
+            });
         }
 
-        function renderLogs(logs) {
+        function renderPracticeLogs(logs) {
+            const practiceLogsTable = document.getElementById('practiceLogsTable').querySelector('tbody');
+            practiceLogsTable.innerHTML = '';
             if (!logs || logs.length === 0) {
-                logContainer.innerHTML = '<div style="color:#aaa;">אין יומנים להצגה.</div>';
+                practiceLogsTable.innerHTML = '<tr><td colspan="5" style="color:#aaa;">אין יומנים להצגה.</td></tr>';
                 return;
             }
-            let html = logs.map(log => `
-                <div style="margin-bottom:12px;padding:8px;border-bottom:1px solid #333;">
-                    <div><strong>זמן:</strong> ${formatTime(log.time)}</div>
-                    <div><strong>מצב:</strong> ${log.mode}</div>
-                    <div><strong>חדר:</strong> ${log.room || 'אחר'}</div>
-                    ${log.note ? `<div><strong>הערה:</strong> ${log.note}</div>` : ''}
-                </div>
-            `).join('');
-            logContainer.innerHTML = html;
+            logs.forEach(log => {
+                practiceLogsTable.innerHTML += `
+                    <tr>
+                        <td>${new Date(log.date).toLocaleDateString()}</td>
+                        <td>${formatTime(log.time)}</td>
+                        <td>${log.mode}</td>
+                        <td>${log.room || 'אחר'}</td>
+                        <td>${log.note || ''}</td>
+                    </tr>
+                `;
+            });
         }
 
         async function fetchLogs() {
@@ -185,11 +173,12 @@
 
         async function fetchAndRenderLogs() {
             const logs = await fetchLogs();
-            renderLogs(logs);
+            renderPracticeLogs(logs);
         }
 
         async function setup() {
             const summaries = await fetchSummaries();
+            const logs = await fetchLogs();
             // Get unique users
             const users = Array.from(new Set(summaries.map(s => s.name))).sort();
             userSelect.innerHTML = '';
@@ -206,14 +195,14 @@
             function showSelectedUserSummary() {
                 const selected = userSelect.value;
                 const summary = summaries.find(s => s.name === selected);
-                renderSummary(summary);
+                renderWeeklySummary(summary);
             }
             userSelect.onchange = showSelectedUserSummary;
             showSelectedUserSummary();
+            renderPracticeLogs(logs);
         }
 
         setup();
-        fetchAndRenderLogs();
     </script>
 </body>
 </html>
