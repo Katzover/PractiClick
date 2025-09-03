@@ -239,9 +239,10 @@
             }
             function showSelectedUserSummary() {
                 const selected = userSelect.value;
+                if (selected != ".בחר משתמש.") {
                 const summary = summaries.find(s => s.name === selected)?.json;
                 renderWeeklySummary(summary);
-                renderPracticeLogs(logs);
+                renderPracticeLogs(logs);}
             }
 
 
