@@ -119,15 +119,20 @@
             showLoading(true);
             try {
                 const { data, error } = await supabase
-                    .from('logs') // Ensure the table name is correct
-                    .select('*');
+                    .from('summaries')
+                    .select('json');
                 showLoading(false);
                 if (error) {
                     console.error('Error fetching logs:', error.message);
                     logContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת יומנים</div>`;
                     return [];
                 }
-                return data || [];
+                // Extract logs from the JSON structure
+                const logs = data.flatMap(item => {
+                    const json = typeof item.json === 'string' ? JSON.parse(item.json) : item.json;
+                    return json.summary.flatMap(day => day.logs || []);
+                });
+                return logs;
             } catch (err) {
                 console.error('Error fetching logs:', err.message);
                 logContainer.innerHTML = `<div style="color:red;">שגיאה בטעינת יומנים</div>`;
