@@ -281,14 +281,13 @@
             let id = 0
 
             selectr.innerHTML = '';
-            for (name in rooms) {
-                console.log(name, name[id])
+            rooms.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name[id];
                 option.textContent = name[id];
                 selectr.appendChild(option);
                 id++;
-            }
+            });
         } renderRooms();
     </script>
 </body>
