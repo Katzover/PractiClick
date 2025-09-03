@@ -465,7 +465,8 @@ async function renderLeaderboard() {
 }
 
 
-function askForNameIfNeeded() {
+async function askForNameIfNeeded() {
+
     let name = localStorage.getItem('practiceUserName');
     if (!name) {
         let msg = currentLang === 'he'
@@ -484,6 +485,14 @@ function askForNameIfNeeded() {
         currentLang === 'he' ? alert("השם הזה חסום") : alert("The name " + name + " is banned.");
         location.reload()
         localStorage.removeItem('practiceUserName');
+    }
+
+    const { error } = await supabase
+        .from('summaries')
+        .insert({ username: userName,json: getWeeklySummaryJson() });
+    if (error) {
+        console.error('Failed to export weekly summary:', error.message);
+        return;
     }
     return name;
 }
@@ -1457,7 +1466,8 @@ async function exportWeeklySummary() {
     console.log("Exporting weekly summary to Supabase...");
     const { error } = await supabase
         .from('summaries')
-        .update({ name: userName, json: getWeeklySummaryJson() });
+        .update({ json: getWeeklySummaryJson() }
+        .eq('username', username));
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
