@@ -1459,7 +1459,7 @@ async function exportWeeklySummary() {
     const { error } = await supabase
         .from('summaries')
         .update({ json: getWeeklySummaryJson() }
-        .eq('username', username));
+        .eq('username', localStorage.getItem('practiceUserName')));
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
