@@ -238,21 +238,15 @@
                 return;
             }
             function showSelectedUserSummary() {
-                const selected = localStorage.getItem('su');
+                const selected = userSelect.value;
                 const summary = summaries.find(s => s.name === selected)?.json;
                 renderWeeklySummary(summary);
                 renderPracticeLogs(logs);
-                localStorage.setItem('su', '');
-            }
-
-            function changeUser(user) {
-                localStorage.setItem('su', userSelect.value);
-                window.location.reload()
             }
 
 
-            userSelect.onchange = changeUser();
-            if (localStorage.getItem('su')) {showSelectedUserSummary}
+            userSelect.onchange = showSelectedUserSummary;
+            
         }
 
         setup();
