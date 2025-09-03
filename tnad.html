@@ -272,8 +272,8 @@
             const { rooms, error } = await supabase
                 .from('rooms')
                 .select('name');
-        } if (error) {console.error('something went wrong ' + error.message); return}
-        return rooms
+        if (error) {console.error('something went wrong ' + error.message); return}
+        return rooms} 
 
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
