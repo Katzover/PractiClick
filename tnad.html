@@ -283,9 +283,8 @@
 
             selectr.innerHTML = '';
             rooms.forEach(name => {
-                console.log(name)
                 const option = document.createElement('option');
-                option.value = name[id];
+                option.value = name[0];
                 option.textContent = name;
                 selectr.appendChild(option);
                 id++;
