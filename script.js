@@ -2067,14 +2067,11 @@ async function establishUserdata() {
     const { error } = await supabase
         .from('summaries')
         .insert({ username: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
-    if (error) {
-        console.error('Failed to export weekly summary:', error.message);
-        return;
-    }
 }
 
+try {establishUserdata();} catch {}
+
 if (!localStorage.getItem('lang')) {
-    establishUserdata();
     showUsageGuide();
 }
 
