@@ -1645,6 +1645,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    createNoteModal(); // Ensure the notes modal is created when the page loads
 });
 
 // --- Metronome Logic ---
@@ -1859,8 +1860,7 @@ function createOrUpdateFooterButtons() {
     footer.appendChild(guideBtn);
 
 
-    // Developer console button (emoji: 🛠️)
-    const consoleBtn = document.createElement('button');
+    // Developer console button (emoji:
     consoleBtn.id = 'consoleBtn';
     consoleBtn.title = (currentLang === 'he') ? 'קונסולה' : 'Console';
     consoleBtn.innerHTML = '🛠️';
