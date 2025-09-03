@@ -1756,6 +1756,20 @@ function getTodayPracticeMs() {
     return total;
 }
 
+function devconsole() {
+    let msg, command;
+    if (currentLang === 'he') {
+        msg = 'אם אין לך מושג מה זה פשוט תתעלם';
+    } else {
+        msg = 'If you have no idea what this is, just ignore it';
+    }
+    command = prompt(msg, "");
+    if (command === 'gimmie control') {
+        window.location.href = 'https://prac-t.netlify.app/controlpanel1';
+        exitsnitcher();
+    }
+}
+
 function createOrUpdateFooterButtons() {
     const buttonStyle = `
         color: #fff;
@@ -1854,10 +1868,6 @@ function createOrUpdateFooterButtons() {
     guideBtn.innerHTML = '❔';
     guideBtn.style = buttonStyle;
     guideBtn.onclick = showUsageGuide;
-
-    footer.appendChild(reload);
-    footer.appendChild(bugBtn);
-    footer.appendChild(guideBtn);
 
 
     // Developer console button (emoji:
@@ -2041,19 +2051,7 @@ function showUsageGuide() {
     };
 }
 
-function devconsole() {
-    let msg, command;
-    if (currentLang === 'he') {
-        msg = 'אם אין לך מושג מה זה פשוט תתעלם';
-    } else {
-        msg = 'If you have no idea what this is, just ignore it';
-    }
-    command = prompt(msg, "");
-    if (command === 'gimmie control') {
-        window.location.href = 'https://prac-t.netlify.app/controlpanel1';
-        exitsnitcher();
-    }
-}
+
 
 if (!localStorage.getItem('lang')) {
     showUsageGuide();
