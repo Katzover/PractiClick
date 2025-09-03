@@ -205,8 +205,8 @@
                 return;
             }
             logs.forEach(log => {
-                const formattedDate = formatDate(log.date);
-                const formattedTime = formatTime(log.time);
+                const formattedDate = formatDate(day.date);
+                const formattedTime = formatTime(log.totalTimeFormatted);
                 tbody.innerHTML += `
                     <tr>
                         <td>${formattedDate}</td>
