@@ -273,11 +273,13 @@
                 .from('rooms')
                 .select('name');
         if (error) {console.error('something went wrong ' + error.message); return}
-        return rooms} 
+        return rooms;
+    } 
 
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
-            const rooms = await fetchRooms();[0]
+            const rooms = await fetchRooms();
+            console.log(rooms)
             selectr.innerHTML = '';
             rooms.forEach(name => {
                 const option = document.createElement('option');
