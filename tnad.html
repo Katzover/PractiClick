@@ -269,11 +269,11 @@
         setup();
 
         async function fetchRooms() {
-            const { rooms, error } = await supabase
+            const { data, error } = await supabase
                 .from('rooms')
                 .select('name');
         if (error) {console.error('something went wrong ' + error.message); return}
-        return rooms} 
+        return data} 
 
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
