@@ -2066,7 +2066,7 @@ function showUsageGuide() {
 async function establishUserdata() {
     const { error } = await supabase
         .from('summaries')
-        .insert({ username: userName,json: getWeeklySummaryJson() });
+        .insert({ username: localStorage.getItem('practiceUserName'), json: getWeeklySummaryJson() });
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
