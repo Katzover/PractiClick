@@ -1,6 +1,12 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 const version = localStorage.getItem('version');
 
+// yes, ik its not secure to expose these keys, but it doesnt really matter in this case
+// and im really lazy to use an actual secure method
+const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZGt6cXlvampmc2hzZHlya3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDc0MDIsImV4cCI6MjA2NTM4MzQwMn0.-NcMckWGJ_Dz5YzzAXRl1VAIcUL8E2XBilicEEX3CVQ';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 window.control = function control() {window.location.href = 'https://prac-t.netlify.app/controlpanel1';}
 if (!localStorage.getItem('practiceUserName')) {alert("שימו לב שהאפליקציה כרגע בגרסה ניסיונית, ייתכן שיהיו בה תקלות.");}
 window.resetname =  function resetname() {return localStorage.removeItem('practiceUserName');}
@@ -300,12 +306,6 @@ async function askForPracticeRoom() {
         showRoomModal(rooms, resolve);
     });
 }
-
-// yes, ik its not secure to expose these keys, but it doesnt really matter in this case
-// and im really lazy to use an actual secure method
-const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZGt6cXlvampmc2hzZHlya3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDc0MDIsImV4cCI6MjA2NTM4MzQwMn0.-NcMckWGJ_Dz5YzzAXRl1VAIcUL8E2XBilicEEX3CVQ';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userName = askForNameIfNeeded();
 
