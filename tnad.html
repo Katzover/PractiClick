@@ -278,6 +278,7 @@
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
             const rooms = await fetchRooms();
+            console.log(rooms)
             let id = 0
 
             selectr.innerHTML = '';
