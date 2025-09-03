@@ -1413,6 +1413,7 @@ function getWeeklySummaryJson() {
     const weekStart = getWeekStart(now);
     const weekStartDate = new Date(weekStart + "T00:00:00");
     let daily = Array(7).fill().map(() => ({ time: 0, count: 0, logs: [] }));
+    console.log(logs)
     logs.forEach(log => {
         const d = new Date(log.date);
         if (d >= weekStartDate && d < new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000)) {
