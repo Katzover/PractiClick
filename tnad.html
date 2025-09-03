@@ -161,7 +161,7 @@
             const hours = Math.floor(totalSeconds / 3600);
             const minutes = Math.floor((totalSeconds % 3600) / 60);
             const seconds = totalSeconds % 60;
-            return `${hours > 0 ? `שעות ${hours} ` : ''} דקות ${minutes} ${seconds > 0 ? `$ שניות {seconds}` : ''}`;
+            return `${hours > 0 ? `שעות ${hours} ` : ''} דקות ${minutes} ${seconds > 0 ? ` שניות ${seconds}` : ''}`;
         }
 
         function formatDate(date) {
