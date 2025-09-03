@@ -269,24 +269,25 @@
         setup();
 
         async function fetchRooms() {
-            const { data, error } = await supabase
+            const { rooms, error } = await supabase
                 .from('rooms')
                 .select('name');
         if (error) {console.error('something went wrong ' + error.message); return}
-        return data;
-    } 
+        return rooms} 
 
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
             const rooms = await fetchRooms();
-            console.log(rooms)
+            let id = 0
+
             selectr.innerHTML = '';
-            rooms.forEach(name => {
+            for (name in rooms) {
                 const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
+                option.value = name[id];
+                option.textContent = name[id];
                 selectr.appendChild(option);
-            });
+                id++;
+            }
         } renderRooms();
     </script>
 </body>
