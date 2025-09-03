@@ -925,3 +925,101 @@ body > .bottom-nav {
     position: relative;
     z-index: 1;
 }
+
+/* Modal overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal content */
+.modal-content {
+    background: linear-gradient(135deg, #22304a 0%, #60aaff 40%, #1e90ff 70%, #aee9e1 100%);
+    color: #e0e6f0;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 90vw;
+    width: 400px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    direction: ltr; /* Default to left-to-right */
+    box-sizing: border-box; /* Ensure padding is included in width */
+    margin: 0 auto; /* Center horizontally */
+}
+
+/* Adjust for Hebrew text */
+body[dir="rtl"] .modal-content {
+    direction: rtl;
+}
+
+/* Modal title */
+.modal-content h3 {
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Modal textarea */
+.modal-textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 16px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: rgba(18, 18, 18, 0.9);
+    color: #e0e6f0;
+    resize: none;
+    font-size: 1rem;
+    direction: ltr; /* Default to left-to-right */
+}
+
+/* Adjust for Hebrew text */
+body[dir="rtl"] .modal-textarea {
+    direction: rtl;
+}
+
+/* Modal buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.modal-button {
+    background: linear-gradient(90deg, var(--primary) 60%, var(--accent) 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(96, 170, 255, 0.3);
+}
+
+.modal-button:hover {
+    background: linear-gradient(90deg, var(--accent) 60%, var(--primary) 100%);
+    box-shadow: 0 4px 16px rgba(96, 170, 255, 0.5);
+}
+
+.modal-button.cancel {
+    background: #444;
+    color: #fff;
+}
+
+.modal-button.cancel:hover {
+    background: #666;
+    color: #fff;
+}

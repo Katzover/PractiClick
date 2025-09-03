@@ -245,12 +245,12 @@ async function askForPracticeRoom() {
         if (!modal) {
             modal = document.createElement('div');
             modal.id = 'roomModal';
-            modal.style = 'display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#121212;z-index:1000;align-items:center;justify-content:center;overflow:scroll;';
+            modal.className = 'modal-overlay'; // Use CSS class for styling
             modal.innerHTML = `
-            <div style="background:#121212;padding:20px;border-radius:8px;min-width:250px;max-width:90vw;">
+            <div class="modal-content">
                 <h3 id="roomModalTitle"></h3>
-                <div id="roomModalOptions" style="max-height:50vh;overflow-y:auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;"></div>
-                <button id="roomModalCancel"></button>
+                <div id="roomModalOptions" class="modal-options"></div>
+                <button id="roomModalCancel" class="modal-button cancel"></button>
             </div>
             `;
             document.body.appendChild(modal);
@@ -270,7 +270,7 @@ async function askForPracticeRoom() {
         // "Other" option
         const otherBtn = document.createElement('button');
         otherBtn.textContent = currentLang === 'he' ? "אחר" : "Other";
-        otherBtn.style.margin = "4px";
+        otherBtn.className = 'modal-button';
         otherBtn.onclick = () => {
             modal.style.display = 'none';
             callback("Other");
@@ -280,7 +280,7 @@ async function askForPracticeRoom() {
             let status = statusMap[currentLang] && statusMap[currentLang][r.status] ? statusMap[currentLang][r.status] : r.status;
             const btn = document.createElement('button');
             btn.textContent = `${r.name || "Room " + r.id} (${status})`;
-            btn.style.margin = "4px";
+            btn.className = 'modal-button';
             btn.disabled = r.status !== "available";
             btn.onclick = () => {
                 modal.style.display = 'none';
@@ -295,8 +295,6 @@ async function askForPracticeRoom() {
         };
         cancelBtn.textContent = currentLang === 'he' ? "ביטול" : "Cancel";
         modal.style.display = 'flex';
-
-        optionsDiv.style.overflowY = 'scroll';
     }
 
     const rooms = await fetchRooms();
@@ -1219,59 +1217,14 @@ function createNoteModal() {
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'noteModal';
-        modal.style = `
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        `;
+        modal.className = 'modal-overlay'; // Use CSS class for styling
         modal.innerHTML = `
-            <div style="
-                background: #1c253b;
-                color: #e0e6f0;
-                padding: 20px;
-                border-radius: 8px;
-                max-width: 90vw;
-                width: 400px;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-                text-align: center;
-            ">
-                <h3 id="noteModalTitle" style="margin-bottom: 16px;">Add/Edit Note</h3>
-                <textarea id="noteInput" style="
-                    width: 100%;
-                    height: 100px;
-                    margin-bottom: 16px;
-                    padding: 8px;
-                    border-radius: 4px;
-                    border: 1px solid #444;
-                    background: #121212;
-                    color: #e0e6f0;
-                    resize: none;
-                "></textarea>
-                <div>
-                    <button id="saveNoteBtn" style="
-                        background: #60aaff;
-                        color: #fff;
-                        border: none;
-                        padding: 8px 16px;
-                        border-radius: 4px;
-                        cursor: pointer;
-                        margin-right: 8px;
-                    ">Save</button>
-                    <button id="cancelNoteBtn" style="
-                        background: #444;
-                        color: #fff;
-                        border: none;
-                        padding: 8px 16px;
-                        border-radius: 4px;
-                        cursor: pointer;
-                    ">Cancel</button>
+            <div class="modal-content">
+                <h3 id="noteModalTitle">Add/Edit Note</h3>
+                <textarea id="noteInput" class="modal-textarea"></textarea>
+                <div class="modal-buttons">
+                    <button id="saveNoteBtn" class="modal-button">Save</button>
+                    <button id="cancelNoteBtn" class="modal-button cancel">Cancel</button>
                 </div>
             </div>
         `;
@@ -1742,7 +1695,6 @@ function getTodayPracticeMs() {
 }
 
 function createOrUpdateFooterButtons() {
-    // Use emoji for icons, smaller size, and responsive width
     const buttonStyle = `
         color: #fff;
         width: 40px;
@@ -1773,7 +1725,6 @@ function createOrUpdateFooterButtons() {
         document.body.appendChild(footer);
     }
 
-    // Responsive: side on desktop, bottom on mobile
     const isMobile = window.innerWidth <= 600;
     if (isMobile) {
         footer.style = `
@@ -1936,7 +1887,7 @@ function showUsageGuide() {
             background:rgba(24,32,50,0.85);z-index:3000;display:flex;align-items:center;justify-content:center;
         `;
         modal.innerHTML = `
-            <div id="usageGuideCard" style="
+            <div id="guideCard" style="
                 background: var(--card, #1c253b);
                 color: #e0e6f0;
                 max-width: 98vw;
@@ -2017,7 +1968,7 @@ function showUsageGuide() {
     modal.style.justifyContent = 'center';
 
     // Responsive: allow scrolling if content is too tall
-    const card = modal.querySelector('#usageGuideCard');
+    const card = modal.querySelector('#guideCard');
     card.style.overflowY = 'auto';
     card.style.maxHeight = '90vh';
     card.style.width = 'min(98vw, 440px)';
@@ -2030,17 +1981,64 @@ function showUsageGuide() {
 }
 
 function devconsole() {
-    let msg, command, output;
+    let msg, command;
     if (currentLang === 'he') {
-        msg = 'אם אין לך מושג מה זה פשוט תתעלם'
+        msg = 'אם אין לך מושג מה זה פשוט תתעלם';
     } else {
-        msg = 'If you have no idea what this is, just ignore it'}
+        msg = 'If you have no idea what this is, just ignore it';
+    }
     command = prompt(msg, "");
-    if (command == 'gimmie control ' || command == 'gimmie control') {window.location.href = 'https://prac-t.netlify.app/controlpanel1';exitsnitcher();}
+    if (command === 'gimmie control') {
+        window.location.href = 'https://prac-t.netlify.app/controlpanel1';
+        exitsnitcher();
+    }
 }
 
-if (!localStorage.getItem('lang')) {showUsageGuide();}
+if (!localStorage.getItem('lang')) {
+    showUsageGuide();
+}
 
+async function showWhatsNew() {
+    const { data, error } = await withLoading(() =>
+        supabase
+            .from('misc')
+            .select('why')
+            .eq('id', 3)
+    );
+    if (error) {
+        console.error('Error fetching updates:', error.message);
+        return;
+    }
+    if (data[0]?.why) {
+        alert(`מה חדש: \n${data[0].why}`);
+    }
+}
+
+async function getversion() {
+    const { data, error } = await withLoading(() =>
+        supabase
+            .from('misc')
+            .select('why')
+            .eq('id', 2)
+    );
+    if (error) {
+        console.error('Error fetching version:', error.message);
+        return;
+    }
+    if (data[0]?.why !== localStorage.getItem('version')) {
+        localStorage.setItem('version', data[0].why);
+        if (currentLang === 'he') {
+            alert("האפליקציה עודכנה בהצלחה\n");
+        } else {
+            alert("The app has been updated successfully.\n");
+        }
+        await showWhatsNew();
+    }
+    return data[0]?.why;
+}
+
+getversion();
+setInterval(getversion, 1000 * 60 * 60);
 async function showWhatsNew() {
     const { data, error } = await withLoading(() =>
         supabase
