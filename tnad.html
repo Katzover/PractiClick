@@ -223,7 +223,6 @@
 
         async function setup() {
             const summaries = await fetchSummaries();
-            const logs = await fetchLogs();
             // Populate user dropdown
             const users = Array.from(new Set(summaries.map(s => s.name))).sort();
             userSelect.innerHTML = '';
@@ -238,12 +237,24 @@
                 return;
             }
             function showSelectedUserSummary() {
-                const selected = userSelect.value;
-                if (selected != '.בחר משתמש.') {
-                const summary = summaries.find(s => s.name === selected)?.json;
+            const selected = userSelect.value;
+            if (selected !== '.בחר משתמש.') {
+                const summaryObj = summaries.find(s => s.name === selected);
+                const summary = summaryObj?.json;
+
                 renderWeeklySummary(summary);
-                renderPracticeLogs(logs);}
+
+                const logs = summary?.summary?.flatMap(day => 
+                    (day.logs || []).map(log => ({
+                        ...log,
+                        date: log.date,
+                        totalTimeFormatted: log.totalTimeFormatted
+                    }))
+                ) || [];
+
+                renderPracticeLogs(logs);
             }
+        }
 
 
             userSelect.onchange = showSelectedUserSummary;
