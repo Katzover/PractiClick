@@ -164,25 +164,3 @@ body {
     transition: background 0.3s;
 }
 
- #summaryContainer {
-            background: var(--card, #1c253b);
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
-            border: 1px solid var(--border, #22304a);
-            color: #e0e6f0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 1rem;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        #summaryContainer::-webkit-scrollbar {
-            width: 8px;
-        }
-        #summaryContainer::-webkit-scrollbar-thumb {
-            background: var(--primary, #60aaff);
-            border-radius: 4px;
-        }
-        #summaryContainer::-webkit-scrollbar-track {
-            background: var(--input-bg, #202b3d);
-        }
