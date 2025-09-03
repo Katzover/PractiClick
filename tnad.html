@@ -140,7 +140,12 @@
                 // Extract logs from the JSON structure
                 const logs = data.flatMap(item => {
                     const json = typeof item.json === 'string' ? JSON.parse(item.json) : item.json;
-                    return json.summary.flatMap(day => day.logs || []);
+                    return json.summary.flatMap(day => 
+                        (day.logs || []).map(log => ({
+                            ...log,
+                            date: new Date(log.date) // Ensure date is properly parsed
+                        }))
+                    );
                 });
                 return logs;
             } catch (err) {
@@ -194,9 +199,12 @@
                 return;
             }
             logs.forEach(log => {
+                const formattedDate = log.date instanceof Date && !isNaN(log.date)
+                    ? log.date.toLocaleDateString()
+                    : 'תאריך לא חוקי'; // Handle invalid dates
                 tbody.innerHTML += `
                     <tr>
-                        <td>${new Date(log.date).toLocaleDateString()}</td>
+                        <td>${formattedDate}</td>
                         <td>${formatTime(log.time)}</td>
                         <td>${log.mode}</td>
                         <td>${log.room || 'אחר'}</td>
