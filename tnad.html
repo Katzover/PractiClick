@@ -223,7 +223,6 @@
 
         async function setup() {
             const summaries = await fetchSummaries();
-            const logs = await fetchLogs();
             // Populate user dropdown
             const users = Array.from(new Set(summaries.map(s => s.name))).sort();
             userSelect.innerHTML = '';
@@ -237,14 +236,16 @@
                 summaryContainer.innerHTML = '<div>אין משתמשים עם יומן תרגול.</div>';
                 return;
             }
-            function showSelectedUserSummary() {
+            async function showSelectedUserSummaryAndLogs() {
                 const selected = userSelect.value;
                 const summary = summaries.find(s => s.name === selected)?.json;
                 renderWeeklySummary(summary);
+                const logs = await fetchLogs();
+                const filteredLogs = logs.filter(log => log.user === selected);
+                renderPracticeLogs(filteredLogs);
             }
-            userSelect.onchange = showSelectedUserSummary;
-            showSelectedUserSummary();
-            renderPracticeLogs(logs);
+            userSelect.onchange = showSelectedUserSummaryAndLogs;
+            await showSelectedUserSummaryAndLogs();
         }
 
         setup();
