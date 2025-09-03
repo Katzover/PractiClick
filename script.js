@@ -1877,7 +1877,8 @@ function createOrUpdateFooterButtons() {
     guideBtn.onclick = showUsageGuide;
 
 
-    // Developer console button (emoji:
+    // Developer console button (emoji: 🛠️)
+    const consoleBtn = document.createElement('button');
     consoleBtn.id = 'consoleBtn';
     consoleBtn.title = (currentLang === 'he') ? 'קונסולה' : 'Console';
     consoleBtn.innerHTML = '🛠️';
