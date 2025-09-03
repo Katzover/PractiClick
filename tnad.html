@@ -161,7 +161,7 @@
             const hours = Math.floor(totalSeconds / 3600);
             const minutes = Math.floor((totalSeconds % 3600) / 60);
             const seconds = totalSeconds % 60;
-            return `${if (hours > 9) {hours} else {'0'+hours}}:${minutes}:${seconds}`;
+            return `${hours > 9 ? hours : '0'+hours}:${minutes}:${seconds}`;
         }
 
         function formatDate(date) {
