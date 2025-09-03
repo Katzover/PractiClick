@@ -1425,7 +1425,8 @@ function getWeeklySummaryJson() {
                     time: log.time,
                     mode: log.mode,
                     room: log.room,
-                    note: log.note || null
+                    note: log.note || null,
+                    date: log.date,
                 });
             }
         }
