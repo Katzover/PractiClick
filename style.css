@@ -24,7 +24,7 @@ body {
     margin: 0 auto 80px auto;
     padding: 0 0 24px 0;
     background: none;
-    border-radius: 0;
+    border-radius: 6px;
     box-shadow: none;
     will-change: opacity, transform;
     animation: fadeInSoft 0.5s cubic-bezier(.23,1,.32,1) 0s 1;
