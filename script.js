@@ -1269,7 +1269,7 @@ function createNoteModal() {
                 <textarea id="noteInput" style="
                     width: 100%;
                     height: 120px;
-                    margin-bottom: 16px;
+                    margin: 0 auto 16px auto;
                     padding: 8px;
                     border-radius: 8px;
                     border: 1px solid var(--border);
@@ -1407,12 +1407,12 @@ function renderSummary() {
 }
 
 function getWeeklySummaryJson() {
-    let daysEn = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    let daysHe = ['א','ב','ג','ד','ה','ו','ש'];
+    let daysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let daysHe = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
     const now = new Date();
     const weekStart = getWeekStart(now);
     const weekStartDate = new Date(weekStart + "T00:00:00");
-    let daily = Array(7).fill().map(() => ({time:0, count:0}));
+    let daily = Array(7).fill().map(() => ({ time: 0, count: 0, logs: [] }));
     logs.forEach(log => {
         const d = new Date(log.date);
         if (d >= weekStartDate && d < new Date(weekStartDate.getTime() + 7 * 24 * 60 * 60 * 1000)) {
@@ -1420,6 +1420,12 @@ function getWeeklySummaryJson() {
             if (day < 7) {
                 daily[day].time += log.time;
                 daily[day].count += 1;
+                daily[day].logs.push({
+                    time: log.time,
+                    mode: log.mode,
+                    room: log.room,
+                    note: log.note || null
+                });
             }
         }
     });
@@ -1428,15 +1434,16 @@ function getWeeklySummaryJson() {
         summary.push({
             dayIndex: i,
             dayName: currentLang === 'he' ? daysHe[i] : daysEn[i],
-            date: new Date(weekStartDate.getTime() + i * 24 * 60 * 60 * 1000).toISOString().slice(0,10),
+            date: new Date(weekStartDate.getTime() + i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
             totalTimeMs: daily[i].time,
             totalTimeFormatted: daily[i].time ? formatTime(daily[i].time) : '-',
-            sessionCount: daily[i].count
+            sessionCount: daily[i].count,
+            logs: daily[i].logs
         });
     }
     return {
         weekStart: weekStart,
-        weekStartDate: weekStartDate.toISOString().slice(0,10),
+        weekStartDate: weekStartDate.toISOString().slice(0, 10),
         userName: userName,
         summary: summary,
         totalWeekMs: getWeekTotal(),

@@ -41,6 +41,13 @@
             return data || [];
         }
 
+        function formatTime(minutes) {
+            if (typeof minutes !== 'number') return '';
+            const hrs = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hrs > 0 ? `${hrs}ש` : ''}${mins}ד`;
+        }
+
         function renderSummary(summary) {
             if (!summary) {
                 summaryContainer.innerHTML = '<div>אין נתונים להצגה.</div>';
@@ -68,6 +75,7 @@
                                 <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">תאריך</th>
                                 <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">סה"כ זמן</th>
                                 <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">מספר סשנים</th>
+                                <th style="text-align:left;padding:8px 10px;border-bottom:2px solid #444;">יומן</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,6 +87,15 @@
                         <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.date}</td>
                         <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.totalTimeFormatted}</td>
                         <td style="padding:8px 10px;border-bottom:1px solid #333;">${day.sessionCount}</td>
+                        <td style="padding:8px 10px;border-bottom:1px solid #333;">
+                            ${day.logs.map(log => `
+                                <div style="margin-bottom:8px;">
+                                    <span style="color:#60aaff;">${formatTime(log.time)}</span>
+                                    <span style="color:#aaa;">(${log.mode}, ${log.room || 'Other'})</span>
+                                    ${log.note ? `<div style="color:#ffa500;">הערה: ${log.note}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </td>
                     </tr>
                 `;
             }
