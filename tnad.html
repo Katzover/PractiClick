@@ -91,7 +91,8 @@
             <label for="editr">בחר חדר</label>
             <select id="selectr" style="width:100%;margin-bottom:18px;">
                 <option value="">.בחר חדר.</option>
-                <option value="all">כולם</option></select>
+                <option value="all">כולם</option>
+            </select>
             <select name="status_selection" id="status" style="width:100%;margin-bottom:18px;">
                 <option value="available">פנוי</option>
                 <option value="taken">תפוס</option>
@@ -240,7 +241,6 @@
             const summaries = await fetchSummaries();
             const users = Array.from(new Set(summaries.map(s => s.name))).sort();
 
-            userSelect.innerHTML = '';
             users.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name;
@@ -290,8 +290,7 @@
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
             const rooms = await fetchRooms();
-
-            selectr.innerHTML = '';
+            
             rooms.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name.name;
