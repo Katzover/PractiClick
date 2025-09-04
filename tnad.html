@@ -87,7 +87,14 @@
         <div>
             <p>עריכת מצב חדרים</p>
             <label for="editr">בחר חדר</label>
-            <select id="selectr" style="width:100%;margin-bottom:18px;"></select>
+            <select id="selectr" style="width:100%;margin-bottom:18px;"><option value="all">כולם</option></select>
+            <select name="status_selection" id="status">
+                <option value="available">פנוי</option>
+                <option value="taken">תפוס</option>
+                <option value="locked">נעול</option>
+                <option value="lesson">בשיעור</option>
+            </select>
+            <button id="usBtn">עדכן מצב</button>
         </div>
     </div>
     <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
@@ -289,8 +296,25 @@
                 option.textContent = name.name;
                 selectr.appendChild(option);
                 id++;
+                
             });
+
+
         } renderRooms();
+
+        async function updateRStatus() {
+            if (document.getElementById('selectr').value != 'all') {
+                const room = document.getElementById('selectr').value;
+            } else {await supabase.from('rooms').update({status: document.getElementById('status').value}).neq('name', 'somethingrandom');return;}
+            const { error } = await supabase
+                    .from('rooms')
+                    .update({status: document.getElementById('status').value})
+                    .eq('name', document.getElementById('selectr').value != 'all' ? document.getElementById('selectr').value : '*');
+        } if (error) {console.error('error while updating: ', error.message)}
+
+        document.getElementById('usBtn').addEventListener('click', async () => {
+            updateRStatus();
+        })
     </script>
 </body>
 </html>
