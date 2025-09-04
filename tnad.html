@@ -271,7 +271,8 @@
         async function fetchRooms() {
             const { data, error } = await supabase
                 .from('rooms')
-                .select('name');
+                .select('name')
+                .sort('id', { ascending: false });
         if (error) {console.error('something went wrong ' + error.message); return}
         return data} 
 
