@@ -2118,7 +2118,7 @@ async function checkforBook() {
     const { data, error } = await withLoading(() =>
         supabase
             .from('misc')
-            .select('what', 'why')
+            .select('what', 'why', 'date')
             .eq('id', 4));
     if (error) {
         console.error('Error fetching book info:', error.message);
@@ -2126,7 +2126,7 @@ async function checkforBook() {
     } else if (!data) {return;}
     const bdate = new Date(data[0].date); 
     const now = new Date();
-    console.log(data, now);
+    console.log(data[0].date, now);
     if (bdate == now || bdate < now) {
         updateRoomStatus(data[0].what, data[0].why, 0);
     }
