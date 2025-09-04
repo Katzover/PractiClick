@@ -52,10 +52,11 @@
             overflow-x: auto;    /* enables horizontal scroll if table is too wide */
         }
 
-            #practiceLogsTable, #weeklySummaryTable {
-            width: 100%;         /* let table fill available space */
-            max-width: 100%;     /* prevent it from overflowing */
-            table-layout: fixed; /* makes columns respect width constraints */
+        #practiceLogsTable,
+        #weeklySummaryTable {
+        width: 100%;
+        max-width: 100%;
+        table-layout: auto;  /* default, allows natural sizing */
         }
 
         #practiceLogsTable th,
