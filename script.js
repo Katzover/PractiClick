@@ -245,7 +245,7 @@ async function askForPracticeRoom() {
         if (!modal) {
             modal = document.createElement('div');
             modal.id = 'roomModal';
-            modal.className = 'modal-overlay'; // Use CSS class for styling
+            modal.className = 'modal-overlay';
             modal.innerHTML = `
             <div class="modal-content">
                 <h3 id="roomModalTitle"></h3>
@@ -259,8 +259,8 @@ async function askForPracticeRoom() {
         const title = modal.querySelector('#roomModalTitle');
         const cancelBtn = modal.querySelector('#roomModalCancel');
         let statusMap = {
-            en: { available: "available", taken: "taken", unavailable: "unavailable" },
-            he: { available: "פנוי", taken: "תפוס", unavailable: "לא זמין" }
+            en: { available: "available", taken: "taken", unavailable: "unavailable", lesson: "in lesson" },
+            he: { available: "פנוי", taken: "תפוס", unavailable: "לא זמין", lesson: "בשיעור"}
         };
         title.textContent = currentLang === 'he'
             ? "בחר חדר תרגול"
