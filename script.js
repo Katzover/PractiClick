@@ -2125,16 +2125,16 @@ async function checkforBook() {
             .neq('name', 'randomname');
     if (!data) {return;}
 
-    const name = data[0].name;
-    const room = data[0].room;
-    const status = data[0].status;
-    const del = data[0].del;
+    data.forEach(d => {
 
-    const time = new Date(data[0].time).getTime();
-    const date = new Date(data[0].date);
-    const length = parseInt(data[0].length);
+    const name = d.name;
+    const room = d.room;
+    const status = d.status;
+    const del = d.del;
 
-    console.log(data)
+    const time = new Date(d.time).getTime();
+    const date = new Date(d.date);
+    const length = parseInt(d.length);
 
 
     if (!date) {
@@ -2154,6 +2154,7 @@ async function checkforBook() {
             } else {await supabase.from('rooms').update({ status: 'available' }).neq('name', 'randomroomname')}
         }
     }
+    });
 
 }
 
