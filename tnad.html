@@ -115,19 +115,26 @@
                 <option value="all">כולם</option>
             </select>
             <label for="editr">בחר שעת התחלה</label>
-            <input type="datetime-local" id="timeinput" style="width:100%;margin-bottom:18px;">
-            <label>בחר שעת סיום</label>
-            <input type="datetime-local" id="timeinputend" style="width:100%;margin-bottom:18px;">
+            <input type="time" id="timeinput" style="width:100%;margin-bottom:18px;">
+
+            <label>בחר תאריך (לא חובה)</label>
+            <input type="date" id="dateinput" style="width:100%;margin-bottom:18px;">
+
+            <label">בחר כמות דקות</label>
+            <input type="text" id="length" value="45">
+
             <select name="status_selection" id="status" style="width:100%;margin-bottom:18px;">
+                <option value="lesson">בשיעור</option>
                 <option value="available">פנוי</option>
                 <option value="taken">תפוס</option>
                 <option value="unavailable">נעול</option>
-                <option value="lesson">בשיעור</option>
             </select><br>
             <button id="usBtn" style="width:100%;margin-bottom:18px;">עדכן מצב</button>
         </div>
     </div>
     <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
+
+
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
         const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
@@ -349,9 +356,17 @@
         }
 
         async function bookAroom() {
-            const { error } = await supabase
-                    .from('booking')
-                    .insert({ why: document.getElementById('status').value, date: document.getElementById('timeinput').value, what: document.getElementById('selectr').value });
+            const time = new Date(document.getElementById('timeinput').value);
+            const date = new Date(document.getElementById('dateinput').value);
+            const status = document.getElementById('status').value;
+            const name = document.getElementById('book-name').value;
+            const room = document.getElementById('selectr').value;
+            const del = document.getElementById('del').value;
+            const length = document.getElementById('length').value;
+
+            await supabase
+                .from('booking')
+                .insert({ name: name, room: room, status: status, time: time, date: date, delete: del, length: length });
         }
 
         document.getElementById('usBtn').addEventListener('click', async () => {
