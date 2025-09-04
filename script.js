@@ -2116,11 +2116,10 @@ async function getversion() {
 }
 
 async function checkforBook() {
-    const { data, error} = await withLoading(() => {
+    const { data, error} = await
         supabase
             .from('booking')
-            .select('name, room, status, time, date, del')
-    });
+            .select('name, room, status, time, date, del');
 
     if (!data && !data.length > 0) {return;}
 
