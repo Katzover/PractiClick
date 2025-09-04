@@ -2125,7 +2125,7 @@ async function checkforBook() {
             .neq('name', 'randomname');
     if (!data) {return;}
 
-    data.forEach(d => {
+    for (const d of data) {
 
     const name = d.name;
     const room = d.room;
@@ -2154,7 +2154,7 @@ async function checkforBook() {
             } else {await supabase.from('rooms').update({ status: 'available' }).neq('name', 'randomroomname')}
         }
     }
-    });
+    };
 
 }
 
