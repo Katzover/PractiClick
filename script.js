@@ -2118,21 +2118,27 @@ async function getversion() {
 async function checkforBook() {
     const { data, error } = await withLoading(() =>
         supabase
-            .from('misc')
-            .select( 'why, what, date')
-            .eq('id', 4));
+            .from('booking')
+            .select('name,room, status, start, end')
+            .neq('name', 'randomactionname'));
     if (error) {
         console.error('Error fetching book info:', error.message);
         return;
     } else if (!data) {return;}
-    const bdate = new Date(data[0].date)
+    const start = new Date(data[0].start);
+    const end = new Date(data[0].end);
     const now = new Date()
-    console.log(bdate, now, 0, bdate == now, bdate < now, bdate > now);
-    if (bdate <= now) {
-        if (data[0].what != 'all') {
-        updateRoomStatus(data[0].what, data[0].why, 0);
-    } else {await supabase.from('rooms').update({ status: data[0].why }).neq('name', 'randomroomname')}
-}
+    console.log(start, now, 0, start == now, start < now, start > now);
+    if (start <= now) {
+        if (data[0].room != 'all') {
+        updateRoomStatus(data[0].room, data[0].status, 0);
+    } else {await supabase.from('rooms').update({ status: data[0].status }).neq('name', 'randomroomname')}
+    } else if (now > end) {
+        await supabase.from('booking').delete().eq('name', data[0].name).neq('delete', false);
+        if (data[0].room != 'all') {
+        updateRoomStatus(data[0].room, 'available', 0);
+    } else {await supabase.from('rooms').update({ status: 'available' }).neq('name', 'randomroomname')}
+    }
 }
 checkforBook();
 setInterval(checkforBook, 1000 * 60);
