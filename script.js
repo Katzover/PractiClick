@@ -2067,7 +2067,7 @@ async function establishUserdata() {
     const { error } = await supabase
         .from('summaries')
         .insert({ name: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
-    if (error) {}
+    if (error) {console.error('error while establishing user: ', error.message)}
 }
 
 try {establishUserdata();} catch (e) {}
@@ -2117,7 +2117,7 @@ async function getversion() {
 
 async function checkforBook() {
     const { data, error} = await withLoading(() => {
-        supaabase
+        supabase
             .from('booking')
             .select('name, room, status, time, date, del')
     });
@@ -2132,7 +2132,7 @@ async function checkforBook() {
     const time = new Date(data[0].time).getTime();
     const date = new Date(data[0].date);
     const length = parseInt(data[0].length);
-    
+
 
     if (!date) {
         const now = new Date().getTime()
