@@ -191,7 +191,6 @@
                 weeklySummaryTable.innerHTML = '<tr><td colspan="4" style="color:#aaa;">אין נתונים להצגה.</td></tr>';
                 return;
             }
-            console.log(summary)
             summary.summary.forEach(day => {
                 weeklySummaryTable.innerHTML += `
                     <tr>
@@ -221,10 +220,10 @@
                 tbody.innerHTML = '<tr><td colspan="5" style="color:#aaa;">אין יומנים להצגה.</td></tr>';
                 return;
             }
-            console.log(logs)
+
             logs.forEach(log => {
                 const formattedDate = log.date
-                const formattedTime = formatTime(log.totalTimeFormatted);
+                const formattedTime = formatTime(log.time);
                 tbody.innerHTML += `
                     <tr>
                         <td>${formattedDate}</td>
@@ -291,8 +290,6 @@
         async function renderRooms() {
             const selectr = document.getElementById('selectr')
             const rooms = await fetchRooms();
-            console.log(rooms)
-            let id = 0
 
             selectr.innerHTML = '';
             rooms.forEach(name => {
@@ -300,7 +297,6 @@
                 option.value = name.name;
                 option.textContent = name.name;
                 selectr.appendChild(option);
-                id++;
                 
             });
 
