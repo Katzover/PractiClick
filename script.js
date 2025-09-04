@@ -2134,6 +2134,8 @@ async function checkforBook() {
     const date = new Date(data[0].date);
     const length = parseInt(data[0].length);
 
+    console.log(data)
+
 
     if (!date) {
         const now = new Date().getTime()
