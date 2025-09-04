@@ -2067,6 +2067,7 @@ async function establishUserdata() {
     const { error } = await supabase
         .from('summaries')
         .insert({ name: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
+    if (error) {}
 }
 
 try {establishUserdata();} catch (e) {}
@@ -2124,7 +2125,7 @@ async function checkforBook() {
         console.error('Error fetching book info:', error.message);
         return;
     } else if (!data) {return;}
-    const bdate = new date(data[0].date); 
+    const bdate = new Date(data[0].date); 
     const now = new Date();
     console.log(bdate, now, 0, bdate == now, bdate < now, bdate > now);
     if (bdate == now || bdate < now) {
