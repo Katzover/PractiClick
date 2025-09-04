@@ -239,8 +239,8 @@
 
         async function setup() {
             const summaries = await fetchSummaries();
-            // Populate user dropdown
             const users = Array.from(new Set(summaries.map(s => s.name))).sort();
+
             userSelect.innerHTML = '';
             users.forEach(name => {
                 const option = document.createElement('option');
@@ -278,6 +278,7 @@
         }
 
         setup();
+        document.getElementById('userSelect').value = '.בחר משתמש.';
 
         async function fetchRooms() {
             const { data, error } = await supabase
