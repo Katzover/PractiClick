@@ -164,7 +164,9 @@ body {
     transition: background 0.3s;
 }
 
-input[type="date"] {
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
     background: var(--input-bg, #202b3d);
     color: #e0e6f0;
     border: 1px solid var(--border, #22304a);
@@ -174,30 +176,13 @@ input[type="date"] {
     margin-bottom: 10px;
     transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
     outline: none;
-    appearance: none; /* removes OS-specific styling */
-    -webkit-appearance: none; /* Safari/Chrome */
-    -moz-appearance: none; /* Firefox */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     cursor: pointer;
 }
 
-/* Placeholder text for empty state */
-input[type="date"]::placeholder {
-    color: #888;
-}
-
-/* Highlight on focus */
-input[type="date"]:focus {
+input[type="datetime-local"]:focus {
     border: 1.5px solid var(--primary, #60aaff);
     box-shadow: 0 0 0 2px rgba(96, 170, 255, 0.3);
-}
-
-/* Optional: style the calendar picker icon */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(70%) sepia(20%) saturate(300%) hue-rotate(180deg);
-    cursor: pointer;
-    opacity: 0.8;
-    transition: opacity 0.2s;
-}
-input[type="date"]::-webkit-calendar-picker-indicator:hover {
-    opacity: 1;
 }
