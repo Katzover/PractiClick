@@ -2119,12 +2119,12 @@ async function checkforBook() {
     const { data, error } = await withLoading(() =>
         supabase
             .from('booking')
-            .select('name,room, status, start, end')
+            .select('name, room, status, start, end')
             .neq('name', 'randomactionname'));
     if (error) {
         console.error('Error fetching book info:', error.message);
         return;
-    } else if (!data) {return;}
+    } else if (!data.length != 0) {return;}
     const start = new Date(data[0].start);
     const end = new Date(data[0].end);
     const now = new Date()
