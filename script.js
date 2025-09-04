@@ -2118,7 +2118,7 @@ async function checkforBook() {
     const { data, error } = await withLoading(() =>
         supabase
             .from('misc')
-            .select('what', 'why', 'date')
+            .select( 'why', 'what', 'date')
             .eq('id', 4));
     if (error) {
         console.error('Error fetching book info:', error.message);
