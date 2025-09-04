@@ -2124,9 +2124,9 @@ async function checkforBook() {
         console.error('Error fetching book info:', error.message);
         return;
     } else if (!data) {return;}
-    const bdate = new Date(data[0].date); 
+    const bdate = data[0].date; 
     const now = new Date();
-    console.log(data[0].date, now);
+    console.log(data, now);
     if (bdate == now || bdate < now) {
         updateRoomStatus(data[0].what, data[0].why, 0);
     }
