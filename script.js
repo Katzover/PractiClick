@@ -2124,10 +2124,10 @@ async function checkforBook() {
         console.error('Error fetching book info:', error.message);
         return;
     } else if (!data) {return;}
-    const date = new Date(date[0].date); 
+    const bdare = new Date(date[0].date); 
     const now = new Date();
-    console.log(date, now);
-    if (date == now || date < now) {
+    console.log(bdate, now);
+    if (bdate == now || date < now) {
         updateRoomStatus(data[0].what, data[0].why, 0);
     }
 }
