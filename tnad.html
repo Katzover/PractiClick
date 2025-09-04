@@ -201,9 +201,19 @@
             return `${hours > 9 ? hours : '0'+hours}:${minutes > 9 ? minutes : '0'+minutes}:${seconds > 9 ? seconds : '0'+seconds}`;
         }
 
-        function formatDate(date) {
-           date.toLocaleDateString('he-IL', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+        function formatDate(dateString) {
+            if (!dateString) return "-";
+            const date = new Date(dateString);
+            return date.toLocaleString("he-IL", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
         }
+
 
         function renderWeeklySummary(summary) {
             const weeklySummaryTable = document.getElementById('weeklySummaryTable').querySelector('tbody');
@@ -243,7 +253,7 @@
             }
 
             logs.forEach(log => {
-                const formattedDate = log.date
+                const formattedDate = formatDate(log.date)
                 const formattedTime = formatTime(log.time);
                 tbody.innerHTML += `
                     <tr>
