@@ -2067,7 +2067,7 @@ async function establishUserdata() {
     const { error } = await supabase
         .from('summaries')
         .insert({ name: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
-    if (error) {console.error('error while establishing user: ', error.message)}
+    if (error) {1}
 }
 
 try {establishUserdata();} catch (e) {}
