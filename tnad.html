@@ -363,10 +363,10 @@
             const room = document.getElementById('selectr').value;
             const length = document.getElementById('length').value;
 
-            await supabase
+            const { error } = await supabase
                 .from('booking')
                 .insert({ name: name, room: room, status: status, time: time, date: date, length: length });
-        }
+        } if (error) {console.error(error.message)}
 
         document.getElementById('usBtn').addEventListener('click', async () => {
             console.log(document.getElementById('timeinput').value);
