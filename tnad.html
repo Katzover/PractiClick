@@ -107,13 +107,17 @@
         </div>
         <div>
             <p>עריכת מצב חדרים</p>
+            <label>הכנס שם שיריון</label>
+            <input type="text" id="book-name" placeholder="שיעור תופים...">
             <label for="editr">בחר חדר</label>
             <select id="selectr" style="width:100%;margin-bottom:18px;">
                 <option value="">.בחר חדר.</option>
                 <option value="all">כולם</option>
             </select>
-            <label for="editr">בחר שעה</label>
+            <label for="editr">בחר שעת התחלה</label>
             <input type="datetime-local" id="timeinput" style="width:100%;margin-bottom:18px;">
+            <label>בחר שעת סיום</label>
+            <input type="datetime-local" id="timeinputend" style="width:100%;margin-bottom:18px;">
             <select name="status_selection" id="status" style="width:100%;margin-bottom:18px;">
                 <option value="available">פנוי</option>
                 <option value="taken">תפוס</option>
@@ -346,8 +350,8 @@
 
         async function bookAroom() {
             const { error } = await supabase
-                    .from('misc')
-                    .update({ why: document.getElementById('status').value, date: document.getElementById('timeinput').value, what: document.getElementById('selectr').value })
+                    .from('booking')
+                    .update({ status: document.getElementById('status').value, start: document.getElementById('timeinput').value, room: document.getElementById('selectr').value, end: document.getElementById('timeinputend').value, name: document.getElementById('book-name').value })
                     .eq('id', '4');
         }
 
