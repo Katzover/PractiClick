@@ -272,7 +272,7 @@
             const { data, error } = await supabase
                 .from('rooms')
                 .select('name')
-                .order('id', { ascending: false });
+                .order('id');
         if (error) {console.error('something went wrong ' + error.message); return}
         return data} 
 
