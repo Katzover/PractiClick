@@ -2064,10 +2064,12 @@ function showUsageGuide() {
 }
 
 async function establishUserdata() {
-    const { error } = await supabase
+    if (localStorage.getItem('established')) {return}
+    await supabase
         .from('summaries')
         .insert({ name: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
-    if (error) {1}
+    localStorage.setItem('established', 'hi')
+    
 }
 
 try {establishUserdata();} catch (e) {}
