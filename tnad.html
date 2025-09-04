@@ -361,12 +361,11 @@
             const status = document.getElementById('status').value;
             const name = document.getElementById('book-name').value;
             const room = document.getElementById('selectr').value;
-            const del = document.getElementById('del').value;
             const length = document.getElementById('length').value;
 
             await supabase
                 .from('booking')
-                .insert({ name: name, room: room, status: status, time: time, date: date, delete: del, length: length });
+                .insert({ name: name, room: room, status: status, time: time, date: date, length: length });
         }
 
         document.getElementById('usBtn').addEventListener('click', async () => {
