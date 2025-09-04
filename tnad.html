@@ -48,6 +48,24 @@
         tr:nth-child(odd) {
             background: var(--card, #1c253b);
         }
+        #logContainer, #summaryContainer {
+            overflow-x: auto;    /* enables horizontal scroll if table is too wide */
+        }
+
+            #practiceLogsTable, #weeklySummaryTable {
+            width: 100%;         /* let table fill available space */
+            max-width: 100%;     /* prevent it from overflowing */
+            table-layout: fixed; /* makes columns respect width constraints */
+        }
+
+        #practiceLogsTable th,
+        #practiceLogsTable td,
+        #weeklySummaryTable th,
+        #weeklySummaryTable td {
+            word-wrap: break-word;   /* break long text */
+            overflow: hidden;
+            text-overflow: ellipsis; /* "..." for overflow */
+        }
     </style>
 </head>
 <body>
@@ -59,7 +77,7 @@
         </select>
         <div id="summaryContainer">
             <h3 style="text-align:center;">סיכום שבועי</h3>
-            <table id="weeklySummaryTable" style="max-width: 350px;">
+            <table id="weeklySummaryTable">
                 <thead>
                     <tr>
                         <th>יום</th>
@@ -73,7 +91,7 @@
         </div>
         <div id="logContainer">
             <h3 style="text-align:center;">יומני תרגול</h3>
-            <table id="practiceLogsTable" style="max-width: 350px;">
+            <table id="practiceLogsTable">
                 <thead>
                     <tr>
                         <th>תאריך</th>
