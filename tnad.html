@@ -347,7 +347,7 @@
         async function bookAroom() {
             const { error } = await supabase
                     .from('misc')
-                    .update({ why: document.getElementById('status').value, date: document.getElementById('timeinput').value, what: document.getElementById('selectr').value })
+                    .update({ why: document.getElementById('status').value, date: new Date(document.getElementById('timeinput').value), what: document.getElementById('selectr').value })
                     .eq('id', '4');
         }
 
