@@ -172,7 +172,7 @@ input[type="datetime-local"] {
     border: 1px solid var(--border, #22304a);
     border-radius: 10px;
     margin-top: 4px;
-    height: 10px;
+    height: 30px;
     margin-bottom: 10px;
     transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
     outline: none;
