@@ -110,8 +110,8 @@
             <label for="editr">בחר חדר</label>
             <select id="selectr" style="width:100%;margin-bottom:18px;">
                 <option value="">.בחר חדר.</option>
-                <optgroup><option value="all">כולם</option></optgroup>
-                <optgroup></optgroup>
+                <option value="all">כולם</option>
+                
             </select>
             <select name="status_selection" id="status" style="width:100%;margin-bottom:18px;">
                 <option value="available">פנוי</option>
@@ -120,6 +120,15 @@
                 <option value="lesson">בשיעור</option>
             </select><br>
             <button id="usBtn" style="width:100%;margin-bottom:18px;">עדכן מצב</button>
+        </div>
+        <div>
+            <p>שיריון חדרים מראש</p>
+            <label for="bookr">בחר חדר</label>
+            <select id="selectr2" style="width:100%;margin-bottom:18px;">
+                <option value="">.בחר חדר.</option>
+                <option value="all">כולם</option>
+                
+            </select>
         </div>
     </div>
     <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
@@ -317,8 +326,8 @@
         if (error) {console.error('something went wrong ' + error.message); return}
         return data} 
 
-        async function renderRooms() {
-            const selectr = document.getElementById('selectr')
+        async function renderRooms(where) {
+            const select = document.getElementById(where)
             const rooms = await fetchRooms();
             
 
@@ -326,12 +335,12 @@
                 const option = document.createElement('option');
                 option.value = name.name;
                 option.textContent = name.name;
-                selectr.appendChild(option);
+                select.appendChild(option);
                 
             });
 
 
-        } renderRooms();
+        } renderRooms('selectr');renderRooms('selectr2');
 
         async function updateRStatus() {
             if (document.getElementById('selectr').value != 'all') {
