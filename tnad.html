@@ -313,8 +313,8 @@
             const { error } = await supabase
                     .from('rooms')
                     .update({status: document.getElementById('status').value})
-                    .eq('name', document.getElementById('selectr').value != 'all' ? document.getElementById('selectr').value : '*');
-        } if (error) {console.error('error while updating: ', error.message)}
+                    .eq('name', document.getElementById('selectr').value);
+        }
 
         document.getElementById('usBtn').addEventListener('click', async () => {
             updateRStatus();
