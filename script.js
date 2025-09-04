@@ -2126,7 +2126,7 @@ async function checkforBook() {
     } else if (!data) {return;}
     const bdate = data[0].date; 
     const now = new Date();
-    console.log(data, now);
+    console.log(bdate, now, 0, bdate == now, bdate < now);
     if (bdate == now || bdate < now) {
         updateRoomStatus(data[0].what, data[0].why, 0);
     }
