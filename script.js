@@ -2138,7 +2138,7 @@ async function checkforBook() {
     if (!date) {
         const now = new Date().getTime()
 
-        console.log(time, time <= now, time + length <= now)
+        console.log(time, time <= now, time + length <= now, 0)
 
         if (time <= now) {
             if (room != 'all') {
