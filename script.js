@@ -2138,6 +2138,8 @@ async function checkforBook() {
     if (!date) {
         const now = new Date().getTime()
 
+        console.log(time, time <= now, time + length <= now)
+
         if (time <= now) {
             if (room != 'all') {
                 updateRoomStatus(room, status, 0)
