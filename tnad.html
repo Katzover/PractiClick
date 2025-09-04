@@ -356,8 +356,8 @@
         }
 
         async function bookAroom() {
-            const time = new Date(document.getElementById('timeinput').value);
-            const date = new Date(document.getElementById('dateinput').value);
+            const time = document.getElementById('timeinput').value;
+            const date = document.getElementById('dateinput').value;
             const status = document.getElementById('status').value;
             const name = document.getElementById('book-name').value;
             const room = document.getElementById('selectr').value;
