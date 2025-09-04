@@ -352,6 +352,7 @@
         }
 
         document.getElementById('usBtn').addEventListener('click', async () => {
+            console.log(document.getElementById('timeinput').value);
             if (!document.getElementById('timeinput').value) {updateRStatus();}
             else {bookAroom()}
             
