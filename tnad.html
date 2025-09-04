@@ -356,7 +356,7 @@
         }
 
         async function bookAroom() {
-            const time = document.getElementById('timeinput').value;
+            const clock = document.getElementById('timeinput').value;
             const date = document.getElementById('dateinput').value;
             const status = document.getElementById('status').value;
             const name = document.getElementById('book-name').value;
@@ -365,7 +365,7 @@
 
             const { error } = await supabase
                 .from('booking')
-                .insert({ name: name, room: room, status: status, time: time, date: date, length: length });
+                .insert({ name: name, room: room, status: status, time: clock, date: date, length: length });
             if (error) {console.error(error.message)}
         } 
 
