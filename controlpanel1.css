@@ -170,6 +170,8 @@ input[type="date"] {
     border: 1px solid var(--border, #22304a);
     border-radius: 10px;
     font-size: 1rem;
+    margin-top: 4px;
+    margin-bottom: 10px;
     transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
     outline: none;
     appearance: none; /* removes OS-specific styling */
