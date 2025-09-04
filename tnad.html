@@ -111,8 +111,9 @@
             <select id="selectr" style="width:100%;margin-bottom:18px;">
                 <option value="">.בחר חדר.</option>
                 <option value="all">כולם</option>
-                
             </select>
+            <label for="editr">בחר שעה</label>
+            <input type="date" id="timeinput" value="עכשיו">
             <select name="status_selection" id="status" style="width:100%;margin-bottom:18px;">
                 <option value="available">פנוי</option>
                 <option value="taken">תפוס</option>
@@ -120,15 +121,6 @@
                 <option value="lesson">בשיעור</option>
             </select><br>
             <button id="usBtn" style="width:100%;margin-bottom:18px;">עדכן מצב</button>
-        </div>
-        <div>
-            <p>שיריון חדרים מראש</p>
-            <label for="bookr">בחר חדר</label>
-            <select id="selectr2" style="width:100%;margin-bottom:18px;">
-                <option value="">.בחר חדר.</option>
-                <option value="all">כולם</option>
-                
-            </select>
         </div>
     </div>
     <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
@@ -326,8 +318,8 @@
         if (error) {console.error('something went wrong ' + error.message); return}
         return data} 
 
-        async function renderRooms(where) {
-            const select = document.getElementById(where)
+        async function renderRooms() {
+            const selectr = document.getElementById('selectr')
             const rooms = await fetchRooms();
             
 
@@ -335,12 +327,12 @@
                 const option = document.createElement('option');
                 option.value = name.name;
                 option.textContent = name.name;
-                select.appendChild(option);
+                selectr.appendChild(option);
                 
             });
 
 
-        } renderRooms('selectr');renderRooms('selectr2');
+        } renderRooms();
 
         async function updateRStatus() {
             if (document.getElementById('selectr').value != 'all') {
@@ -352,8 +344,17 @@
                     .eq('name', document.getElementById('selectr').value);
         }
 
+        async function bookAroom() {
+            const { error } = await supabase
+                    .from('misc')
+                    .update({ why: document.getElementById('status').value, date: document.getElementById('timeinput').value, what: document.getElementById('selectr').value })
+                    .eq('id', '4');
+        }
+
         document.getElementById('usBtn').addEventListener('click', async () => {
-            updateRStatus();
+            if (document.getElementById('timeinput').value != 'עכשיו') {updateRStatus();}
+            else {bookAroom()}
+            
         })
     </script>
 </body>

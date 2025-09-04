@@ -2114,5 +2114,24 @@ async function getversion() {
     return data[0]?.why;
 }
 
+async function checkforBook() {
+    const { data, error } = await withLoading(() =>
+        supabase
+            .from('misc')
+            .select('what', 'why')
+            .eq('id', 4));
+    if (error) {
+        console.error('Error fetching book info:', error.message);
+        return;
+    } else if (!data) {return;}
+    const date = new Date(date[0].date); 
+    const now = new Date();
+    if (date == now || date < now) {
+        updateRoomStatus(data[0].what, data[0].why, 0);
+    }
+}
+checkforBook();
+setInterval(checkforBook, 1000 * 60);
+
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
