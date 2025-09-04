@@ -2069,7 +2069,7 @@ async function establishUserdata() {
         .insert({ name: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
 }
 
-try {establishUserdata();} catch {}
+try {establishUserdata();} catch (e) {}
 
 if (!localStorage.getItem('lang')) {
     showUsageGuide();
