@@ -352,7 +352,7 @@
         }
 
         document.getElementById('usBtn').addEventListener('click', async () => {
-            if (document.getElementById('timeinput').value != 'עכשיו') {updateRStatus();}
+            if (!document.getElementById('timeinput').value) {updateRStatus();}
             else {bookAroom()}
             
         })
