@@ -2124,6 +2124,7 @@ async function checkforBook() {
     if (error) {
         console.error('Error fetching book info:', error.message);
         return;
+    console.log(data);
     } else if (!data.length != 0) {return;}
     const start = new Date(data[0].start);
     const end = new Date(data[0].end);
