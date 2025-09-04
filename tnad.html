@@ -92,6 +92,7 @@
             <select id="selectr" style="width:100%;margin-bottom:18px;">
                 <option value="">.בחר חדר.</option>
                 <optgroup><option value="all">כולם</option></optgroup>
+                <optgroup></optgroup>
             </select>
             <select name="status_selection" id="status" style="width:100%;margin-bottom:18px;">
                 <option value="available">פנוי</option>
@@ -291,6 +292,7 @@
             const selectr = document.getElementById('selectr')
             const rooms = await fetchRooms();
             
+
             rooms.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name.name;
