@@ -2126,7 +2126,7 @@ async function checkforBook() {
     if (!data) {return;}
 
     for (const d of data) {
-    print(d)
+    console.log(d)
 
     const name = d.name;
     const room = d.room;
