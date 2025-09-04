@@ -2129,8 +2129,10 @@ async function checkforBook() {
     const now = new Date()
     console.log(bdate, now, 0, bdate == now, bdate < now, bdate > now);
     if (bdate <= now) {
+        if (data[0].what != 'all') {
         updateRoomStatus(data[0].what, data[0].why, 0);
-    }
+    } else {supabase.from('rooms').update({ status: data[0].why }).neq('name', 'randomroomname')}
+}
 }
 checkforBook();
 setInterval(checkforBook, 1000 * 60);
