@@ -2131,7 +2131,7 @@ async function checkforBook() {
     if (bdate <= now) {
         if (data[0].what != 'all') {
         updateRoomStatus(data[0].what, data[0].why, 0);
-    } else {supabase.from('rooms').update({ status: data[0].why }).neq('name', 'randomroomname')}
+    } else {await supabase.from('rooms').update({ status: data[0].why }).neq('name', 'randomroomname')}
 }
 }
 checkforBook();
