@@ -16,10 +16,8 @@ function dateToMinutes(date) {
   return date.getHours() * 60 + date.getMinutes();
 }
 
-// Replace this with your real function
-async function updateRoomStatus(room, status, dummy) {
-  // Example update, replace with your actual code
-  await supabase.from("rooms").update({ status }).eq("name", room);
+async function updateRoomStatus(room, status, updated_at) {
+  await supabase.from("rooms").update({ status: satus }).eq("name", room);
 }
 
 // The main function
