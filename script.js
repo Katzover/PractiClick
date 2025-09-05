@@ -2128,15 +2128,16 @@ async function checkforBook() {
     for (const d of data) {
     console.log(d)
 
-    const name = d.name;
-    const room = d.room;
+    const name   = d.name;
+    const room   = d.room;
     const status = d.status;
-    const del = d.del;
+    const del    = d.del;
 
-    const time = new Date(d.time).getTime();
-    const date = new Date(d.date);
+    const time   = new Date(d.time).getTime();
+    const date   = new Date(d.date);
     const length = parseInt(d.length);
 
+    console.log(name, room, status, del, time, date, length)
 
     if (!date) {
         const now = new Date().getTime()
