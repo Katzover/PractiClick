@@ -2152,12 +2152,14 @@ async function checkforBook() {
         console.log(time, time <= now, time + length <= now, 0)
 
         if (time <= now) {
+            console.log(0)
             if (room != 'all') {
                 updateRoomStatus(room, status, 0)
                 if (del) {await supabase.from('booking').delete().eq(name, 'name')}
             } else {await supabase.from('rooms').update({ status: status }).neq('name', 'randomroomname')}
 
         } else if (time + length <= now) {
+            console.log(1)
             if (room != 'all') {
                 updateRoomStatus(room, 'available', 0)
             } else {await supabase.from('rooms').update({ status: 'available' }).neq('name', 'randomroomname')}
