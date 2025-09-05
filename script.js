@@ -2117,6 +2117,11 @@ async function getversion() {
     return data[0]?.why;
 }
 
+function toMinutes(timeStr) {
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
 async function checkforBook() {
     const { data, error} = await
         supabase
@@ -2133,7 +2138,7 @@ async function checkforBook() {
     const status = d.status;
     const del    = d.del;
 
-    const time   = new Date(d.time).getTime();
+    const time   = toMinutes(d.time);
     const date   = d.date ? new Date(d.date) : null;
     const length = parseInt(d.length);
 
