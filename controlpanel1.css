@@ -166,8 +166,7 @@ body {
 
 input[type="date"],
 input[type="time"],
-input[type="datetime-local"],
-input[type='text'] {
+input[type="datetime-local"] {
     background: var(--input-bg, #202b3d);
     color: #e0e6f0;
     border: 1px solid var(--border, #22304a);
