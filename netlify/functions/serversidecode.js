@@ -1,4 +1,4 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+const { createClient } = require("@supabase/supabase-js");
 
 // Supabase server keys (stored in Netlify environment variables)
 const supabase = createClient(
