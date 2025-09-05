@@ -363,8 +363,8 @@
             const room = document.getElementById('selectr').value;
             const length = document.getElementById('length').value;
         
-        if (!room, !clock, !status, !name, !length) {alert('אופס, נראה ששחכת משהו...')}
-            const { error } = await supabase
+        if (!room, !clock, !status, !name, !length) {alert('אופס, נראה ששחכת משהו...'); return;}
+        const { error } = await supabase
                 .from('booking')
                 .insert({ name: name, room: room, status: status, time: clock, date: date, length: length });
             if (error) {console.error(error.message); return}
