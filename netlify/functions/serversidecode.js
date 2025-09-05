@@ -17,7 +17,7 @@ function dateToMinutes(date) {
 }
 
 async function updateRoomStatus(room, status, updated_at) {
-  await supabase.from("rooms").update({ status: satus }).eq("name", room);
+  await supabase.from("rooms").update({ status: status }).eq("name", room);
 }
 
 // The main function
