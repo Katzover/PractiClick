@@ -366,7 +366,8 @@
             const { error } = await supabase
                 .from('booking')
                 .insert({ name: name, room: room, status: status, time: clock, date: date, length: length });
-            if (error) {console.error(error.message)}
+            if (error) {console.error(error.message); return}
+            alert('השיריון נשלח בהצלחה')
         } 
 
         document.getElementById('usBtn').addEventListener('click', async () => {
