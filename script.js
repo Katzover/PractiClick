@@ -2117,63 +2117,7 @@ async function getversion() {
     return data[0]?.why;
 }
 
-function toMinutes(timeStr) {
-  const [hours, minutes] = timeStr.split(":").map(Number);
-  return hours * 60 + minutes;
-} function dateToMinutes(date) {
-  return date.getHours() * 60 + date.getMinutes();
-}
-
-async function checkforBook() {
-    const { data, error} = await
-        supabase
-            .from('booking')
-            .select()
-            .neq('name', 'randomname');
-    if (!data) {return;}
-
-    for (const d of data) {
-    console.log(d)
-
-    const name   = d.name;
-    const room   = d.room;
-    const status = d.status;
-    const del    = d.delete;
-
-    const time   = toMinutes(d.time);
-    const date   = d.date ? new Date(d.date) : null;
-    const length = parseInt(d.length);
-
-    console.log(name, room, status, del, time, date, length)
-
-    if (!date) {
-        const now = dateToMinutes(new Date())
-
-        console.log(time, time <= now, time + length, now)
-
-        if (time <= now && time + length >= now) {
-            console.log(0)
-            if (del) {await supabase.from('booking').delete().eq('name', name)}
-            
-            if (room != 'all') {
-                updateRoomStatus(room, status, 0)   
-            } else {await supabase.from('rooms').update({ status: status }).neq('name', 'randomroomname')}
-
-        } else if (time + length <= now) {
-            console.log(1)
-            if (del) {await supabase.from('booking').delete().eq('name', name)}
-
-            if (room != 'all') {
-                updateRoomStatus(room, 'available', 0)
-            } else {await supabase.from('rooms').update({ status: 'available' }).neq('name', 'randomroomname')}
-        }
-    }
-    };
-
-}
-
-checkforBook();
-setInterval(checkforBook, 1000 * 60);
+setInterval(() => fetch("/.netlify/functions/checkBooking"), 1000 * 60);
 
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
