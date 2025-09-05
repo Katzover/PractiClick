@@ -2134,7 +2134,7 @@ async function checkforBook() {
     const del    = d.del;
 
     const time   = new Date(d.time).getTime();
-    const date   = new Date(d.date);
+    const date   = d.date != null ? new Date(d.date) : null;
     const length = parseInt(d.length);
 
     console.log(name, room, status, del, time, date, length)
