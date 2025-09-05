@@ -2149,7 +2149,7 @@ async function checkforBook() {
     if (!date) {
         const now = dateToMinutes(new Date())
 
-        console.log(time, time <= now, time + length)
+        console.log(time, time <= now, time + length, now)
 
         if (time <= now && !time + length <= now) {
             console.log(0)
