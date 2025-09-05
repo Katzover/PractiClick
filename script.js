@@ -2151,7 +2151,7 @@ async function checkforBook() {
 
         console.log(time, time <= now, time + length, now)
 
-        if (time <= now && !time + length <= now) {
+        if (time <= now && time + length >= now) {
             console.log(0)
             if (room != 'all') {
                 updateRoomStatus(room, status, 0)
