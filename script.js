@@ -2120,6 +2120,8 @@ async function getversion() {
 function toMinutes(timeStr) {
   const [hours, minutes] = timeStr.split(":").map(Number);
   return hours * 60 + minutes;
+} function dateToMinutes(date) {
+  return date.getHours() * 60 + date.getMinutes();
 }
 
 async function checkforBook() {
@@ -2136,7 +2138,7 @@ async function checkforBook() {
     const name   = d.name;
     const room   = d.room;
     const status = d.status;
-    const del    = d.del;
+    const del    = d.delete;
 
     const time   = toMinutes(d.time);
     const date   = d.date ? new Date(d.date) : null;
@@ -2145,7 +2147,7 @@ async function checkforBook() {
     console.log(name, room, status, del, time, date, length)
 
     if (!date) {
-        const now = new Date().getTime()
+        const now = dateToMinutes(new Date())
 
         console.log(time, time <= now, time + length <= now, 0)
 
