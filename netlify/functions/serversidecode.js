@@ -16,7 +16,7 @@ function dateToMinutes(date) {
   return date.getHours() * 60 + date.getMinutes();
 }
 
-async function updateRoomStatus(room, status, updated_at) {
+async function updateRoomStatus(room, status) {
   await supabase.from("rooms").update({ status: status }).eq("name", room);
 }
 
@@ -43,9 +43,6 @@ async function checkforBook() {
       const now = dateToMinutes(new Date());
 
       if (time <= now && time + length >= now) {
-        if (del) {
-          await supabase.from("booking").delete().eq("name", name);
-        }
 
         if (room !== "all") {
           await updateRoomStatus(room, status, 0);
@@ -61,7 +58,7 @@ async function checkforBook() {
         }
 
         if (room !== "all") {
-          await updateRoomStatus(room, "available", 0);
+          await updateRoomStatus(room, "available");
         } else {
           await supabase
             .from("rooms")
