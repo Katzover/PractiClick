@@ -20,6 +20,7 @@ async function updateRoomStatus(room, status) {
   await supabase.from("rooms").update({ status: status }).eq("name", room);
 }
 
+
 // The main function
 async function checkforBook() {
   const { data, error } = await supabase
@@ -27,7 +28,7 @@ async function checkforBook() {
     .select()
     .neq("name", "randomname");
 
-  if (!data) return;
+  if (!data) return 'nothing';
 
   for (const d of data) {
     const name = d.name;
@@ -73,10 +74,10 @@ async function checkforBook() {
 // Expose function to Netlify
 exports.handler = async (event, context) => {
   try {
-    await checkforBook();
+    const msg = await checkforBook();
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: "Checked bookings" }),
+      body: JSON.stringify({ success: true, message: msg }),
     };
   } catch (err) {
     return {
