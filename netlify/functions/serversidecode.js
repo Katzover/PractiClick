@@ -40,7 +40,7 @@ async function checkforBook() {
     const date = d.date ? new Date(d.date) : null;
     const length = parseInt(d.length);
 
-    return = name, room, status, del, time, date, length;
+    return name, room, status, del, time, date, length;
 
     if (!date) {
       const now = dateToMinutes(new Date());
