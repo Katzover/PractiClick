@@ -79,7 +79,7 @@ exports.handler = async (event, context) => {
     const msg = await checkforBook();
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: "function ran", log: msg }),
+      body: JSON.stringify({ success: true, message: msg}),
     };
   } catch (err) {
     return {
