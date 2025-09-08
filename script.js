@@ -2119,7 +2119,7 @@ async function getbooks() {
 
 const msg = await fetch("/.netlify/functions/serversidecode");
 
-alert(msg);
+alert(msg[0]);
 }
 
 getbooks();
