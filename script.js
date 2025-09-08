@@ -396,7 +396,7 @@ async function upsertLeaderboard(ms) {
         supabase
             .from('leaderboard')
             .upsert([{
-                user_name: userName,
+                user_name: localStorage.getItem('UserName'),
                 total_time: ms,
                 week_start: weekStart,
             }])
