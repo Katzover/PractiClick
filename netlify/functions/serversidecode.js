@@ -30,6 +30,7 @@ async function checkforBook() {
   if (!data) return 'nothing';
 
   for (const d of data) {
+    return (d, data)
     const name = d.name;
     const room = d.room;
     const status = d.status;
@@ -75,10 +76,10 @@ async function checkforBook() {
 // Expose function to Netlify
 exports.handler = async (event, context) => {
   try {
-    await checkforBook();
+    const msg = await checkforBook();
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: "function ran"  }),
+      body: JSON.stringify({ success: true, message: "function ran", log: msg }),
     };
   } catch (err) {
     return {
