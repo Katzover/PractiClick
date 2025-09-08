@@ -80,7 +80,7 @@ exports.handler = async (event, context) => {
     await checkforBook();
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: 'idk why this won't work' }),
+      body: JSON.stringify({ success: true, message: 'idk why this wont work' }),
     };
   } catch (err) {
     return {
