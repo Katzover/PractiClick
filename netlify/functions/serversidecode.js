@@ -40,6 +40,8 @@ async function checkforBook() {
     const date = d.date ? new Date(d.date) : null;
     const length = parseInt(d.length);
 
+    const msg = name, room, status, del, time, date, length;
+
     if (!date) {
       const now = dateToMinutes(new Date());
 
@@ -65,6 +67,7 @@ async function checkforBook() {
             .from("rooms")
             .update({ status: "available" })
             .neq("name", "randomroomname");
+         return msg;
         }
       }
     }
