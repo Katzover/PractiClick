@@ -30,7 +30,6 @@ async function checkforBook() {
   if (!data) return 'nothing';
 
   for (const d of data) {
-    return (d, data)
     const name = d.name;
     const room = d.room;
     const status = d.status;
