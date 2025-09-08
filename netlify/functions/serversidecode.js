@@ -40,7 +40,6 @@ async function checkforBook() {
     const date = d.date ? new Date(d.date) : null;
     const length = parseInt(d.length);
 
-    return name, room, status, del, time, date, length;
 
     if (!date) {
       const now = dateToMinutes(new Date());
@@ -77,10 +76,10 @@ async function checkforBook() {
 // Expose function to Netlify
 exports.handler = async (event, context) => {
   try {
-    const msg = await checkforBook();
+    await checkforBook();
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: msg }),
+      body: JSON.stringify({ success: true, message: "function ran"  }),
     };
   } catch (err) {
     return {
