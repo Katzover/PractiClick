@@ -25,8 +25,7 @@ async function updateRoomStatus(room, status) {
 async function checkforBook() {
   const { data, error } = await supabase
     .from("booking")
-    .select()
-    .neq("name", "randomname");
+    .select('*')
 
   if (!data) return 'nothing';
 
