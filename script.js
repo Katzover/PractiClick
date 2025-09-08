@@ -2115,7 +2115,7 @@ async function getversion() {
     return data[0]?.why;
 }
 
-setInterval(alert(() => fetch("/.netlify/functions/serversidecode")), 500 * 30);
+setInterval(() => alert(fetch("/.netlify/functions/serversidecode")), 500 * 30);
 
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
