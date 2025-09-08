@@ -2115,7 +2115,15 @@ async function getversion() {
     return data[0]?.why;
 }
 
-setInterval(() => alert(fetch("/.netlify/functions/serversidecode")), 500 * 30);
+async function getbooks() {
+
+const msg = await fetch("/.netlify/functions/serversidecode");
+
+alert(msg);
+}
+
+getbooks();
+setInterval(getbooks, 10000);
 
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
