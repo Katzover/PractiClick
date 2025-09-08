@@ -1776,7 +1776,7 @@ function devconsole() {
     if (command === 'gimmie control') {
         window.location.href = 'https://prac-t.netlify.app/controlpanel1';
         exitsnitcher();
-    }
+    } else if (command == 'reset name') {reset name();}
 }
 
 function createOrUpdateFooterButtons() {
