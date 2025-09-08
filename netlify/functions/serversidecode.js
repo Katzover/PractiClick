@@ -77,10 +77,10 @@ async function checkforBook() {
 // Expose function to Netlify
 exports.handler = async (event, context) => {
   try {
-    await checkforBook();
+    const msg = await checkforBook();
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: 'idk why this wont work' }),
+      body: JSON.stringify({ success: true, message: msg }),
     };
   } catch (err) {
     return {
