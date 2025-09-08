@@ -2117,9 +2117,7 @@ async function getversion() {
 
 async function getbooks() {
 
-const msg = await fetch("/.netlify/functions/serversidecode");
-
-alert(msg.success);
+await fetch("/.netlify/functions/serversidecode")
 }
 
 getbooks();
