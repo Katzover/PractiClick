@@ -1,121 +1,184 @@
+/* -----------------------------------------
+   Base Styles
+----------------------------------------- */
 body {
-        background: linear-gradient(135deg, #181926 0%, #232336 100%);
-        color: #e0e6f0;
-        font-family: 'Segoe UI', 'Inter', 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        transition: background 0.4s, color 0.3s;
-    }
-    div {
-        background: var(--card, #1c253b);
-        border-radius: 12px;
-        margin: 32px auto;
-        padding: 28px 36px;
-        max-width: 420px;
-        box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
-        border: 1px solid var(--border, #22304a);
-        transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s, padding 0.3s, margin 0.3s, border 0.3s;
-    }
-    label {
-        color: #c7c9e2;
-        font-size: 1rem;
-        font-weight: 500;
-        margin-bottom: 8px;
-        display: block;
-        letter-spacing: 0.1em;
-        transition: color 0.3s;
-    }
-    input[type="text"], select {
-        background: var(--input-bg, #202b3d);
-        color: #e0e6f0;
-        border: 1px solid var(--border, #22304a);
-        border-radius: 10px;
-        padding-top: 8px 12px;
-        font-size: 1rem;
-        margin-top: 4px;
-        margin-bottom: 10px;
-        transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
-        outline: none;
-    }
-    input[type="text"]:focus, select:focus {
-        border: 1.5px solid var(--primary, #60aaff);
-        box-shadow: 0 0 0 2px rgba(96, 170, 255, 0.3);
-    }
-    button {
-        background: linear-gradient(90deg, var(--primary, #60aaff) 60%, #1560b6 100%);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        padding: 11px 26px;
-        font-size: 1rem;
-        cursor: pointer;
-        font-weight: 700;
-        margin: 4px 0;
-        box-shadow: 0 2px 8px rgba(96, 170, 255, 0.2);
-        transition: background 0.2s, border-radius 0.2s, box-shadow 0.2s, color 0.2s, border 0.2s;
-        letter-spacing: 0.04em;
-    }
-    button:hover, button:focus {
-        background: linear-gradient(90deg, #60aaff 60%, var(--primary, #1e90ff) 100%);
-        color: #162032;
-        border-radius: 16px;
-        box-shadow: 0 4px 16px rgba(96, 170, 255, 0.3);
-    }
-    p {
-        margin-top: 0;
-        font-weight: bold;
-        font-size: 1.1rem;
-        color: var(--primary, #60aaff);
-        text-shadow: 0 2px 8px rgba(96, 170, 255, 0.2);
-    }
-    ::placeholder {
-        color: #888;
-    }
-    /* Loading overlay */
-    .loading-overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(24,26,27,0.8);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        z-index: 9999;
-        transition: background 0.3s;
-    }
-    body {
-    background: #181a1b;
-    color: #e0e0e0;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #181926 0%, #232336 100%);
+    color: #e0e6f0;
+    font-family: 'Segoe UI', 'Inter', 'Roboto', Arial, sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    transition: background 0.4s, color 0.3s;
 }
 
-.creatures-grid {
-    background: #23272a;
-    border-radius: 8px;
-    margin: 32px auto;
-    padding: 24px 32px;
-    max-width: 800px;
-    box-shadow: 0 2px 8px #000a;
+::placeholder {
+    color: #888;
 }
+
+/* -----------------------------------------
+   Cards / Containers
+----------------------------------------- */
+div,
+#summaryContainer,
+#logContainer,
+.creatures-grid {
+    background: var(--card, #1c253b);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin: 32px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
+    border: 1px solid var(--border, #22304a);
+    transition: box-shadow 0.3s, background 0.3s, border-radius 0.3s, padding 0.3s, margin 0.3s, border 0.3s;
+}
+
+#summaryContainer,
+#logContainer {
+    padding: 16px;
+    font-size: 1rem;
+    overflow-x: auto;
+}
+
+.booking-card {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    padding: 12px 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.booking-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+}
+
+.booking-row span {
+    color: #bbb;
+}
+
+/* -----------------------------------------
+   Typography
+----------------------------------------- */
+label {
+    color: #c7c9e2;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+}
+
+p {
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--primary, #60aaff);
+    text-shadow: 0 2px 8px rgba(96, 170, 255, 0.2);
+}
+
 .grid-title {
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
     color: #e0e0e0;
     text-align: center;
 }
-.table-container {
-    overflow-x: auto;
+
+/* -----------------------------------------
+   Inputs & Selects
+----------------------------------------- */
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+select {
+    background: var(--input-bg, #202b3d);
+    color: #e0e6f0;
+    border: 1px solid var(--border, #22304a);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    margin-top: 6px;
+    margin-bottom: 14px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
+    width: 100%;
+    appearance: none;
+    cursor: pointer;
 }
+
+input:focus,
+select:focus {
+    border: 1.5px solid var(--primary, #60aaff);
+    box-shadow: 0 0 0 2px rgba(96, 170, 255, 0.3);
+}
+
+/* -----------------------------------------
+   Buttons
+----------------------------------------- */
+button {
+    background: linear-gradient(90deg, var(--primary, #60aaff) 60%, #1560b6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(96, 170, 255, 0.2);
+    transition: background 0.2s, border-radius 0.2s, box-shadow 0.2s, color 0.2s;
+    letter-spacing: 0.04em;
+    width: 100%;
+}
+
+button:hover,
+button:focus {
+    background: linear-gradient(90deg, #60aaff 60%, var(--primary, #1e90ff) 100%);
+    color: #162032;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(96, 170, 255, 0.3);
+}
+
+/* -----------------------------------------
+   Tables
+----------------------------------------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+}
+
+th, td {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border, #22304a);
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+th {
+    background: var(--primary, #60aaff);
+    color: #162032;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background: var(--input-bg, #202b3d);
+}
+
+tr:nth-child(odd) {
+    background: var(--card, #1c253b);
+}
+
 .creatures-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 0.5rem;
 }
+
 .header-cell {
     padding: 1rem 1.5rem;
     background: #2f3136;
@@ -123,31 +186,59 @@ body {
     text-align: left;
     font-weight: bold;
 }
+
 .creatures-table tbody tr {
     background: #2f3136;
     transition: background 0.2s;
 }
+
 .creatures-table tbody tr:hover {
     background: #36393f;
 }
+
 .creatures-table td {
     padding: 1rem 1.5rem;
     color: #e0e0e0;
 }
-.online, .offline {
+
+.online,
+.offline {
     padding: 0.4rem 0.8rem;
     border-radius: 1rem;
     font-weight: 500;
     display: inline-block;
 }
+
 .online {
     background: rgba(0, 160, 94, 0.2);
     color: #00a05e;
 }
+
 .offline {
     background: rgba(211, 47, 47, 0.2);
     color: #ff8800;
 }
+
+/* -----------------------------------------
+   Grid & Summary
+----------------------------------------- */
+#practiceLogsTable,
+#weeklySummaryTable {
+    width: 100%;
+    max-width: 100%;
+    table-layout: auto;
+}
+
+#info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    direction: rtl;
+}
+
+/* -----------------------------------------
+   Loading Overlay
+----------------------------------------- */
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -163,122 +254,3 @@ body {
     z-index: 9999;
     transition: background 0.3s;
 }
-
-input[type="date"],
-input[type="time"],
-input[type="datetime-local"] {
-    background: var(--input-bg, #202b3d);
-    color: #e0e6f0;
-    border: 1px solid var(--border, #22304a);
-    border-radius: 10px;
-    margin-top: 4px;
-    height: 35px;
-    margin-bottom: 10px;
-    transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
-}
-
-input[type="date"]:focus {
-    border: 1.5px solid var(--primary, #60aaff);
-    box-shadow: 0 0 0 2px rgba(96, 170, 255, 0.3);
-}
-
-input,
-select,
-button{
-    width: 100%;
-    margin-bottom:18px;
-}
-
-#summaryContainer {
-    background: var(--card, #1c253b);
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
-    border: 1px solid var(--border, #22304a);
-    color: #e0e6f0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    font-size: 1rem;
-    margin-bottom: 24px;
-}
-
-#logContainer {
-    background: var(--card, #1c253b);
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
-    border: 1px solid var(--border, #22304a);
-    color: #e0e6f0;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    font-size: 1rem;
-}
-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 12px;
-}
-        th, td {
-            padding: 8px 12px;
-            text-align: center;
-            border-bottom: 1px solid var(--border, #22304a);
-        }
-        th {
-            background: var(--primary, #60aaff);
-            color: #162032;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background: var(--input-bg, #202b3d);
-        }
-        tr:nth-child(odd) {
-            background: var(--card, #1c253b);
-        }
-        #logContainer, #summaryContainer {
-            overflow-x: auto;  
-        }
-
-        #practiceLogsTable,
-        #weeklySummaryTable {
-            width: 100%;
-            max-width: 100%;
-            table-layout: auto;
-        }
-
-        #practiceLogsTable th,
-        #practiceLogsTable td,
-        #weeklySummaryTable th,
-        #weeklySummaryTable td {
-            word-wrap: break-word;   /* break long text */
-            overflow: hidden;
-            text-overflow: ellipsis; /* "..." for overflow */
-        }
-
-        #info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            direction: rtl;
-        }
-
-        .booking-card {
-            background-color: #1e1e1e; /* dark card background */
-            color: #f0f0f0;           /* light text */
-            padding: 12px 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            }
-
-        .booking-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 4px 0;
-            }
-
-        .booking-row span {
-            color: #bbb; /* lighter label color */
-        }
