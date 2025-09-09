@@ -2121,7 +2121,7 @@ await fetch("/.netlify/functions/serversidecode")
 }
 
 getbooks();
-setInterval(getbooks, 10000);
+setInterval(getbooks, 5000);
 
 getversion();
 setInterval(getversion, 1000 * 60 * 60);
