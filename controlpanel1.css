@@ -88,6 +88,12 @@ p {
 /* -----------------------------------------
    Inputs & Selects
 ----------------------------------------- */
+/* Apply box-sizing to all elements */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Ensure inputs and selects match exactly */
 input[type="text"],
 input[type="date"],
 input[type="time"],
