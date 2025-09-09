@@ -924,8 +924,8 @@ async function renderRooms() {
     }
     // Status translation map
     let statusMap = {
-        en: { available: "available", taken: "taken", unavailable: "Locked" },
-        he: { available: "פנוי", taken: "תפוס", unavailable: "נעול" }
+        en: { available: "available", taken: "taken", unavailable: "Locked", lesson: "in lesson" },
+        he: { available: "פנוי", taken: "תפוס", unavailable: "נעול", lesson: "בשיעור" }
     };
     const t = LANGS[currentLang];
     // Update table headers
@@ -942,6 +942,7 @@ async function renderRooms() {
         if (room.status === "available") color = "green";
         else if (room.status === "taken") color = "orange";
         else if (room.status === "unavailable") color = "red"
+        else if (room.status === "lesson") color = "yellow"
         let statusLabel = statusMap[currentLang] && statusMap[currentLang][room.status] ? statusMap[currentLang][room.status] : room.status;
         tbody.innerHTML += `
             <tr>
