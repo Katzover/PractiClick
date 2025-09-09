@@ -1679,6 +1679,7 @@ if (window.matchMedia('(pointer: fine)').matches && modeStack) {
 
 // --- Initial mode setup with animation ---
 document.addEventListener('DOMContentLoaded', function() {
+    restorePendingSession();
     // Hide all mode sections except current
     const stack = document.getElementById('modeStack');
     if (stack) {
