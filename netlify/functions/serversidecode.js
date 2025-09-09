@@ -66,7 +66,7 @@ async function checkforBook() {
         }
       } else if (time + length <= now) {
         if (del) {
-          await supabase.from("booking").delete().eq("name", name);
+          await supabase.from("booking").delete('*').eq("name", name);
         }
 
         if (room !== "all") {
