@@ -27,13 +27,13 @@ async function checkforBook() {
     .from("booking")
     .select('*')
 
-  if (!data) return 'nothing';
+  if (!data || data.length === 0) return 'nothing';
 
   for (const d of data) {
     const name = d.name;
     const room = d.room;
     const status = d.status;
-    const del = d.delete;
+    const del = d.del;
 
     const time = toMinutes(d.time);
     const date = d.date ? new Date(d.date) : null;
