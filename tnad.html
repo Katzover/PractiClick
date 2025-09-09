@@ -432,9 +432,18 @@
 
                 books.forEach(book => {
                     if (book.name === name) {
-                        document.getElementById('info').innerHTML = "חדר: " + book.room + ", תאריך: " + (book.date ? book.date : 'לא נקבע') + ", שעה: " + book.time + ", אורך: " + book.length + " דקות, מצב: " + book.status + ", נמחק אוטומטית " + (book.del ? 'כן' : 'לא');
-                    }
-                });
+                        const info = `
+                            <strong>חדר:</strong> ${book.room} <br>
+                            <strong>תאריך:</strong> ${book.date || 'לא נקבע'} <br>
+                            <strong>שעה:</strong> ${book.time} <br>
+                            <strong>אורך:</strong> ${book.length} דקות <br>
+                            <strong>מצב:</strong> ${book.status} <br>
+                            <strong>נמחק אוטומטית:</strong> ${book.del ? 'כן' : 'לא'}
+                            `;
+
+                        document.getElementById('info').innerHTML = info;
+                    };
+                })
             }
         })
 
