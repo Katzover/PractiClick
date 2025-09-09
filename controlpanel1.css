@@ -31,7 +31,7 @@ body {
         color: #e0e6f0;
         border: 1px solid var(--border, #22304a);
         border-radius: 10px;
-        padding-top: 8px;
+        padding-top: 8px 12px;
         font-size: 1rem;
         margin-top: 4px;
         margin-bottom: 10px;
@@ -164,13 +164,6 @@ body {
     transition: background 0.3s;
 }
 
-input,
-select,
-button{
-    width: 95%;
-    margin-bottom:18px;
-}
-
 input[type="date"],
 input[type="time"],
 input[type="datetime-local"] {
@@ -194,32 +187,40 @@ input[type="date"]:focus {
     box-shadow: 0 0 0 2px rgba(96, 170, 255, 0.3);
 }
 
- #summaryContainer {
-            background: var(--card, #1c253b);
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
-            border: 1px solid var(--border, #22304a);
-            color: #e0e6f0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 1rem;
-            margin-bottom: 24px;
-        }
-        #logContainer {
-            background: var(--card, #1c253b);
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
-            border: 1px solid var(--border, #22304a);
-            color: #e0e6f0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 1rem;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-        }
+input,
+select,
+button{
+    width: 100%;
+    margin-bottom:18px;
+}
+
+#summaryContainer {
+    background: var(--card, #1c253b);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
+    border: 1px solid var(--border, #22304a);
+    color: #e0e6f0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 1rem;
+    margin-bottom: 24px;
+}
+
+#logContainer {
+    background: var(--card, #1c253b);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 24px rgba(96, 170, 255, 0.2);
+    border: 1px solid var(--border, #22304a);
+    color: #e0e6f0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 1rem;
+}
+table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+}
         th, td {
             padding: 8px 12px;
             text-align: center;
