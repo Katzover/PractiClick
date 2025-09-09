@@ -1623,8 +1623,8 @@ function checkDirection() {
 
         } else {
             console.log('Swiped right!');
-            showMode(MODES[currentModeIndex - 1])
-            
+            showMode(MODES[currentModeIndex + 1])
+
         }
     }
     } catch (e) {}
