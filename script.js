@@ -489,6 +489,7 @@ async function askForNameIfNeeded() {
 }
 
 async function deleteAllLeaderboardRows() {
+    document.localStorage.setItem('establishedUD', false)
     const { error } = await withLoading(() =>
         supabase
             .from('leaderboard')
@@ -1457,14 +1458,14 @@ async function exportWeeklySummary() {
     const { error } = await supabase
         .from('summaries')
         .update({ json: getWeeklySummaryJson() })
-        .eq('name', localStorage.getItem('UserName'))
+        .eq('name', `${localStorage.getItem('UserName')} - ${getWeekStart()}`)
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
     }
 }
 
-setInterval(exportWeeklySummary, 5000);
+setInterval(exportWeeklySummary, 10000);
 exportWeeklySummary();
 
 // --- Animated mode transitions & swipe navigation ---
@@ -2064,11 +2065,11 @@ function showUsageGuide() {
 }
 
 async function establishUserdata() {
-    if (localStorage.getItem('established')) {return}
+    if (localStorage.getItem('establishedUD')) {return}
     await supabase
         .from('summaries')
-        .insert({ name: localStorage.getItem('UserName'), json: getWeeklySummaryJson() });
-    localStorage.setItem('established', 'hi')
+        .insert({ name: `${localStorage.getItem('UserName')} - ${getWeekStart()}`, json: getWeeklySummaryJson() });
+    localStorage.setItem('establishedUD', true)
     
 }
 
