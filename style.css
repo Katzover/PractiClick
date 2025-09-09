@@ -194,8 +194,7 @@ button:hover, button:focus {
     transition: color 0.4s, background 0.3s, box-shadow 0.3s;
 }
 .log-list {
-    max-height: 200px;
-    overflow-y: auto;
+    max-height: 200px;
     border-radius: 12px;
     background: #23243a;
     padding: 12px;
