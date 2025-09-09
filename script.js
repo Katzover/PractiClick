@@ -2120,7 +2120,7 @@ async function getbooks() {
 await fetch("/.netlify/functions/serversidecode")
 }
 
-setInterval(getbooks, 1000 * 60);
+// setInterval(getbooks, 1000 * 60); for now this will not be used as a scheduled function is used :D
 
 getversion();
 setInterval(getversion, 1000 * 60 * 60);

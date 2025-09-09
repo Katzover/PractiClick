@@ -1,12 +1,10 @@
 const { createClient } = require("@supabase/supabase-js");
 
-// Supabase server keys (stored in Netlify environment variables)
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
 
-// Helper functions
 function toMinutes(timeStr) {
   const [hours, minutes] = timeStr.split(":").map(Number);
   return hours * 60 + minutes;
@@ -26,12 +24,8 @@ async function updateRoomStatus(room, status) {
   await supabase.from("rooms").update({ status: status }).eq("name", room);
 }
 
-
-// The main function
 async function checkforBook() {
-  const { data, error } = await supabase
-    .from("booking")
-    .select('*')
+  const { data, error } = await supabase.from("booking").select('*');
 
   if (!data || data.length === 0) return 'nothing';
 
@@ -45,54 +39,37 @@ async function checkforBook() {
     const date = d.date ? new Date(d.date) : null;
     const length = parseInt(d.length);
 
-
     if (!date) {
       const now = dateToMinutes(new Date());
-      console.log([
-        time <= now && time + length >= now,
-        time + length < now,
-        time, time + length, now       
-      ]);
+      console.log([time <= now && time + length >= now, time + length < now, time, time + length, now]);
 
       if (time <= now && time + length >= now) {
-
         if (room !== "all") {
-          console.log(0)
-          await updateRoomStatus(room, status, 0);
+          await updateRoomStatus(room, status);
         } else {
-          console.log(1)
-          await supabase
-            .from("rooms").update({ status: status }).neq("name", "randomroomname");}
-
-
+          await supabase.from("rooms").update({ status }).neq("name", "randomroomname");
+        }
       } else if (time + length < now) {
-        console.log(4)
         if (del) {
-          console.log(5)
-          await supabase.from("booking").delete('*').eq("name", name);
+          await supabase.from("booking").delete().eq("name", name);
         }
 
         if (room !== "all") {
           await updateRoomStatus(room, "available");
         } else {
-          await supabase
-            .from("rooms")
-            .update({ status: "available" })
-            .neq("name", "randomroomname");
-         
+          await supabase.from("rooms").update({ status: "available" }).neq("name", "randomroomname");
         }
       }
     }
   }
 }
 
-// Expose function to Netlify
 exports.handler = async (event, context) => {
   try {
     const msg = await checkforBook();
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: msg}),
+      body: JSON.stringify({ success: true, message: msg }),
     };
   } catch (err) {
     return {
@@ -101,3 +78,5 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+exports.schedule = "*/1 * * * *";
