@@ -991,6 +991,7 @@ async function startTimer() {
         resetBtn.disabled = true;
         logBtn.disabled = true;
         minutesInput.disabled = secondsInput.disabled = true;
+        return
     }
 }
 
