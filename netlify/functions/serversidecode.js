@@ -38,10 +38,11 @@ async function checkforBook() {
     const time = toMinutes(d.time);
     const date = d.date ? new Date(d.date) : null;
     const length = parseInt(d.length);
+    const ndate = new Date();
 
 
     if (!date) {
-      const now = dateToMinutes(new Date());
+      const now = toMinutes(`${ndate.getHours()}:${ndate.getMinutes()}`);
       return [
         time <= now && time + length >= now,
         time + length <= now,
