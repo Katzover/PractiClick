@@ -1602,6 +1602,10 @@ function swipeToSwitchMode() {
     let touchendX = 0;
 
     const container = document.getElementById('container');
+    if (!container) {
+        console.error("Container not found");
+        return;
+    }
 
     container.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].clientX;
@@ -1610,25 +1614,22 @@ function swipeToSwitchMode() {
     container.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].clientX;
         checkDirection();
-    });}
+    });
 
-function checkDirection() {
-    const threshold = 50; // Minimum pixels for a swipe
-
-    try {
-    if (Math.abs(touchendX - touchstartX) > threshold) {
-        if (touchendX < touchstartX) {
-            console.log('Swiped left!');
-            showMode(MODES[currentModeIndex - 1])
-
-        } else {
-            console.log('Swiped right!');
-            showMode(MODES[currentModeIndex + 1])
-
+    function checkDirection() {
+        const threshold = 50; // Minimum pixels for a swipe
+        if (Math.abs(touchendX - touchstartX) > threshold) {
+            if (touchendX < touchstartX) {
+                console.log('Swiped left!');
+                showMode(MODES[currentModeIndex - 1]);
+            } else {
+                console.log('Swiped right!');
+                showMode(MODES[currentModeIndex + 1]);
+            }
         }
     }
-    } catch (e) {}
 }
+
 
 // --- Initial mode setup with animation ---
 document.addEventListener('DOMContentLoaded', function() {
