@@ -42,7 +42,7 @@ async function checkforBook() {
 
     if (!date) {
       const now = dateToMinutes(new Date());
-      return time <= now && time + length >= now, time + length <= now;
+      return (time <= now && time + length >= now, time + length <= now);
 
       if (time <= now && time + length >= now) {
 
