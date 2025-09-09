@@ -207,6 +207,7 @@ button:hover, button:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: scroll;
 }
 .log-list > div {
     width: 100%;
