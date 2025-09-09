@@ -1601,16 +1601,16 @@ function swipeToSwitchMode() {
     let touchstartX = 0;
     let touchendX = 0;
 
-    const element = document.getElementById('myElement'); // Replace with your element
+    const body = document.getElementById('body');
 
-    element.addEventListener('touchstart', e => {
+    body.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].clientX;
     });
 
-    element.addEventListener('touchend', e => {
+    body.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].clientX;
         checkDirection();
-    });
+    });}
 
 function checkDirection() {
     const threshold = 50; // Minimum pixels for a swipe
@@ -1628,7 +1628,7 @@ function checkDirection() {
         }
     }
     } catch (e) {}
-}}
+}
 
 // --- Initial mode setup with animation ---
 document.addEventListener('DOMContentLoaded', function() {
