@@ -811,6 +811,7 @@ function stopCycle() {
 }
 
 function resetCycle() {
+    paused = false
     cycleMode.running = false;
     clearInterval(cycleMode.interval);
     cycleMode.currentCycle = 1;
