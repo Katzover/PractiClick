@@ -215,15 +215,24 @@
             }
 
             logs.forEach(log => {
-                const formattedDate = formatDate(log.date)
+                const formattedDate = formatDate(log.date);
                 const formattedTime = formatTime(log.time);
+
+                let noteDisplay = log.note || '';
+                let noteCell = noteDisplay;
+
+
+                if (noteDisplay.length > 10) {
+                    noteCell = `<span title="${noteDisplay}" style="cursor:pointer;">${noteDisplay.slice(0, 10)}...</span>`;
+                }
+
                 tbody.innerHTML += `
                     <tr>
                         <td>${formattedDate}</td>
                         <td>${formattedTime}</td>
                         <td>${log.mode}</td>
-                        <td>${log.room || 'אחר'}</td>
-                        <td>${log.note || ''}</td>
+                        <td>${(log.room == 'other' ? 'אחר' : log.room)}</td>
+                        <td>${noteCell}</td>
                     </tr>
                 `;
             });
