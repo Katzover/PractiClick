@@ -45,7 +45,7 @@ async function checkforBook() {
       return [
         time <= now && time + length >= now,
         time + length <= now,
-        time, time + length          
+        time, time + length, now       
       ];
 
       if (time <= now && time + length >= now) {
