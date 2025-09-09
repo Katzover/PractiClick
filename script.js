@@ -1601,13 +1601,13 @@ function swipeToSwitchMode() {
     let touchstartX = 0;
     let touchendX = 0;
 
-    const body = document.getElementById('body');
+    const container = document.getElementById('container');
 
-    body.addEventListener('touchstart', e => {
+    container.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].clientX;
     });
 
-    body.addEventListener('touchend', e => {
+    container.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].clientX;
         checkDirection();
     });}
