@@ -68,15 +68,30 @@
             text-overflow: ellipsis; /* "..." for overflow */
         }
 
-        #book-name,
-        #selectr,
-        #timeinput,
-        #dateinput,
-        #length,
-        #status {
-            width: 100%;
-            margin-bottom: 18px;
-            box-sizing: border-box; /* ensures padding doesn't break width */
+        #info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            }
+
+            .booking-card {
+            background-color: #1e1e1e; /* dark card background */
+            color: #f0f0f0;           /* light text */
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            }
+
+            .booking-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+            }
+
+            .booking-row span {
+            color: #bbb; /* lighter label color */
         }
     </style>
 </head>
@@ -431,16 +446,18 @@
                 const name = document.getElementById('selectb').value;
 
                 books.forEach(book => {
+                    document.getElementById('info').innerHTML = '';
                     if (book.name === name) {
                         const info = `
-                            <strong>חדר:</strong> ${book.room} <br>
-                            <strong>תאריך:</strong> ${book.date || 'לא נקבע'} <br>
-                            <strong>שעה:</strong> ${book.time} <br>
-                            <strong>אורך:</strong> ${book.length} דקות <br>
-                            <strong>מצב:</strong> ${book.status} <br>
-                            <strong>נמחק אוטומטית:</strong> ${book.del ? 'כן' : 'לא'}
-                            `;
-
+                           <div class="booking-card">
+                            <div class="booking-row"><span>חדר:</span> <strong>${book.room}</strong></div>
+                            <div class="booking-row"><span>תאריך:</span> <strong>${book.date || 'לא נקבע'}</strong></div>
+                            <div class="booking-row"><span>שעה:</span> <strong>${book.time}</strong></div>
+                            <div class="booking-row"><span>אורך:</span> <strong>${book.length} דקות</strong></div>
+                            <div class="booking-row"><span>מצב:</span> <strong>${book.status}</strong></div>
+                            <div class="booking-row"><span>נמחק אוטומטית:</span> <strong>${book.del ? 'כן' : 'לא'}</strong></div>
+                            </div>
+                        `;
                         document.getElementById('info').innerHTML = info;
                     };
                 })
