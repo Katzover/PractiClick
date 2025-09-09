@@ -1171,7 +1171,7 @@ async function restorePendingSession() {
         };
         logs.push(entry);
         localStorage.setItem('practiceLogs', JSON.stringify(logs));
-        renderLogs();
+        await renderLogs();
         renderSummary();
         await withLoading(() => updateRoomStatus(entry.room, "available", 0));
         await withLoading(() => upsertLeaderboard(getWeekTotal()));
