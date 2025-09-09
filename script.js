@@ -743,9 +743,6 @@ function stopCycle() {
 }
 
 function resetCycle() {
-    let msg;
-    if (currentLang == 'he') {msg = "האם אתה בטוח שברצונך לאפס את הסבב? כל ההתקדמות תאבד."} else {msg = "Are you sure you want to reset the cycle? All progress will be lost."}
-    if (!confirm(msg)) {return}
     cycleMode.running = false;
     clearInterval(cycleMode.interval);
     cycleMode.currentCycle = 1;
@@ -798,7 +795,11 @@ cycleStartBtn.onclick = function() {
     }
 };
 cyclePauseBtn.onclick = pauseCycle;
-cycleResetBtn.onclick = resetCycle;
+cycleResetBtn.onclick = function () {
+    let msg;
+    if (currentLang == 'he') {msg = "האם אתה בטוח שברצונך לאפס את הסבב? כל ההתקדמות תאבד."} else {msg = "Are you sure you want to reset the cycle? All progress will be lost."}
+    if (confirm(msg)) {resetCycle()};
+};
 cycleLogBtn.onclick = logCycleSession;
 
 
@@ -967,6 +968,7 @@ async function startTimer() {
         timerDuration = (min * 60 + sec) * 1000;
         if (timerDuration <= 0) return;
     }
+    if (pauseBtn.disabled) {
     withLoading(() => askForPracticeRoom()).then(async room => {
         if (!room) return; // Cancel if user aborts
         currentPracticeRoom = room;
@@ -976,10 +978,20 @@ async function startTimer() {
         interval = setInterval(tick, 200);
         startBtn.disabled = true;
         pauseBtn.disabled = false;
-        resetBtn.disabled = false;
+        resetBtn.disabled = true;
         logBtn.disabled = true;
         minutesInput.disabled = secondsInput.disabled = true;
-    });
+    });}
+    else {
+        running = true;
+        startTime = Date.now() - elapsed;
+        interval = setInterval(tick, 200);
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        resetBtn.disabled = true;
+        logBtn.disabled = true;
+        minutesInput.disabled = secondsInput.disabled = true;
+    }
 }
 
 function pauseTimer() {
@@ -992,9 +1004,6 @@ function pauseTimer() {
 }
 
 function resetTimer() {
-    let msg;
-    if (currentLang == 'he') {msg = "האם אתה בטוח שברצונך לאפס את הסבב? כל ההתקדמות תאבד."} else {msg = "Are you sure you want to reset the cycle? All progress will be lost."}
-    if (!confirm(msg)) {return}
     wakeLock = null;
     running = false;
     clearInterval(interval);
@@ -1087,7 +1096,11 @@ async function exitsnitcher() {
 
 startBtn.onclick = startTimer;
 pauseBtn.onclick = pauseTimer;
-resetBtn.onclick = resetTimer;
+resetBtn.onclick = function () {
+    let msg;
+    if (currentLang == 'he') {msg = "האם אתה בטוח שברצונך לאפס את הסבב? כל ההתקדמות תאבד."} else {msg = "Are you sure you want to reset the cycle? All progress will be lost."}
+    if (confirm(msg)) {resetTimer()};
+};
 logBtn.onclick = logSession;
 
 // --- Logging & Persistence ---
@@ -1230,7 +1243,7 @@ function renderLogs() {
         const item = document.createElement('div');
         item.className = 'log-item';
         item.style.cursor = 'pointer';
-        item.onclick = () => openNoteModal(logs.length - 1 - index); // Reverse index for correct mapping
+        item.onclick = () => openNoteModal(logs.length - 1 - index);
         let roomLabel;
         if (log.room && log.room !== "Other" && log.room !== "אחר") {
             roomLabel = `${t.logRoom}: ${log.room}`;
