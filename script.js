@@ -1601,17 +1601,17 @@ function swipeToSwitchMode() {
     let touchstartX = 0;
     let touchendX = 0;
 
-    const container = document.getElementById('container');
-    if (!container) {
-        console.error("Container not found");
+    const body = document.getElementById('body');
+    if (!body) {
+        console.error("body not found");
         return;
     }
 
-    container.addEventListener('touchstart', e => {
+    body.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].clientX;
     });
 
-    container.addEventListener('touchend', e => {
+    body.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].clientX;
         checkDirection();
     });
