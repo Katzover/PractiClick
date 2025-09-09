@@ -930,7 +930,7 @@ async function renderRooms() {
         if (room.status === "available") color = "green";
         else if (room.status === "taken") color = "orange";
         else if (room.status === "unavailable") color = "red"
-        else if (room.status === "lesson") color = "yellow"
+        else if (room.status === "lesson") color = "purple"
         let statusLabel = statusMap[currentLang] && statusMap[currentLang][room.status] ? statusMap[currentLang][room.status] : room.status;
         tbody.innerHTML += `
             <tr>
