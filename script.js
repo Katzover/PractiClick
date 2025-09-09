@@ -1592,6 +1592,9 @@ exportWeeklySummary();
 // --- Animated mode transitions & swipe navigation ---
 const MODES = ['cycle', 'timer', 'stopwatch', 'rooms'];
 let currentModeIndex = MODES.indexOf(mode);
+MODES.forEach(m => {
+    console.log(m + " index: " + getModeIndex(m));
+});
 
 function getModeIndex(m) {
     return MODES.indexOf(m);
