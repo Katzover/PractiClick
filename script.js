@@ -6,6 +6,7 @@ if (!localStorage.getItem('UserName')) {alert("שימו לב שהאפליקצי�
 window.resetname =  function resetname() {return localStorage.removeItem('UserName');}
 let lboard = false;
 let wakeLock = null;
+let practing;
 let showntoasts = [];
 let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר", 'bannedusername']
@@ -657,6 +658,7 @@ window.updateRoomStatus = updateRoomStatus;
 
 // --- Cycle Mode Logic ---
 async function startCycle() {
+    practing = true;
     wakeLock = await navigator.wakeLock.request('screen');
     currentPracticeRoom = await withLoading(() => askForPracticeRoom());
     if (!currentPracticeRoom) return;
@@ -681,45 +683,26 @@ async function startCycle() {
     cycleMode.interval = setInterval(cycleTick, 200);
 }
 
-function cycleTick() {
-    existancesnitcher()
-    if (!cycleMode.running || cycleMode.paused) return;
-    if (cycleMode.inBreak) {
-        cycleMode.breakElapsed += 200;
-        updateCycleDisplay();
-        if (cycleMode.breakElapsed >= cycleMode.breakLength) {
-            cycleMode.inBreak = false;
-            cycleMode.breakElapsed = 0;
-            cycleMode.currentCycle++;
-            if (cycleMode.currentCycle > cycleMode.totalCycles) {
-                stopCycle();
-                cycleLogBtn.disabled = false;
-                cycleStatus.textContent = "Cycle session complete!";
-                return;
-            }
-            updateCycleStatus();
-        }
-    } else {
-        cycleMode.elapsed += 200;
-        cycleMode.totalElapsed += 200;
-        updateCycleDisplay();
-        if (cycleMode.elapsed >= cycleMode.cycleLength) {
-            if (cycleMode.currentCycle < cycleMode.totalCycles) {
-                cycleMode.inBreak = true;
-                cycleMode.elapsed = 0;
-                updateCycleStatus();
-            } else {
-                stopCycle();
-                cycleLogBtn.disabled = false;
-                cycleStatus.textContent = "Cycle session complete!";
-            }
-        }
+function tick() {
+    existancesnitcher();
+    if (!running) return;
+
+    elapsed = Date.now() - startTime;
+
+    if (mode === 'timer' && elapsed >= timerDuration) {
+        elapsed = timerDuration;
+        updateDisplay();
+        stopTimer();
+        logBtn.disabled = false;
+
+        saveSessionState();
+        return;
     }
-    // Enable log button if any time has elapsed
-    if (cycleMode.totalElapsed > 0 && cycleMode.running) {
-        cycleLogBtn.disabled = false;
-    }
+
+    updateDisplay();
+    saveSessionState();
 }
+
 
 function pauseCycle() {
     wakeLock = null;
@@ -760,6 +743,9 @@ function stopCycle() {
 }
 
 function resetCycle() {
+    let msg;
+    if (currentLang == 'he') {msg = "האם אתה בטוח שברצונך לאפס את הסבב? כל ההתקדמות תאבד."} else {msg = "Are you sure you want to reset the cycle? All progress will be lost."}
+    if (!confirm(msg)) {return}
     cycleMode.running = false;
     clearInterval(cycleMode.interval);
     cycleMode.currentCycle = 1;
@@ -973,18 +959,25 @@ function updateDisplay() {
 }
 
 function tick() {
-    existancesnitcher()
+    existancesnitcher();
     if (!running) return;
+
     elapsed = Date.now() - startTime;
+
     if (mode === 'timer' && elapsed >= timerDuration) {
         elapsed = timerDuration;
         updateDisplay();
         stopTimer();
         logBtn.disabled = false;
+
+        saveSessionState();
         return;
     }
+
     updateDisplay();
+    saveSessionState();
 }
+
 
 async function startTimer() {
     wakeLock = await navigator.wakeLock.request('screen');
@@ -1019,6 +1012,9 @@ function pauseTimer() {
 }
 
 function resetTimer() {
+    let msg;
+    if (currentLang == 'he') {msg = "האם אתה בטוח שברצונך לאפס את הסבב? כל ההתקדמות תאבד."} else {msg = "Are you sure you want to reset the cycle? All progress will be lost."}
+    if (!confirm(msg)) {return}
     wakeLock = null;
     running = false;
     clearInterval(interval);
@@ -1151,6 +1147,65 @@ async function logSession() {
         showtoast("Session logged in practice log", "green");
     }
 }
+
+function saveSessionState() {
+    const state = {
+        mode,
+        cycleMode: cycleMode.running ? cycleMode : null,
+        timer: {
+            running,
+            elapsed,
+            timerDuration,
+            startTime,
+            mode
+        },
+        currentPracticeRoom
+    };
+    localStorage.setItem('pendingSession', JSON.stringify(state));
+}
+
+function clearSessionState() {
+    localStorage.removeItem('pendingSession');
+}
+
+async function restorePendingSession() {
+    const saved = localStorage.getItem('pendingSession');
+    if (!saved) return;
+    const state = JSON.parse(saved);
+
+    // Check if any elapsed time exists
+    let ms = 0;
+    if (state.mode === 'cycle' && state.cycleMode) {
+        ms = state.cycleMode.totalElapsed || 0;
+    } else if (state.timer) {
+        ms = state.timer.elapsed || 0;
+    }
+
+    if (ms > 1000) {
+        const now = new Date();
+        const entry = {
+            time: ms,
+            date: now.toISOString(),
+            mode: state.mode || "other",
+            room: state.currentPracticeRoom || "Other"
+        };
+        logs.push(entry);
+        localStorage.setItem('practiceLogs', JSON.stringify(logs));
+        renderLogs();
+        renderSummary();
+        await withLoading(() => updateRoomStatus(entry.room, "available", 0));
+        await withLoading(() => upsertLeaderboard(getWeekTotal()));
+        renderLeaderboard();
+        if (currentLang === 'he') {
+            showtoast("הסשן הקודם נשמר ביומן התרגול", "green");
+        } else {
+            showtoast("Previous unfinished session logged", "green");
+        }
+    }
+
+    clearSessionState(); // prevent double logging
+}
+
 
 function getCurrentWeekNumber() {
     const now = new Date();
