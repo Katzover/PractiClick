@@ -1458,7 +1458,7 @@ async function exportWeeklySummary() {
     const { error } = await supabase
         .from('summaries')
         .update({ json: getWeeklySummaryJson() })
-        .eq('name', `${localStorage.getItem('UserName')} - ${toString(getWeekStart(new Date()))}`)
+        .eq('name', `${localStorage.getItem('UserName')} - ${getWeekStart(new Date())}`)
     if (error) {
         console.error('Failed to export weekly summary:', error.message);
         return;
@@ -2068,7 +2068,7 @@ async function establishUserdata() {
     if (localStorage.getItem('establishedUD')) {return}
     await supabase
         .from('summaries')
-        .insert({ name: `${localStorage.getItem('UserName')} - ${toString(getWeekStart(new Date()))}`, json: getWeeklySummaryJson() });
+        .insert({ name: `${localStorage.getItem('UserName')} - ${getWeekStart(new Date())}`, json: getWeeklySummaryJson() });
     localStorage.setItem('establishedUD', true)
     
 }
