@@ -194,7 +194,8 @@ button:hover, button:focus {
     transition: color 0.4s, background 0.3s, box-shadow 0.3s;
 }
 .log-list {
-    max-height: 200px;
+    max-height: 200px;
+
     border-radius: 12px;
     background: #23243a;
     padding: 12px;
@@ -640,26 +641,28 @@ body[dir="rtl"] {
     margin-top: 2px;
 }
 #loading-overlay {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(24, 25, 38, 0.7);
-    z-index: 9999;
-    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    display: none; /* hidden until showLoading() is called */
     align-items: center;
-    transition: background 0.3s;
+    justify-content: center;
+    z-index: 9999;
 }
-.loading-spinner {
-    border: 5px solid #202b3d;
-    border-top: 5px solid var(--accent);
+
+/* Spinner styling */
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.3);
+    border-top: 6px solid #fff;
     border-radius: 50%;
-    width: 54px;
-    height: 54px;
     animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
