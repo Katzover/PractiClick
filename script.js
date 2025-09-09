@@ -489,7 +489,7 @@ async function askForNameIfNeeded() {
 }
 
 async function deleteAllLeaderboardRows() {
-    document.localStorage.setItem('establishedUD', false)
+    document.localStorage.setItem('establishedUser', false)
     const { error } = await withLoading(() =>
         supabase
             .from('leaderboard')
@@ -2065,11 +2065,11 @@ function showUsageGuide() {
 }
 
 async function establishUserdata() {
-    if (localStorage.getItem('establishedUD')) {return}
+    if (localStorage.getItem('establishedUser')) {return}
     await supabase
         .from('summaries')
         .insert({ name: `${localStorage.getItem('UserName')} - ${getWeekStart(new Date())}`, json: getWeeklySummaryJson() });
-    localStorage.setItem('establishedUD', true)
+    localStorage.setItem('establishedUser', true)
     
 }
 
