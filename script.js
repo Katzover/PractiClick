@@ -1624,10 +1624,10 @@ function checkDirection() {
     if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > threshold) {
         if (xDiff > 0) {
             console.log("Swiped right on page!");
-            showMode(MODES[currentModeIndex + 1]);
+            showMode(MODES[currentModeIndex + 1 <= 3 ? currentModeIndex + 1 : 0]);
         } else {
             console.log("Swiped left on page!");
-            showMode(MODES[currentModeIndex - 1]);
+            showMode(MODES[currentModeIndex - 1 >= 0 ? currentModeIndex - 1 : 3]);
         }
     }
 }
