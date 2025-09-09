@@ -6,7 +6,7 @@ if (!localStorage.getItem('UserName')) {alert("שימו לב שהאפליקצי�
 window.resetname =  function resetname() {return localStorage.removeItem('UserName');}
 let lboard = false;
 let wakeLock = null;
-let practing;
+let paused = false;
 let showntoasts = [];
 let banned_names = [
     "admin", "administrator", "root", "test", "testuser", "nigger","ניגר", 'bannedusername']
@@ -968,7 +968,7 @@ async function startTimer() {
         timerDuration = (min * 60 + sec) * 1000;
         if (timerDuration <= 0) return;
     }
-    if (pauseBtn.disabled) {
+    if (!paused) {
     withLoading(() => askForPracticeRoom()).then(async room => {
         if (!room) return; // Cancel if user aborts
         currentPracticeRoom = room;
@@ -983,6 +983,7 @@ async function startTimer() {
         minutesInput.disabled = secondsInput.disabled = true;
     });}
     else {
+        paused = false
         running = true;
         startTime = Date.now() - elapsed;
         interval = setInterval(tick, 200);
@@ -991,11 +992,11 @@ async function startTimer() {
         resetBtn.disabled = true;
         logBtn.disabled = true;
         minutesInput.disabled = secondsInput.disabled = true;
-        return
     }
 }
 
 function pauseTimer() {
+    paused = true;
     wakeLock = null;
     running = false;
     clearInterval(interval);
