@@ -1634,7 +1634,8 @@ function swipeToSwitchMode() {
 // --- Initial mode setup with animation ---
 document.addEventListener('DOMContentLoaded', function() {
     restorePendingSession();
-    createNoteModal(); // Ensure the notes modal is created when the page loads
+    createNoteModal();
+    swipeToSwitchMode();
 });
 
 // --- Metronome Logic ---
