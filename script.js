@@ -706,6 +706,51 @@ async function startCycle() {
 
 }
 
+function cycleTick() {
+    existancesnitcher();
+    if (!cycleMode.running || cycleMode.paused) return;
+
+    if (cycleMode.inBreak) {
+        cycleMode.breakElapsed += 200;
+        updateCycleDisplay();
+        if (cycleMode.breakElapsed >= cycleMode.breakLength) {
+            cycleMode.inBreak = false;
+            cycleMode.breakElapsed = 0;
+            cycleMode.currentCycle++;
+            if (cycleMode.currentCycle > cycleMode.totalCycles) {
+                stopCycle();
+                cycleLogBtn.disabled = false;
+                cycleStatus.textContent = "Cycle session complete!";
+                return;
+            }
+            updateCycleStatus();
+        }
+    } else {
+        cycleMode.elapsed += 200;
+        cycleMode.totalElapsed += 200;
+        updateCycleDisplay();
+        if (cycleMode.elapsed >= cycleMode.cycleLength) {
+            if (cycleMode.currentCycle < cycleMode.totalCycles) {
+                cycleMode.inBreak = true;
+                cycleMode.elapsed = 0;
+                updateCycleStatus();
+            } else {
+                stopCycle();
+                cycleLogBtn.disabled = false;
+                cycleStatus.textContent = "Cycle session complete!";
+            }
+        }
+    }
+
+    // Enable log button if any time has elapsed
+    if (cycleMode.totalElapsed > 0 && cycleMode.running) {
+        cycleLogBtn.disabled = false;
+    }
+
+    // --- Save session state ---
+    saveSessionState();
+}
+
 function tick() {
     existancesnitcher();
     if (!running) return;
