@@ -223,7 +223,7 @@
 
 
                  if (noteDisplay.length > 10) {
-                    const noteId = `note-${index}`;
+                    const noteId = `note-${Math.random()}`;
                     noteCell = `<span id="${noteId}" style="cursor:pointer;" title="${noteDisplay}">${noteDisplay.slice(0, 10)}...</span>`;
                     setTimeout(() => {
                         document.getElementById(noteId)?.addEventListener('click', () => {
