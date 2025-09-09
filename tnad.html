@@ -69,27 +69,26 @@
         }
 
         #info {
-            font-family: 'Assistant', sans-serif; /* Hebrew-friendly */
-            font-size: 13px;
-            color: #eee;
-            direction: rtl;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
         }
+
+        .booking-card {
+            background-color: #1e1e1e; /* dark card background */
+            color: #f0f0f0;           /* light text */
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            }
 
         .booking-row {
-            background-color: #2a2a2a;
-            padding: 6px 10px;
-            border-radius: 6px;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-
-        .booking-row .label {
-            color: #bbb; /* lighter label color */
-            margin-left: 4px;
-        }
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+            }
 
         .booking-row span {
             color: #bbb; /* lighter label color */
@@ -450,14 +449,12 @@
                 books.forEach(book => {
                     if (book.name === name) {
                         const info = `
-                           <div class="booking-card">
                             <div class="booking-row"><span>חדר:</span> <strong>${book.room}</strong></div>
                             <div class="booking-row"><span>תאריך:</span> <strong>${book.date || 'לא נקבע'}</strong></div>
                             <div class="booking-row"><span>שעה:</span> <strong>${book.time}</strong></div>
                             <div class="booking-row"><span>אורך:</span> <strong>${book.length} דקות</strong></div>
                             <div class="booking-row"><span>מצב:</span> <strong>${book.status}</strong></div>
                             <div class="booking-row"><span>נמחק אוטומטית:</span> <strong>${book.del ? 'כן' : 'לא'}</strong></div>
-                            </div>
                         `;
                         document.getElementById('info').innerHTML = info;
                     };
