@@ -222,11 +222,14 @@
                 let noteCell = noteDisplay;
 
 
-                if (noteDisplay.length > 10) {
-                    noteCell = `<span title="${noteDisplay}" id="note" style="cursor:pointer;">${noteDisplay.slice(0, 10)}...</span>`;
-                    document.getElementById('note')?.addEventListener('click', () => {
-                        alert(log.note);
-                    });
+                 if (noteDisplay.length > 10) {
+                    const noteId = `note-${index}`;
+                    noteCell = `<span id="${noteId}" style="cursor:pointer;" title="${noteDisplay}">${noteDisplay.slice(0, 10)}...</span>`;
+                    setTimeout(() => {
+                        document.getElementById(noteId)?.addEventListener('click', () => {
+                            alert(log.note);
+                        });
+                    }, 0); 
                 }
 
                 tbody.innerHTML += `
