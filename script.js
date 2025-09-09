@@ -307,6 +307,7 @@ async function askForPracticeRoom() {
 const SUPABASE_URL = 'https://uhdkzqyojjfshsdyrkyd.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoZGt6cXlvampmc2hzZHlya3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MDc0MDIsImV4cCI6MjA2NTM4MzQwMn0.-NcMckWGJ_Dz5YzzAXRl1VAIcUL8E2XBilicEEX3CVQ';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 function showLoading() {
     document.getElementById('loading-overlay').style.display = 'flex';
 }
@@ -315,8 +316,8 @@ function hideLoading() {
     document.getElementById('loading-overlay').style.display = 'none';
 }
 
-async function withLoading(fn, loadingText) {
-    showLoading(loadingText);
+async function withLoading(fn) {
+    showLoading();
     try {
         return await fn();
     } finally {
