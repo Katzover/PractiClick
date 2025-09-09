@@ -57,13 +57,14 @@ async function checkforBook() {
       if (time <= now && time + length >= now) {
 
         if (room !== "all") {
+          console.log(0)
           await updateRoomStatus(room, status, 0);
         } else {
+          console.log(1)
           await supabase
-            .from("rooms")
-            .update({ status: status })
-            .neq("name", "randomroomname");
-        }
+            .from("rooms").update({ status: status }).neq("name", "randomroomname");}
+
+            
       } else if (time + length <= now) {
         if (del) {
           await supabase.from("booking").delete('*').eq("name", name);
