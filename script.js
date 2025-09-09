@@ -1597,35 +1597,37 @@ function getModeIndex(m) {
     return MODES.indexOf(m);
 }
 
-function swipeToSwitchMode() {
-    let touchstartX = 0;
-    let touchendX = 0;
+let touchstartX = 0;
+let touchendX = 0;
+let touchstartY = 0;
+let touchendY = 0;
 
-    const body = document.getElementById('body');
-    if (!body) {
-        console.error("body not found");
-        return;
-    }
-
-    body.addEventListener('touchstart', e => {
+function initSwipeDetection() {
+    document.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].clientX;
+        touchstartY = e.changedTouches[0].clientY;
     });
 
-    body.addEventListener('touchend', e => {
+    document.addEventListener('touchend', e => {
         touchendX = e.changedTouches[0].clientX;
+        touchendY = e.changedTouches[0].clientY;
         checkDirection();
     });
+}
 
-    function checkDirection() {
-        const threshold = 50; // Minimum pixels for a swipe
-        if (Math.abs(touchendX - touchstartX) > threshold) {
-            if (touchendX < touchstartX) {
-                console.log('Swiped left!');
-                showMode(MODES[currentModeIndex - 1]);
-            } else {
-                console.log('Swiped right!');
-                showMode(MODES[currentModeIndex + 1]);
-            }
+function checkDirection() {
+    const threshold = 50; // min distance
+    const xDiff = touchendX - touchstartX;
+    const yDiff = touchendY - touchstartY;
+
+    // Check if horizontal swipe is stronger than vertical movement
+    if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > threshold) {
+        if (xDiff > 0) {
+            console.log("Swiped right on page!");
+            showMode(MODES[currentModeIndex + 1]);
+        } else {
+            console.log("Swiped left on page!");
+            showMode(MODES[currentModeIndex - 1]);
         }
     }
 }
@@ -1635,7 +1637,7 @@ function swipeToSwitchMode() {
 document.addEventListener('DOMContentLoaded', function() {
     restorePendingSession();
     createNoteModal();
-    swipeToSwitchMode();
+    initSwipeDetection();
 });
 
 // --- Metronome Logic ---
