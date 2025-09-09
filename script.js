@@ -1003,6 +1003,7 @@ function pauseTimer() {
     startBtn.disabled = false;
     pauseBtn.disabled = true;
     logBtn.disabled = false;
+    resetBtn.disabled = false;
 }
 
 function resetTimer() {
