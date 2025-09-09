@@ -2117,7 +2117,7 @@ async function getversion() {
 
 async function getbooks() {
 
-await fetch("/.netlify/functions/serversidecode")
+await fetch("/.netlify/functions/scheduled-booking")
 }
 
 // setInterval(getbooks, 1000 * 60); for now this will not be used as a scheduled function is used :D
