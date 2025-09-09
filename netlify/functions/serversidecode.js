@@ -48,11 +48,11 @@ async function checkforBook() {
 
     if (!date) {
       const now = dateToMinutes(new Date());
-      return [
+      console.log([
         time <= now && time + length >= now,
         time + length < now,
         time, time + length, now       
-      ];
+      ]);
 
       if (time <= now && time + length >= now) {
 
