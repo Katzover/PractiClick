@@ -50,7 +50,7 @@ async function checkforBook() {
         } else {
           await supabase
             .from("rooms")
-            .update({ status })
+            .update({ status: status })
             .neq("name", "randomroomname");
         }
       } else if (time + length <= now) {
