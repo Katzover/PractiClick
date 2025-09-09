@@ -223,8 +223,8 @@
 
 
                 if (noteDisplay.length > 10) {
-                    noteCell = `<span title="${noteDisplay}" id="${noteDisplay}" style="cursor:pointer;">${noteDisplay.slice(0, 10)}...</span>`;
-                    document.getElementById(noteDisplay)?.addEventListener('click', () => {
+                    noteCell = `<span title="${noteDisplay}" id="note" style="cursor:pointer;">${noteDisplay.slice(0, 10)}...</span>`;
+                    document.getElementById('note')?.addEventListener('click', () => {
                         alert(log.note);
                     });
                 }
