@@ -958,26 +958,6 @@ function updateDisplay() {
     }
 }
 
-function tick() {
-    existancesnitcher();
-    if (!running) return;
-
-    elapsed = Date.now() - startTime;
-
-    if (mode === 'timer' && elapsed >= timerDuration) {
-        elapsed = timerDuration;
-        updateDisplay();
-        stopTimer();
-        logBtn.disabled = false;
-
-        saveSessionState();
-        return;
-    }
-
-    updateDisplay();
-    saveSessionState();
-}
-
 
 async function startTimer() {
     wakeLock = await navigator.wakeLock.request('screen');
