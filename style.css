@@ -195,7 +195,7 @@ button:hover, button:focus {
 }
 .log-list {
     max-height: 200px;
-
+    overflow-y: scroll;
     border-radius: 12px;
     background: #23243a;
     padding: 12px;
@@ -207,7 +207,8 @@ button:hover, button:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: scroll;
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+    overflow-y: scroll !important;     /* always reserve scroll space */
 }
 .log-list > div {
     width: 100%;

@@ -658,29 +658,52 @@ window.updateRoomStatus = updateRoomStatus;
 
 // --- Cycle Mode Logic ---
 async function startCycle() {
-    practing = true;
     wakeLock = await navigator.wakeLock.request('screen');
+    if (!paused) {
     currentPracticeRoom = await withLoading(() => askForPracticeRoom());
     if (!currentPracticeRoom) return;
-    await withLoading(() => updateRoomStatus(currentPracticeRoom, "taken", 0));
-    cycleMode.totalCycles = parseInt(cycleCountInput.value) || 6;
-    cycleMode.cycleLength = (parseInt(cycleLengthInput.value) || 15) * 60 * 1000;
-    cycleMode.breakLength = (parseInt(cycleBreakInput.value) || 90) * 1000;
-    cycleMode.currentCycle = 1;
-    cycleMode.elapsed = 0;
-    cycleMode.breakElapsed = 0;
-    cycleMode.totalElapsed = 0;
-    cycleMode.inBreak = false;
-    cycleMode.running = true;
-    cycleMode.paused = false;
-    updateCycleDisplay();
-    updateCycleStatus();
-    cycleStartBtn.disabled = true;
-    cyclePauseBtn.disabled = false;
-    cycleResetBtn.disabled = false;
-    cycleLogBtn.disabled = true;
-    cycleCountInput.disabled = cycleLengthInput.disabled = cycleBreakInput.disabled = true;
-    cycleMode.interval = setInterval(cycleTick, 200);
+        await withLoading(() => updateRoomStatus(currentPracticeRoom, "taken", 0));
+        cycleMode.totalCycles = parseInt(cycleCountInput.value) || 6;
+        cycleMode.cycleLength = (parseInt(cycleLengthInput.value) || 15) * 60 * 1000;
+        cycleMode.breakLength = (parseInt(cycleBreakInput.value) || 90) * 1000;
+        cycleMode.currentCycle = 1;
+        cycleMode.elapsed = 0;
+        cycleMode.breakElapsed = 0;
+        cycleMode.totalElapsed = 0;
+        cycleMode.inBreak = false;
+        cycleMode.running = true;
+        cycleMode.paused = false;
+        updateCycleDisplay();
+        updateCycleStatus();
+        cycleStartBtn.disabled = true;
+        cyclePauseBtn.disabled = false;
+        cycleResetBtn.disabled = false;
+        cycleLogBtn.disabled = true;
+        cycleCountInput.disabled = cycleLengthInput.disabled = cycleBreakInput.disabled = true;
+        cycleMode.interval = setInterval(cycleTick, 200);}
+
+    else {
+        paused = false;
+        cycleMode.totalCycles = parseInt(cycleCountInput.value) || 6;
+        cycleMode.cycleLength = (parseInt(cycleLengthInput.value) || 15) * 60 * 1000;
+        cycleMode.breakLength = (parseInt(cycleBreakInput.value) || 90) * 1000;
+        cycleMode.currentCycle = 1;
+        cycleMode.elapsed = 0;
+        cycleMode.breakElapsed = 0;
+        cycleMode.totalElapsed = 0;
+        cycleMode.inBreak = false;
+        cycleMode.running = true;
+        cycleMode.paused = false;
+        updateCycleDisplay();
+        updateCycleStatus();
+        cycleStartBtn.disabled = true;
+        cyclePauseBtn.disabled = false;
+        cycleResetBtn.disabled = false;
+        cycleLogBtn.disabled = true;
+        cycleCountInput.disabled = cycleLengthInput.disabled = cycleBreakInput.disabled = true;
+        cycleMode.interval = setInterval(cycleTick, 200);
+    }
+
 }
 
 function tick() {
@@ -1007,6 +1030,7 @@ function pauseTimer() {
 }
 
 function resetTimer() {
+    paused = false
     wakeLock = null;
     running = false;
     clearInterval(interval);
