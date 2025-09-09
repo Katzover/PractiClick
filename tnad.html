@@ -143,6 +143,15 @@
             </select><br>
             <button id="usBtn" style="width:100%;margin-bottom:18px;">עדכן מצב</button>
         </div>
+
+        <div>
+            <p>מחיקת שיריון</p>
+            <label>בחר שם</label>
+            <select id="selectb" style="width:100%;margin-bottom:18px;">
+                <option value="">.בחר שם שיריון.</option>
+            </select>
+            <button id="delb">מחק</button>
+        </div>
     </div>
     <div id="loading-overlay" class="loading-overlay" style="display:none;">טוען...</div>
 
@@ -389,6 +398,40 @@
             if (!document.getElementById('timeinput').value) {updateRStatus();}
             else {bookAroom()}
             
+        })
+
+        async function fetchbooks() {
+            const { data, error } = await supabase
+                .from('booking')
+                .select('*')
+         if (error) {console.error(error.message)}
+        else {return data}
+        }
+
+        async function renderbookings() {
+            const selectb = document.getElementById('selectb')
+            const books = await fetchbooks();
+            
+
+            books.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name.name;
+                option.textContent = name.name;
+                selectb.appendChild(option);
+                
+            });
+
+        } renderbookings();
+
+        document.getElementById('delb').addEventListener('click', async () => {
+            const name = document.getElementById('selectb').value;
+            if (!name) {alert('בחר שם שיריון למחיקה'); return;}
+            const { error } = await supabase
+                .from('booking')
+                .delete('*')
+                .eq('name', name);
+            if (error) {console.error(error.message); return}
+            alert('השיריון נמחק בהצלחה')
         })
     </script>
 </body>
