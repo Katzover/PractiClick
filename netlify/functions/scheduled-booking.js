@@ -64,7 +64,7 @@ async function checkforBook() {
   }
 }
 
-exports.handler = async (event, context) => {
+export default async (req) => {
   try {
     const msg = await checkforBook();
     return {
@@ -79,4 +79,7 @@ exports.handler = async (event, context) => {
   }
 };
 
-exports.schedule = "*/1 * * * *";
+
+export const config = {
+  schedule: "*/1 * * * *"
+}
