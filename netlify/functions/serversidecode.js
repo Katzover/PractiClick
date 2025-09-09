@@ -13,7 +13,13 @@ function toMinutes(timeStr) {
 }
 
 function dateToMinutes(date) {
-  return date.getHours() * 60 + date.getMinutes();
+  const options = { timeZone: "Asia/Jerusalem", hour: "2-digit", minute: "2-digit", hour12: false };
+  const parts = new Intl.DateTimeFormat("en-GB", options).formatToParts(date);
+
+  const hours = parseInt(parts.find(p => p.type === "hour").value, 10);
+  const minutes = parseInt(parts.find(p => p.type === "minute").value, 10);
+
+  return hours * 60 + minutes;
 }
 
 async function updateRoomStatus(room, status) {
@@ -38,11 +44,10 @@ async function checkforBook() {
     const time = toMinutes(d.time);
     const date = d.date ? new Date(d.date) : null;
     const length = parseInt(d.length);
-    const ndate = new Date();
 
 
     if (!date) {
-      const now = toMinutes(`${ndate.getHours()}:${ndate.getMinutes()}`);
+      const now = dateToMinutes(new Date());
       return [
         time <= now && time + length >= now,
         time + length <= now,
