@@ -150,6 +150,7 @@
             <select id="selectb" style="width:100%;margin-bottom:18px;">
                 <option value="">.בחר שם שיריון.</option>
             </select>
+            <h3 id="info"></h3>
             <button id="delb">מחק</button>
         </div>
     </div>
@@ -422,6 +423,19 @@
             });
 
         } renderbookings();
+
+        document.getElementById('selectb').addEventListener('change', async () => {
+            if (document.getElementById('selectb').value) {
+                const books = await fetchbooks();
+                const name = document.getElementById('selectb').value;
+
+                books.array.forEach(book => {
+                    if (book.name === name) {
+                        document.getElementById('info').innerHTML = "חדר: " + book.room + ", תאריך: " + (book.date ? book.date : 'לא נקבע') + ", שעה: " + book.time + ", אורך: " + book.length + " דקות, מצב: " + book.status + ", נמחק אוטומטית " + book.del ? 'כן' : 'לא';
+                    }
+                });
+            }
+        })
 
         document.getElementById('delb').addEventListener('click', async () => {
             const name = document.getElementById('selectb').value;
