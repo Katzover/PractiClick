@@ -66,7 +66,9 @@ async function checkforBook() {
 
 
       } else if (time + length < now) {
+        console.log(4)
         if (del) {
+          console.log(5)
           await supabase.from("booking").delete('*').eq("name", name);
         }
 
