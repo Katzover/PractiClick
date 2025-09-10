@@ -649,7 +649,7 @@ async function updateRoomStatus(roomName, status, updated_at) {
     const { d, error } = await withLoading(() =>
         supabase
             .from('rooms')
-            .update({ status: status, username: userName })
+            .update({ status: status, username: localStorage.getItem('UserName') })
             .eq('name', roomName)
     ); if (error) {
         console.error('Error updating room status:', error.message);}
