@@ -1622,18 +1622,23 @@ function checkDirection() {
     const threshold = 50; // min distance
     const xDiff = touchendX - touchstartX;
     const yDiff = touchendY - touchstartY;
+    let change = 0;
 
     // Check if horizontal swipe is stronger than vertical movement
     if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > threshold) {
         try {
         if (xDiff > 0) {
             console.log("Swiped right on page!");
-            showMode(MODES[currentModeIndex + 1 >= 3 ? currentModeIndex + 1 : 0]);
+            change++;
         } else {
             console.log("Swiped left on page!");
-            showMode(MODES[currentModeIndex - 1 <= 0 ? currentModeIndex - 1 : 3]);
+            change--;
         }} catch (e) { alert(e);}
-    }
+        
+    } if (change < 4 && change > -1) {
+        showMode(MODES[(currentModeIndex + change)])
+    } else if (change >= 4) {showMode(MODES[0])}
+    else {showMode(MODES[3])}
 }
 
 
