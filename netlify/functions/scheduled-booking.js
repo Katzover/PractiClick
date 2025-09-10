@@ -36,10 +36,11 @@ async function checkforBook() {
     const del = d.del;
 
     const time = toMinutes(d.time);
-    const date = d.date ? new Date(d.date) : null;
+    const date = d.date;
     const length = parseInt(d.length);
+    const day = d.day
 
-    if (!date) {
+    if (!date || `${new Date().getDate()}/${new Date().getMonth()+1}` == date) { if (day == new Date().getDay() + 1) {
       const now = dateToMinutes(new Date());
       console.log([time <= now && time + length >= now, time + length < now, time, time + length, now]);
 
@@ -62,7 +63,7 @@ async function checkforBook() {
       }
     }
   }
-}
+}}
 
 export default async (req) => {
   try {

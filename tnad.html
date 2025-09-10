@@ -57,6 +57,9 @@
 
             <label>בחר תאריך (לא חובה)</label>
             <input type="date" id="dateinput">
+            
+            <label>בחר יום (לא חובה)</label>
+            <input type="number" min="1" max="7" id="dayinput" placeholder="1-6">
 
             <label">בחר כמות דקות</label>
             <input type="text" id="length" value="45">
@@ -327,11 +330,12 @@
             const name = document.getElementById('book-name').value;
             const room = document.getElementById('selectr').value;
             const length = document.getElementById('length').value;
+            const day = document.getElementById('dayinput').value ? document.getElementById('dayinput').value : null;
         
-        if (!room, !clock, !status, !name, !length) {alert('אופס, נראה ששחכת משהו...'); return;}
+        if (!room || !clock || !status || !name || !length) {alert('אופס, נראה ששחכת משהו...'); return;}
         const { error } = await supabase
                 .from('booking')
-                .insert({ name: name, room: room, status: status, time: clock, date: date, length: length });
+                .insert({ name: name, room: room, status: status, time: clock, date: `${new Date(date).getDate()}/${new Date(date).getMonth()+1}`, length: length, day: day });
             if (error) {console.error(error.message); return}
             alert('השיריון נשלח בהצלחה')
         } 
@@ -389,6 +393,7 @@
         })
 
         document.getElementById('delb').addEventListener('click', async () => {
+            if (!confirm('האם אתה בטוח שברצונך למחוק את השיריון?')) {return;}
             const name = document.getElementById('selectb').value;
             if (!name) {alert('בחר שם שיריון למחיקה'); return;}
             const { error } = await supabase
