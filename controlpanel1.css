@@ -97,6 +97,7 @@ p {
 input[type="text"],
 input[type="date"],
 input[type="time"],
+input[type="number"],
 input[type="datetime-local"],
 select {
     background: var(--input-bg, #202b3d);
