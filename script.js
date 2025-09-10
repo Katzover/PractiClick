@@ -1637,8 +1637,9 @@ function checkDirection() {
         
     } if (change < 4 && change > -1) {
         showMode(MODES[(currentModeIndex + change)])
-    } else if (change >= 4) {showMode(MODES[0])}
+    } else if (change >= 3) {showMode(MODES[0])}
     else {showMode(MODES[3])}
+    alert(change)
 }
 
 
