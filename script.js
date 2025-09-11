@@ -1645,8 +1645,7 @@ function checkDirection() {
 // --- Initial mode setup with animation ---
 document.addEventListener('DOMContentLoaded', function() {
     restorePendingSession();
-    createNoteModal();
-    initSwipeDetection();
+    createNoteModal();
 });
 
 // --- Metronome Logic ---
