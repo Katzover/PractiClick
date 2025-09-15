@@ -1638,14 +1638,101 @@ function checkDirection() {
     } if (change < 4 && change > -1) {
         showMode(MODES[(currentModeIndex + change)])
     } else if (change >= 3) {showMode(MODES[0])}
-    else {showMode(MODES[3])}
+    else {showMode(MODES[3])}
+
 }
+
+
+// --- Practice Reminder Notifications ---
+function startPracticeReminders() {
+    if (!window.WebToApk || typeof window.WebToApk.showNotification !== "function") {
+        console.warn("WebToApk interface not found. Notifications won't work.");
+        return;
+    }
+
+    const messages = [
+        "🎶 זמן לתרגל! גם כמה דקות זה צעד קדימה.",
+        "🎸 תזכורת קטנה: כל אימון מביא אותך קרוב יותר למטרה!",
+        "🥁 אפילו חזרות קצרות יכולות לעשות שינוי גדול 💪",
+        "🎹 קח רגע, שב עם הכלי שלך ותן לו לדבר 🎵",
+        "⏰ אל תחכה – כל דקה של אימון חשובה!",
+        "🎼 בוא נבנה יציבות – תרגול קבוע עושה פלאים.",
+        "✨ התמדה קטנה היום = הצלחה גדולה מחר.",
+        "🎵 זה הזמן לחדד את המיומנויות שלך!",
+        "💡 כל תרגול הוא עוד צעד בדרך לאמן שאתה רוצה להיות.",
+        "🔥 תעשה חימום קצר – זה נותן אנרגיה להמשך!",
+        "🎶 גם חמש דקות של חזרות זה הרבה יותר מאפס.",
+        "🌟 תתמיד – ההתקדמות מגיעה בצעדים קטנים.",
+        "🎼 זכור: הדרך חשובה לא פחות מהתוצאה.",
+        "🎵 כל פעם שאתה מתרגל, אתה בונה ביטחון חדש.",
+        "💪 אל תדחה – כלי הנגינה מחכה לך!",
+        "🎶 חזרה קצרה יכולה להפוך את היום שלך ליותר טוב.",
+        "🚀 שים מטרה קטנה להיום – ותתחיל לתרגל.",
+        "🎼 זה הזמן להתרכז בעצמך ובמוזיקה.",
+        "🎵 אל תשכח – התרגול עושה את ההבדל.",
+        "🌞 הפסקה קטנה באמצע היום = אימון מושלם עכשיו.",
+        "🎶 קח נשימה, תרגל, ותראה איך זה משנה את מצב הרוח.",
+        "⚡ תעשה עוד ניסיון – האצבעות שלך יודו לך.",
+        "🎵 התקדמות מגיעה מתרגול, לא מחלום.",
+        "🌟 כל אימון קטן מוסיף עוד שכבה לכישרון שלך.",
+        "🎼 אולי היום תגלה משהו חדש בנגינה שלך 😉",
+        "🎶 כל פעם שאתה מתיישב לתרגל – זה ניצחון.",
+        "⏳ הזמן עובר בכל מקרה – תשתמש בו לחזרות!",
+        "🎵 תן לקצב להוביל אותך.",
+        "💡 חזרה היום יכולה להפוך את האימון של מחר להרבה יותר קל.",
+        "🎶 קדימה – אפילו כמה תווים יספיקו להתחלה."
+    ];
+
+    function scheduleNextNotification() {
+        // Random interval between 1h and 3h (in ms)
+        const interval = (Math.floor(Math.random() * 3) + 1) * 60 * 60 * 1000;
+
+        setTimeout(() => {
+            const msg = messages[Math.floor(Math.random() * messages.length)];
+            const hour = new Date().getHours();
+            if (hour >= 12 && hour <= 22) {
+                window.WebToApk.showNotification("⏰ תזכורת אימון", msg);
+            }
+
+            scheduleNextNotification(); // Schedule again
+        }, interval);
+    }
+
+    // --- Helper: send test notification ---
+    function sendTestNotification() {
+        try {
+            window.WebToApk.showNotification("🔔 בדיקה", "זהו ניסיון לשלוח התראה – אם אתה רואה את זה, זה עובד! 🎉");
+            console.log("Test notification sent.");
+        } catch (e) {
+            console.warn("Failed to send test notification:", e);
+        }
+    }
+
+    function checkAndStart() {
+        const now = new Date();
+        if (now.getHours() >= 12) {
+            scheduleNextNotification();
+        } else {
+            // Wait until 12pm today
+            const msUntil12 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0, 0) - now;
+            setTimeout(scheduleNextNotification, msUntil12);
+        }
+    }
+
+    checkAndStart();
+}
+
+// Start reminders once the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    startPracticeReminders();
+});
 
 
 // --- Initial mode setup with animation ---
 document.addEventListener('DOMContentLoaded', function() {
     restorePendingSession();
-    createNoteModal();
+    createNoteModal();
+
 });
 
 // --- Metronome Logic ---
@@ -1768,6 +1855,7 @@ function devconsole() {
         window.location.href = 'https://prac-t.netlify.app/controlpanel1';
         exitsnitcher();
     } else if (command == 'reset name') {resetname();}
+    else if (command == 'noti') {sendTestNotification();}
 }
 
 function createOrUpdateFooterButtons() {
