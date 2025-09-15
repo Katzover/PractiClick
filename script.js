@@ -1685,7 +1685,7 @@ function startPracticeReminders() {
 
     function scheduleNextNotification() {
         // Random interval between 1h and 3h (in ms)
-        const interval = (Math.floor(Math.random() * 3) + 1) * 60 * 60 * 1000;
+        const interval = (Math.floor(Math.random() * 3) + 1) * 60 * 1000;
 
         setTimeout(() => {
             const msg = messages[Math.floor(Math.random() * messages.length)];
