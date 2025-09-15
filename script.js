@@ -1698,16 +1698,6 @@ function startPracticeReminders() {
         }, interval);
     }
 
-    // --- Helper: send test notification ---
-    function sendTestNotification() {
-        try {
-            window.WebToApk.showNotification("🔔 בדיקה", "זהו ניסיון לשלוח התראה – אם אתה רואה את זה, זה עובד! 🎉");
-            console.log("Test notification sent.");
-        } catch (e) {
-            console.warn("Failed to send test notification:", e);
-        }
-    }
-
     function checkAndStart() {
         const now = new Date();
         if (now.getHours() >= 12) {
@@ -1720,6 +1710,35 @@ function startPracticeReminders() {
     }
 
     checkAndStart();
+}
+
+// --- Test Notification Function ---
+function sendTestNotification() {
+    if (!window.WebToApk) {
+        console.warn("WebToApk interface not found. Cannot send notifications.");
+        return;
+    }
+
+    // Step 1: Check permission
+    const hasPermission = window.WebToApk.hasNotificationPermission();
+    if (!hasPermission) {
+        console.log("Requesting notification permission...");
+        window.WebToApk.requestNotificationPermission();
+
+        // Small delay to give user time to accept/deny
+        setTimeout(() => {
+            const granted = window.WebToApk.hasNotificationPermission();
+            if (granted) {
+                console.log("Permission granted! Sending test notification...");
+                window.WebToApk.showNotification("✅ בדיקת התראות", "הנה התראה לדוגמה – אם אתה רואה אותה, הכל עובד 🎶");
+            } else {
+                console.warn("Permission was not granted. Test notification not sent.");
+            }
+        }, 2000); 
+    } else {
+        // Already has permission → send test notification right away
+        window.WebToApk.showNotification("✅ בדיקת התראות", "הנה התראה לדוגמה – אם אתה רואה אותה, הכל עובד 🎶");
+    }
 }
 
 // Start reminders once the page loads
