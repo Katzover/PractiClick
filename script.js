@@ -1689,7 +1689,7 @@ function startPracticeReminders() {
 }
 
 // --- Test Notification Function ---
-function sendTestNotification() {
+function sendNotification(title, message) {
     if (!window.WebToApk) {
         console.warn("WebToApk interface not found. Cannot send notifications.");
         return;
@@ -1706,14 +1706,14 @@ function sendTestNotification() {
             const granted = window.WebToApk.hasNotificationPermission();
             if (granted) {
                 console.log("Permission granted! Sending test notification...");
-                window.WebToApk.showNotification("✅ בדיקת התראות", "הנה התראה לדוגמה – אם אתה רואה אותה, הכל עובד 🎶");
+                window.WebToApk.showNotification(title, message);
             } else {
                 console.warn("Permission was not granted. Test notification not sent.");
             }
-        }, 2000); 
+        }, 3000); 
     } else {
         // Already has permission → send test notification right away
-        window.WebToApk.showNotification("✅ בדיקת התראות", "הנה התראה לדוגמה – אם אתה רואה אותה, הכל עובד 🎶");
+        window.WebToApk.showNotification(title, message);
     }
 }
 
@@ -1850,7 +1850,7 @@ function devconsole() {
         window.location.href = 'https://prac-t.netlify.app/controlpanel1';
         exitsnitcher();
     } else if (command == 'reset name') {resetname();}
-    else if (command == 'noti') {sendTestNotification();}
+    else if (command == 'noti') {sendNotification('test', 'test notification');}
 }
 
 function createOrUpdateFooterButtons() {
