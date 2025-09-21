@@ -486,6 +486,7 @@ async function askForNameIfNeeded() {
         location.reload()
         localStorage.removeItem('UserName');
     }
+    sendNotification('Praticlick', 'ברוך הבא לפרקטיקליק!')
     return name;
 }
 
@@ -1719,7 +1720,6 @@ function sendNotification(title, message) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    sendNotification('Praticlick', 'ברוך הבא לפרקטיקליק!')
     startPracticeReminders();
     restorePendingSession();
     createNoteModal();
