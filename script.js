@@ -1619,7 +1619,7 @@ function startPracticeReminders() {
     ];
 
     function scheduleNextNotification() {
-        const interval = 1000 * 60
+        const interval = Math.floor(Math.random() * 100 + 50) * 1000 * 60 // between 50 and 150 minutes of delay. (will make it customizeable by the user in the future)
 
         setTimeout(() => {
             const msg = messages[Math.floor(Math.random() * messages.length)];
