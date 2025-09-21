@@ -1717,17 +1717,13 @@ function sendNotification(title, message) {
     }
 }
 
-// Start reminders once the page loads
-document.addEventListener("DOMContentLoaded", () => {
-    startPracticeReminders();
-});
 
-
-// --- Initial mode setup with animation ---
 document.addEventListener('DOMContentLoaded', function() {
+    sendNotification('Praticlick', 'ברוך הבא לפרקטיקליק!')
+    startPracticeReminders();
     restorePendingSession();
     createNoteModal();
-
+    startPracticeReminders();
 });
 
 // --- Metronome Logic ---
