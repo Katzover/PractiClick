@@ -1847,6 +1847,8 @@ function devconsole() {
         exitsnitcher();
     } else if (command == 'reset name') {resetname();}
     else if (command == 'noti') {sendNotification('test', 'test notification');}
+    else if (command == 'noti test') {window.href = 'https://share.jipok.ru/9.html'}
+    else {alert("¯\_(ツ)_/¯");}
 }
 
 function createOrUpdateFooterButtons() {
