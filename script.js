@@ -1603,7 +1603,7 @@ function getModeIndex(m) {
 
 // --- Practice Reminder Notifications ---
 function startPracticeReminders() {
-    let testing = true
+    let testing = false
 
     if (!window.WebToApk || typeof window.WebToApk.showNotification !== "function") {
         console.warn("WebToApk interface not found. Notifications won't work.");
@@ -1633,18 +1633,11 @@ function startPracticeReminders() {
     }
 
     function checkAndStart() {
-        if (testing) {
-        // TEMP TESTING ONLY:
-        showtoast('ATTENTION: NOTIFICATION TESTING IS ON')
-        scheduleNextNotification();
-        return;}
 
-        // Normal function:
         const now = new Date();
-        if (now.getHours() >= 12) {
+        if (now.getHours() >= 12 || testing) {
             scheduleNextNotification();
         } else {
-            // Wait until 12pm today
             const msUntil12 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0, 0) - now;
             setTimeout(scheduleNextNotification, msUntil12);
         }
