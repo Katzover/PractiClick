@@ -1631,8 +1631,13 @@ function startPracticeReminders() {
     }
 
     function checkAndStart() {
+        // TEMP TESTING ONLY:
+        scheduleNextNotification();
+        return;
+
+        // Normal function:
         const now = new Date();
-        if (now.getHours() >= 12 || localStorage.getItem('UserName').includes('איתמר קצובר')) {
+        if (now.getHours() >= 12) {
             scheduleNextNotification();
         } else {
             // Wait until 12pm today
