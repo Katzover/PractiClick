@@ -1603,6 +1603,8 @@ function getModeIndex(m) {
 
 // --- Practice Reminder Notifications ---
 function startPracticeReminders() {
+    let testing = true
+
     if (!window.WebToApk || typeof window.WebToApk.showNotification !== "function") {
         console.warn("WebToApk interface not found. Notifications won't work.");
         return;
@@ -1622,7 +1624,7 @@ function startPracticeReminders() {
         setTimeout(() => {
             const msg = messages[Math.floor(Math.random() * messages.length)];
             const hour = new Date().getHours();
-            if (hour >= 12 && hour <= 22) {
+            if (hour >= 12 && hour <= 22 || testing) {
                 window.WebToApk.showNotification("⏰ תזכורת אימון", msg);
             }
 
@@ -1631,10 +1633,11 @@ function startPracticeReminders() {
     }
 
     function checkAndStart() {
+        if (testing) {
         // TEMP TESTING ONLY:
         showtoast('ATTENTION: NOTIFICATION TESTING IS ON')
         scheduleNextNotification();
-        return;
+        return;}
 
         // Normal function:
         const now = new Date();
