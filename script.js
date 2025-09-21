@@ -1632,7 +1632,7 @@ function startPracticeReminders() {
 
     function checkAndStart() {
         // TEMP TESTING ONLY:
-        showtoast('ATTENTION: NOTIFICATION TESTING IS ON', duration=10000)
+        showtoast('ATTENTION: NOTIFICATION TESTING IS ON')
         scheduleNextNotification();
         return;
 
