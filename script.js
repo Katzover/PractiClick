@@ -1601,49 +1601,6 @@ function getModeIndex(m) {
     return MODES.indexOf(m);
 }
 
-let touchstartX = 0;
-let touchendX = 0;
-let touchstartY = 0;
-let touchendY = 0;
-
-function initSwipeDetection() {
-    document.addEventListener('touchstart', e => {
-        touchstartX = e.changedTouches[0].clientX;
-        touchstartY = e.changedTouches[0].clientY;
-    });
-
-    document.addEventListener('touchend', e => {
-        touchendX = e.changedTouches[0].clientX;
-        touchendY = e.changedTouches[0].clientY;
-        checkDirection();
-    });
-}
-
-function checkDirection() {
-    const threshold = 50; // min distance
-    const xDiff = touchendX - touchstartX;
-    const yDiff = touchendY - touchstartY;
-    let change = 0;
-
-    // Check if horizontal swipe is stronger than vertical movement
-    if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > threshold) {
-        try {
-        if (xDiff > 0) {
-            console.log("Swiped right on page!");
-            change++;
-        } else {
-            console.log("Swiped left on page!");
-            change--;
-        }} catch (e) { alert(e);}
-        
-    } if (change < 4 && change > -1) {
-        showMode(MODES[(currentModeIndex + change)])
-    } else if (change >= 3) {showMode(MODES[0])}
-    else {showMode(MODES[3])}
-
-}
-
-
 // --- Practice Reminder Notifications ---
 function startPracticeReminders() {
     if (!window.WebToApk || typeof window.WebToApk.showNotification !== "function") {
@@ -1660,8 +1617,7 @@ function startPracticeReminders() {
     ];
 
     function scheduleNextNotification() {
-        // Random interval between 1h and 3h (in ms)
-        const interval = (Math.floor(Math.random() * 3) + 1) * 60 * 60;
+        const interval = 1000 * 60
 
         setTimeout(() => {
             const msg = messages[Math.floor(Math.random() * messages.length)];
