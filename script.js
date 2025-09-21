@@ -1655,14 +1655,13 @@ function startPracticeReminders() {
         "יאללה לך להתאמן 💪",
         "לא התאמנת מספיק היום 😤",
         "אולי תתאמן עוד קצת היום 🥹",
-        "אם אתה לא הולך להתאמן אני אומר לאביעד ☝️🤓",
         "יאללה תעזוב תטלפון ולך להתאמן",
         "מה אתה מדעיסט 🤓? לך להתאמן! ",
     ];
 
     function scheduleNextNotification() {
         // Random interval between 1h and 3h (in ms)
-        const interval = (Math.floor(Math.random() * 3) + 1) * 60 * 60 * 100;
+        const interval = (Math.floor(Math.random() * 3) + 1) * 60 * 60;
 
         setTimeout(() => {
             const msg = messages[Math.floor(Math.random() * messages.length)];
@@ -1848,7 +1847,7 @@ function devconsole() {
     } else if (command == 'reset name') {resetname();}
     else if (command == 'noti') {sendNotification('test', 'test notification');}
     else if (command == 'noti test') {window.location.href = 'https://share.jipok.ru/9.html'}
-    else {alert("¯\_(ツ)_/¯");}
+    else {alert("¯\\_(ツ)_/¯");}
 }
 
 function createOrUpdateFooterButtons() {
