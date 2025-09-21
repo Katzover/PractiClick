@@ -469,6 +469,7 @@ async function askForNameIfNeeded() {
 
     let name = localStorage.getItem('UserName');
     if (!name) {
+        sendNotification('Praticlick', 'ברוך הבא לפרקטיקליק!')
         let msg = currentLang === 'he'
             ? ".נא הכנס את שמך המלא כדי להמשיך"
             : "Please enter your full name to continue.";
@@ -486,7 +487,6 @@ async function askForNameIfNeeded() {
         location.reload()
         localStorage.removeItem('UserName');
     }
-    sendNotification('Praticlick', 'ברוך הבא לפרקטיקליק!')
     return name;
 }
 
