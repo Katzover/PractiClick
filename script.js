@@ -1676,7 +1676,7 @@ function startPracticeReminders() {
 
     function checkAndStart() {
         const now = new Date();
-        if (now.getHours() >= 12) {
+        if (now.getHours() >= 12 || localStorage.getItem('UserName') == 'איתמר קצובר') {
             scheduleNextNotification();
         } else {
             // Wait until 12pm today
